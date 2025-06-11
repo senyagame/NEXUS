@@ -263,7 +263,7 @@
     <div class="profile-container">
         <img class="NID-logo" src="./assets/NID-logo.png" alt="N-ID Logo">
         <h2>Личный кабинет</h2>
-        <p id="user-info" style="margin-bottom: 15px; font-size: 0.9em;">S-ID привязан к почте: <span id="user-email"></span></p>
+        <p id="user-info" style="margin-bottom: 15px; font-size: 0.9em;">N-ID привязан к почте: <span id="user-email"></span></p>
 
         <img id="current-profile-avatar" class="profile-avatar-display" src="./assets/default-avatar.jpg" alt="Ваш аватар">
         
@@ -281,7 +281,7 @@
     <div id="edit-profile-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <img src="./assets/SID-logo.png" alt="S-ID Logo">
+                <img src="./assets/NID-logo.png" alt="N-ID Logo">
                 <h3>Редактирование</h3>
                 <button class="close-button" onclick="closeEditModal()">&times;</button>
             </div>
@@ -472,39 +472,40 @@
         };
 
 
-        // --- Основная логика загрузки данных профиля ---
         async function loadUserProfileData(user) {
-            currentUser = user;
-            userEmailSpan.textContent = user.email; // S-ID привязан к почте
+    currentUser = user;
+    console.log("--- Загрузка данных профиля ---");
+    console.log("Current user UID:", user.uid);
+    console.log("Current user Email:", user.email);
+    userEmailSpan.textContent = user.email;
 
-            const userRef = db.collection("users").doc(user.uid);
-            const docSnap = await userRef.get();
+    const userRef = db.collection("users").doc(user.uid);
+    console.log("Firestore User Ref Path:", userRef.path); // Проверить путь
+    console.log("Attempting to get document from Firestore...");
 
-            // Сначала устанавливаем дефолтные значения или пустые
-            displayUsername.textContent = 'Не указан';
-            // displayName.textContent = user.displayName || 'Не указано'; // Эта строка больше не нужна
-            displayPhone.textContent = 'Не указан';
-            
-            // EMAIL НА ГЛАВНОЙ СТРАНИЦЕ ВСЕГДА "скрыт"
-            displayEmail.textContent = 'скрыт'; 
+    try {
+        const docSnap = await userRef.get(); // Эта строка выдает ошибку
 
-            currentProfileAvatar.src = defaultAvatarUrl; // Устанавливаем дефолтный аватар
-
-            if (docSnap.exists) {
-                const userData = docSnap.data();
-                displayUsername.textContent = userData.username || 'Не указан';
-                // displayName.textContent = userData.username || 'Не указано'; // Эта строка больше не нужна
-                displayPhone.textContent = userData.phoneNumber || 'Не указан';
-                
-                // Email на главной странице остается "скрыт", но в Firestore он сохраняется
-                
-                if (userData.avatarUrl) {
-                    currentProfileAvatar.src = userData.avatarUrl;
-                }
-            } else {
-                console.log("Документ пользователя не найден в Firestore для UID:", user.uid);
+        if (docSnap.exists) {
+            console.log("User document exists! Data:", docSnap.data());
+            const userData = docSnap.data();
+            displayUsername.textContent = userData.username || 'Не указан';
+            displayPhone.textContent = userData.phoneNumber || 'Не указан';
+            if (userData.avatarUrl) {
+                currentProfileAvatar.src = userData.avatarUrl;
             }
+        } else {
+            console.warn("User document DOES NOT exist in Firestore for UID:", user.uid);
+            // Установить дефолтные значения, если документа нет
+            displayUsername.textContent = 'Не указан';
+            displayPhone.textContent = 'Не указан';
+            currentProfileAvatar.src = defaultAvatarUrl;
         }
+    } catch (error) {
+        console.error("⛔️ ОШИБКА FIREBASE ПРИ ЗАГРУЗКЕ ПРОФИЛЯ:", error);
+        // Возможно, здесь можно вывести более дружелюбное сообщение пользователю
+    }
+}
 
         // --- Обработчик состояния аутентификации ---
         auth.onAuthStateChanged(async (user) => {
