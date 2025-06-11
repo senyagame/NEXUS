@@ -6,6 +6,7 @@
     <title>Авторизация</title>
     <link rel="stylesheet" href="styles.css">
     <style>
+        /* Твои текущие стили, адаптированные для форм */
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -14,20 +15,19 @@
             height: 100vh;
             margin: 0;
             background-image: url('./assets/auth_mountains.jpg');
-            background-size: cover; /* Растягиваем изображение на весь фон */
-            background-position: center; /* Центрируем изображение */
-            background-repeat: no-repeat; /* Запрещаем повторение изображения */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
-    
         .container {
-            color: #fff;
-            background-color: rgba(5, 0, 78, 0.8);
+            color: #000000;
+            background-color: rgba(255, 255, 255);
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 30px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             width: 300px;
             text-align: center;
-            margin: 0; 
+            margin: 0;
         }
         .form-group {
             margin-bottom: 15px;
@@ -35,6 +35,7 @@
         .form-group label {
             display: block;
             margin-bottom: 5px;
+            text-align: left; /* Выравнивание текста метки влево */
         }
         .form-group input {
             width: 100%;
@@ -42,8 +43,8 @@
             box-sizing: border-box;
             border-radius: 4px;
             border: 1px solid #ccc;
-            background-color: #0f0347;
-            color: #fff;
+            background-color: #e4e4e4;
+            color: #000000;
         }
         .form-group button {
             width: 100%;
@@ -77,137 +78,380 @@
         .back-to-profile:hover {
             text-decoration: underline;
         }
-        .error-message {
-            color: #ff4d4d;
+        .message { /* ОБЩИЙ КЛАСС ДЛЯ СООБЩЕНИЙ */
             margin-top: 10px;
+            padding: 8px;
+            border-radius: 4px;
+            display: none; /* По умолчанию скрыто */
+            font-size: 0.9em;
         }
+        .message.error {
+            color: #ff4d4d;
+            background-color: rgba(255, 77, 77, 0.2);
+            border: 1px solid #ff4d4d;
+        }
+        .message.success {
+            color: #4CAF50;
+            background-color: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4CAF50;
+        }
+        .NID-logo {
+            width: 190px;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 2px rgba(0, 0, 0);
+        }
+        /* Стили для скрытия/показа форм и user-dashboard */
+        #auth-section { display: block; }
+        #user-dashboard { display: none; } /* По умолчанию скрыто */
     </style>
-</head>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    </head>
 <body>
     <div class="container">
-        <div id="login-form" class="form-group">
-            <h2 class="gradient-sid">S-ID</h2>
-            <h2>Авторизация</h2>
-            <label for="login-email">Email:</label>
-            <input type="email" id="login-email" required>
-            <label for="login-password">Пароль:</label>
-            <input type="password" id="login-password" required>
-            <button onclick="login()">Авторизироваться в NEXUS</button>
-            <div class="toggle-link">
-                <a href="#" onclick="toggleForm('register')">Нет S-ID? Зарегистрируйтесь тут!</a>
+        <div id="auth-section">
+            <img class="NID-logo" src="./assets/NID-long-logo.png" alt="N-ID Logo">
+
+            <div id="login-form">
+                <h2>Авторизация</h2>
+                <div class="form-group">
+                    <label for="login-email">Email / Логин / Номер телефона:</label>
+                    <input type="text" id="login-email" placeholder="Email / Логин / Номер телефона" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Пароль:</label>
+                    <input type="password" id="login-password" placeholder="Пароль" required>
+                </div>
+                <button id="login-button">Авторизироваться в NEXUS</button>
+                <div id="login-message" class="message"></div> <div class="toggle-link">
+                    <a href="#" id="show-register-form-link" style="color: #000000;">Нет N-ID? Зарегистрируйтесь тут!</a>
+                </div>
             </div>
-            <p id="login-error" class="error-message"></p>
-        </div>
-        <div id="register-form" class="form-group" style="display: none;">
-            <h2 class="gradient-sid">S-ID</h2>
-            <img src="./assets/logo.png" alt="">
-            <h2>Регистрация S-ID</h2>
-            <label for="register-email">Email:</label>
-            <input type="email" id="register-email" required>
-            <label for="register-password">Пароль:</label>
-            <input type="password" id="register-password" required>
-            <button onclick="register()">Регистрация</button>
-            <div class="toggle-link">
-                <a href="#" onclick="toggleForm('login')">Уже есть S-ID? Авторизируйтесь тут!</a>
+
+            <div id="register-form" style="display: none;">
+                <h2>Регистрация N-ID</h2>
+                <div class="form-group">
+                    <label for="register-username">Придумайте логин:</label>
+                    <input type="text" id="register-username" placeholder="Ваш логин" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email:</label>
+                    <input type="email" id="register-email" placeholder="email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-phone">Номер телефона (необязательно):</label>
+                    <input type="tel" id="register-phone" placeholder="+7 (XXX) XXX-XX-XX">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Придумайте пароль:</label>
+                    <input type="password" id="register-password" placeholder="Пароль (мин. 6 символов)" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm-password">Подтвердите пароль:</label>
+                    <input type="password" id="register-confirm-password" placeholder="Подтвердите пароль" required>
+                </div>
+                <button id="register-button">Зарегистрироваться</button>
+                <div id="register-message" class="message"></div> <div class="toggle-link">
+                    <a href="#" id="show-login-form-link" style="color: #000000;">Уже есть N-ID? Авторизируйтесь тут!</a>
+                </div>
             </div>
-            <p id="register-error" class="error-message"></p>
         </div>
-        <a href="profile.html" class="back-to-profile">Вернуться в личный кабинет</a>
+
+        <div id="user-dashboard">
+            <img class="NID-logo" src="./assets/NID-long-logo-2.png" alt="S-ID Logo">
+            <h2>Добро пожаловать, <span id="user-display-name">Пользователь</span>!</h2>
+            <p>Вы вошли как: <span id="user-email"></span></p>
+            <button id="logout-button">Выйти из S-ID</button>
+        </div>
+        <a href="profile.html" id="back-to-profile-link" class="back-to-profile" style="display: none; color: #000000;">Вернуться в профиль</a>
     </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"; // Import setDoc
-
-        // Firebase конфигурация (из config.js)
+    <script>
+        // Инициализация Firebase SDK
         const firebaseConfig = {
-            apiKey: "AIzaSyBIF6s94-IuXl3accPXPQzVYWYciO5D5lg",
-            authDomain: "super-app-1872b.firebaseapp.com",
-            projectId: "super-app-1872b",
-            storageBucket: "super-app-1872b.appspot.com",
-            messagingSenderId: "19947702298",
-            appId: "1:19947702298:web:6d962472fbb3a92b5c69a3",
-            measurementId: "G-5PMEEJFMDT"
+            apiKey: "AIzaSyAP04srkFeyQPsp1iuhn0RwzMav9fhqCRw",
+            authDomain: "nexus-90a19.firebaseapp.com",
+            projectId: "nexus-90a19",
+            storageBucket: "nexus-90a19.firebasestorage.app",
+            messagingSenderId: "78051357921",
+            appId: "1:78051357921:web:477ab2794b67e0c706b3a0",
+            measurementId: "G-X65550ENG3"
         };
 
-        // Инициализация Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app); // Получаем доступ к Firestore
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-        const loginError = document.getElementById('login-error');
-        const registerError = document.getElementById('register-error');
+        // --- Элементы DOM ---
+        const authSection = document.getElementById('auth-section');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const userDashboard = document.getElementById('user-dashboard');
 
-        // Функция переключения формы (логин/регистрация)
-        window.toggleForm = function (form) {
-            document.getElementById('login-form').style.display = form === 'login' ? 'block' : 'none';
-            document.getElementById('register-form').style.display = form === 'register' ? 'block' : 'none';
-            loginError.textContent = ''; // Очищаем сообщения об ошибках при переключении формы
-            registerError.textContent = '';
+        // ИЗМЕНЕНО: теперь это поле для email/логина/телефона
+        const loginIdentifierInput = document.getElementById('login-email'); // Оставляем ID 'login-email', но будем использовать для разных типов ввода
+        loginIdentifierInput.placeholder = "Email / Логин / Номер телефона"; // Обновляем плейсхолдер
+
+        const loginPasswordInput = document.getElementById('login-password');
+        const loginButton = document.getElementById('login-button');
+        const loginMessage = document.getElementById('login-message');
+
+        const registerUsernameInput = document.getElementById('register-username');
+        const registerEmailInput = document.getElementById('register-email');
+        const registerPhoneInput = document.getElementById('register-phone');
+        const registerPasswordInput = document.getElementById('register-password');
+        const registerConfirmPasswordInput = document.getElementById('register-confirm-password');
+        const registerButton = document.getElementById('register-button');
+        const registerMessage = document.getElementById('register-message');
+
+        const showRegisterFormLink = document.getElementById('show-register-form-link');
+        const showLoginFormLink = document.getElementById('show-login-form-link');
+
+        const userDisplayNameSpan = document.getElementById('user-display-name');
+        const userEmailSpan = document.getElementById('user-email');
+        const userUidSpan = document.getElementById('user-uid');
+        const logoutButton = document.getElementById('logout-button');
+        const backToProfileLink = document.getElementById('back-to-profile-link');
+
+
+        // --- Вспомогательные функции UI ---
+        function showMessage(element, message, type) {
+            if (!element) {
+                console.error(`Элемент для сообщения не найден: ${message}`);
+                return;
+            }
+            element.textContent = message;
+            element.className = `message ${type}`;
+            element.style.display = 'block';
+            setTimeout(() => {
+                element.style.display = 'none';
+                element.textContent = '';
+            }, 5000);
         }
 
-        window.register = function () {
-            const email = document.getElementById("register-email").value;
-            const password = document.getElementById("register-password").value;
+        function showAuthForm(formToShow) {
+            if (!loginForm || !registerForm) {
+                console.error("Один из элементов формы (loginForm или registerForm) не найден.");
+                return;
+            }
 
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    const userRef = doc(db, "users", user.uid);
-                    return setDoc(userRef, {
-                        username: "", // Можно установить значения по умолчанию
-                        avatarUrl: ""
-                    });
-                })
-                .then(() => {
-                    window.location.href = "profile.html"; // Перенаправление в личный кабинет после регистрации и создания документа
-                })
-                .catch((error) => {
-                    console.error("Ошибка регистрации:", error.code, error.message);
-                    switch (error.code) {
-                        case 'auth/email-already-in-use':
-                            registerError.textContent = 'Этот адрес электронной почты уже используется.';
-                            break;
-                        case 'auth/invalid-email':
-                            registerError.textContent = 'Неверный формат адреса электронной почты.';
-                            break;
-                        case 'auth/weak-password':
-                            registerError.textContent = 'Пароль слишком слабый (минимум 6 символов).';
-                            break;
-                        default:
-                            registerError.textContent = 'Произошла ошибка при регистрации. Неверный логин или пароль.';
-                            break;
-                    }
+            if (formToShow === 'login') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+            } else if (formToShow === 'register') {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+            }
+            loginMessage.style.display = 'none';
+            registerMessage.style.display = 'none';
+        }
+
+        // --- Обработчики событий для переключения форм ---
+        if (showRegisterFormLink) {
+            showRegisterFormLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log("Нажата ссылка 'Зарегистрироваться'.");
+                showAuthForm('register');
+            });
+        } else {
+            console.error("Элемент с ID 'show-register-form-link' не найден в DOM.");
+        }
+
+        if (showLoginFormLink) {
+            showLoginFormLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log("Нажата ссылка 'Авторизоваться'.");
+                showAuthForm('login');
+            });
+        } else {
+            console.error("Элемент с ID 'show-login-form-link' не найден в DOM.");
+        }
+
+        // --- Функции Firebase Authentication ---
+
+        registerButton.addEventListener('click', async (event) => {
+            event.preventDefault();
+
+            const username = registerUsernameInput.value.trim();
+            const email = registerEmailInput.value.trim();
+            const password = registerPasswordInput.value;
+            const confirmPassword = registerConfirmPasswordInput.value;
+            const phoneNumber = registerPhoneInput.value.trim();
+
+            if (!username || !email || !password || !confirmPassword) {
+                showMessage(registerMessage, "Пожалуйста, заполните все обязательные поля.", "error");
+                return;
+            }
+            if (password !== confirmPassword) {
+                showMessage(registerMessage, "Пароли не совпадают!", "error");
+                return;
+            }
+            if (password.length < 6) {
+                showMessage(registerMessage, "Пароль должен быть не менее 6 символов.", "error");
+                return;
+            }
+
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                await user.updateProfile({
+                    displayName: username
                 });
-        }
 
-        window.login = function () {
-            const email = document.getElementById("login-email").value;
-            const password = document.getElementById("login-password").value;
+                const userDocRef = db.collection("users").doc(user.uid);
+                await userDocRef.set({
+                    username: username,
+                    email: email,
+                    phoneNumber: phoneNumber,
+                    avatarUrl: "",
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
 
-            signInWithEmailAndPassword(auth, email, password)
-                .then(() => {
-                    window.location.href = "profile.html"; // Перенаправление в личный кабинет после входа
-                })
-                .catch((error) => {
-                    console.error("Ошибка входа:", error.code, error.message);
-                    switch (error.code) {
-                        case 'auth/user-not-found':
-                            loginError.textContent = 'Пользователь с таким адресом электронной почты не найден.';
-                            break;
-                        case 'auth/wrong-password':
-                            loginError.textContent = 'Неверный пароль.';
-                            break;
-                        case 'auth/invalid-email':
-                            loginError.textContent = 'Неверный формат адреса электронной почты.';
-                            break;
-                        default:
-                            loginError.textContent = 'Произошла ошибка при входе.';
-                            break;
+                showMessage(registerMessage, "Регистрация успешна! Вы вошли в систему.", "success");
+                console.log("Пользователь зарегистрирован и его профиль создан в Firestore:", user.uid, username);
+
+                window.location.href = "profile.html";
+
+            } catch (error) {
+                let errorMessage = "Произошла ошибка при регистрации.";
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = 'Этот Email уже используется.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Некорректный формат Email.';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = 'Пароль слишком слабый (минимум 6 символов).';
+                        break;
+                    default:
+                        errorMessage = `Ошибка: ${error.message}`;
+                }
+                console.error("Ошибка регистрации:", error.code, error.message);
+                showMessage(registerMessage, errorMessage, "error");
+            }
+        });
+
+        loginButton.addEventListener('click', async (event) => {
+            event.preventDefault();
+
+            const identifier = loginIdentifierInput.value.trim(); // Получаем значение из поля
+            const password = loginPasswordInput.value;
+
+            if (!identifier || !password) {
+                showMessage(loginMessage, "Пожалуйста, введите Email / Логин / Номер телефона и пароль.", "error");
+                return;
+            }
+
+            try {
+                let emailToSignIn = identifier;
+
+                // Если введенное значение НЕ похоже на email, ищем в Firestore
+                // Простая проверка на @ и .
+                if (!identifier.includes('@') || !identifier.includes('.')) {
+                    console.log(`Ищем пользователя по логину или телефону: ${identifier}`);
+                    const usersRef = db.collection('users');
+                    let querySnapshot;
+
+                    // Попытка найти по username
+                    querySnapshot = await usersRef.where('username', '==', identifier).limit(1).get();
+                    
+                    // Если не нашли по username, ищем по phoneNumber
+                    if (querySnapshot.empty) {
+                        querySnapshot = await usersRef.where('phoneNumber', '==', identifier).limit(1).get();
                     }
-                });
-        }
+
+                    if (!querySnapshot.empty) {
+                        const userData = querySnapshot.docs[0].data();
+                        emailToSignIn = userData.email; // Получаем email найденного пользователя
+                        console.log(`Найден пользователь по идентификатору: ${identifier}, его email: ${emailToSignIn}`);
+                    } else {
+                        // Если не нашли пользователя ни по логину, ни по телефону
+                        showMessage(loginMessage, "Пользователь с таким логином или номером телефона не найден.", "error");
+                        return;
+                    }
+                }
+
+                // Теперь используем найденный email (или исходный email, если он был введен) для входа
+                await auth.signInWithEmailAndPassword(emailToSignIn, password);
+                showMessage(loginMessage, "Вход успешен!", "success");
+
+                window.location.href = "profile.html";
+
+            } catch (error) {
+                let errorMessage = "Произошла ошибка при входе.";
+                switch (error.code) {
+                    case 'auth/invalid-email':
+                        errorMessage = 'Некорректный формат Email.';
+                        break;
+                    case 'auth/user-disabled':
+                        errorMessage = 'Пользователь заблокирован.';
+                        break;
+                    case 'auth/user-not-found': // Эта ошибка Firebase может быть вызвана, если email, полученный из Firestore, не соответствует пользователю в Authentication
+                        errorMessage = 'Неверные данные для входа.';
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage = 'Неверный пароль.';
+                        break;
+                    default:
+                        errorMessage = `Ошибка: ${error.message}`;
+                }
+                console.error("Ошибка входа:", error.code, error.message);
+                showMessage(loginMessage, errorMessage, "error");
+            }
+        });
+
+        logoutButton.addEventListener('click', async () => {
+            try {
+                await auth.signOut();
+                console.log("Пользователь вышел.");
+                window.location.href = "auth.html"; 
+
+            } catch (error) {
+                console.error("Ошибка выхода:", error.message);
+            }
+        });
+
+        // --- Обработчик состояния аутентификации ---
+        auth.onAuthStateChanged((user) => {
+            if (!authSection || !userDashboard || !backToProfileLink) {
+                console.error("Один из основных элементов UI (authSection, userDashboard, backToProfileLink) не найден.");
+                return;
+            }
+
+            if (user) {
+                authSection.style.display = 'none';
+                userDashboard.style.display = 'block';
+                backToProfileLink.style.display = 'block';
+
+                userDisplayNameSpan.textContent = user.displayName || 'Неизвестный пользователь';
+                userEmailSpan.textContent = user.email;
+                userUidSpan.textContent = user.uid;
+
+                console.log("Пользователь вошел:", user.email, "UID:", user.uid, "DisplayName:", user.displayName);
+                
+            } else {
+                authSection.style.display = 'block';
+                userDashboard.style.display = 'none';
+                backToProfileLink.style.display = 'none';
+                showAuthForm('login');
+                console.log("Пользователь вышел из системы.");
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!auth.currentUser) {
+                showAuthForm('login');
+            } else {
+                authSection.style.display = 'none';
+                userDashboard.style.display = 'block';
+                backToProfileLink.style.display = 'block';
+            }
+        });
     </script>
 </body>
 </html>

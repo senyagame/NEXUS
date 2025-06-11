@@ -1,6 +1,6 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 export function formatTime(seconds) {
     const minutes = Math.floor(seconds / 60);
@@ -107,14 +107,15 @@ export function initializeCustomPlayer(container) {
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
+    // === ВАША ПРАВИЛЬНАЯ FIREBASE КОНФИГУРАЦИЯ ДЛЯ ПРОЕКТА nexus-90a19 ===
     const firebaseConfig = {
-        apiKey: "AIzaSyBIF6s94-IuXl3accPXPQzVYWYciO5D5lg",
-        authDomain: "super-app-1872b.firebaseapp.com",
-        projectId: "super-app-1872b",
-        storageBucket: "super-app-1872b.appspot.com",
-        messagingSenderId: "19947702298",
-        appId: "1:19947702298:web:6d962472fbb3a92b5c69a3",
-        measurementId: "G-5PMEEJFMDT"
+      apiKey: "AIzaSyAP04srkFeyQPsp1iuhn0RwzMav9fhqCRw",
+      authDomain: "nexus-90a19.firebaseapp.com",
+      projectId: "nexus-90a19",
+      storageBucket: "nexus-90a19.firebasestorage.app",
+      messagingSenderId: "78051357921",
+      appId: "1:78051357921:web:477ab2794b67e0c706b3a0",
+      measurementId: "G-X65550ENG3"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -140,10 +141,11 @@ document.addEventListener("DOMContentLoaded", async function () {
             const docSnap = await getDoc(userFavoritesRef);
             if (docSnap.exists()) {
                 const favorites = docSnap.data().tracks || [];
+                // Проверка по нескольким полям для уникальности трека
                 const isFavorite = favorites.some(fav =>
                     fav.song === songData.song &&
                     fav.artist === songData.artist &&
-                    fav.yandexLink === songData.yandexLink
+                    fav.yandexLink === songData.yandexLink // Используем yandexLink как уникальный идентификатор
                 );
                 if (isFavorite) {
                     heartButton.textContent = '❤️';
@@ -155,12 +157,13 @@ document.addEventListener("DOMContentLoaded", async function () {
                     heartButton.title = 'Добавить в избранное';
                 }
             } else {
+                // Документа пользователя с избранным еще нет
                 heartButton.textContent = '🤍';
                 heartButton.classList.remove("is-favorite");
                 heartButton.title = 'Добавить в избранное';
             }
         } catch (error) {
-            console.error("Ошибка при проверке избранного:", error);
+            console.error("❌ Ошибка при проверке избранного:", error);
             heartButton.textContent = '❓';
             heartButton.disabled = true;
             heartButton.title = 'Ошибка загрузки избранного';
@@ -170,6 +173,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     async function toggleFavorite(heartButton, songData) {
         if (!currentUserId) {
             alert("Пожалуйста, войдите в систему, чтобы добавлять треки в избранное.");
+            console.warn("User not logged in. Cannot toggle favorite."); // Отладочное сообщение
             return;
         }
 
@@ -185,51 +189,62 @@ document.addEventListener("DOMContentLoaded", async function () {
             );
 
             if (isFavorite) {
+                // Удаляем из избранного
                 await updateDoc(userFavoritesRef, {
                     tracks: arrayRemove(songData)
                 });
                 alert(`${songData.song} удален из понравившихся.`);
+                console.log(`🗑️ ${songData.song} удален из избранного.`); // Отладочное сообщение
             } else {
+                // Добавляем в избранное
                 if (docSnap.exists()) {
+                    // Документ уже существует, обновляем массив
                     await updateDoc(userFavoritesRef, {
                         tracks: arrayUnion(songData)
                     });
                 } else {
+                    // Документ не существует, создаем его с первым треком
                     await setDoc(userFavoritesRef, { tracks: [songData] });
                 }
                 alert(`${songData.song} добавлен в понравившиеся!`);
+                console.log(`❤️ ${songData.song} добавлен в избранное.`); // Отладочное сообщение
             }
+            // Обновляем состояние кнопки после операции
             await updateFavoriteHeartState(heartButton, songData);
 
         } catch (error) {
-            console.error("Ошибка при изменении статуса избранного:", error);
-            alert("Произошла ошибка при изменении статуса избранного.");
+            console.error("❌ Ошибка при изменении статуса избранного:", error);
+            alert("Произошла ошибка при изменении статуса избранного. Проверьте консоль для деталей.");
         }
     }
 
     const musicContainers = document.querySelectorAll('.music-container');
     musicContainers.forEach(container => {
-        initializeCustomPlayer(container);
+        initializeCustomPlayer(container); // Инициализация плеера для каждого контейнера
 
         const favoriteHeartBtn = container.querySelector('.favorite-heart-btn');
         if (favoriteHeartBtn) {
+            // Собираем все данные о песне из dataset для сохранения в Firestore
             const songData = {
                 song: container.dataset.song,
                 artist: container.dataset.artist,
-                date: container.dataset.date,
-                duration: container.dataset.duration,
-                img: container.dataset.img,
-                yandexLink: container.dataset.yandexLink,
-                audioSrc: container.dataset.audioSrc
+                date: container.dataset.date || '', // Добавляем пустую строку, если нет
+                duration: container.dataset.duration || '', // Добавляем пустую строку, если нет
+                img: container.dataset.img || '', // Добавляем пустую строку, если нет
+                yandexLink: container.dataset.yandexLink || '', // Добавляем пустую строку, если нет
+                audioSrc: container.dataset.audioSrc || '' // Добавляем пустую строку, если нет
             };
             favoriteHeartBtn.addEventListener('click', () => toggleFavorite(favoriteHeartBtn, songData));
         }
     });
 
+    // Слушатель состояния аутентификации
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             currentUserId = user.uid;
-            console.log("Пользователь вошел. UID:", currentUserId);
+            console.log("🔥 [music.js]: Пользователь вошел. UID:", currentUserId); // Отладочное сообщение
+            
+            // После входа пользователя, обновите состояние всех кнопок избранного
             musicContainers.forEach(async (container) => {
                 const favoriteHeartBtn = container.querySelector('.favorite-heart-btn');
                 if (favoriteHeartBtn) {
@@ -237,15 +252,18 @@ document.addEventListener("DOMContentLoaded", async function () {
                         song: container.dataset.song,
                         artist: container.dataset.artist,
                         yandexLink: container.dataset.yandexLink
+                        // Для проверки избранного достаточно уникальных полей
                     };
                     await updateFavoriteHeartState(favoriteHeartBtn, songData);
                 }
             });
         } else {
             currentUserId = null;
-            console.log("Пользователь не вошел.");
-            musicContainers.forEach(heartBtn => {
-                const favoriteHeartBtn = heartBtn.querySelector('.favorite-heart-btn');
+            console.log("❌ [music.js]: Пользователь не вошел."); // Отладочное сообщение
+            
+            // Если пользователь не вошел, заблокируйте все кнопки избранного
+            musicContainers.forEach(container => {
+                const favoriteHeartBtn = container.querySelector('.favorite-heart-btn');
                 if (favoriteHeartBtn) {
                     favoriteHeartBtn.textContent = '🔒';
                     favoriteHeartBtn.disabled = true;
@@ -256,14 +274,17 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     });
 
+    // Логика для заголовка при скролле
     const mainHeader = document.getElementById('main-header');
     const scrollThreshold = 100;
 
     window.addEventListener('scroll', () => {
-        if (window.scrollY > scrollThreshold) {
-            mainHeader.classList.add('scrolled');
-        } else {
-            mainHeader.classList.remove('scrolled');
+        if (mainHeader) { // Проверка на существование элемента
+            if (window.scrollY > scrollThreshold) {
+                mainHeader.classList.add('scrolled');
+            } else {
+                mainHeader.classList.remove('scrolled');
+            }
         }
     });
 });

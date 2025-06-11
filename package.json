@@ -1,15 +1,13 @@
 {
   "dependencies": {
     "better-sqlite3": "^11.8.1",
-    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "firebase": "^11.1.0"
+    "firebase": "^11.9.0"
   },
-"scripts": {
-  "start": "electron .",
-  "build": "react-scripts build"
-},
+  "scripts": {
+    "start": "electron .",
+    "build": "react-scripts build"
+  },
   "name": "supper-app-fo-tg",
   "version": "1.0.0",
   "main": "main.js",
@@ -21,5 +19,3 @@
   "license": "ISC",
   "description": ""
 }
-
-

@@ -1,8 +1,5 @@
 {
   "projects": {
-    "default": "super-app-1872b",
-    "y": "super-app-1872b"
-  },
-  "targets": {},
-  "etags": {}
+    "default": "nexus-90a19"
+  }
 }

@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Личный кабинет</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css"> 
     <style>
+        /* Стили из твоего предоставленного кода */
         body {
             background-image: url('./assets/auth_mountains.jpg');
             background-size: cover;
@@ -19,39 +20,20 @@
         }
 
         .profile-container {
-            max-width: 600px;
-            padding: 20px;
+            max-width: 1200px; /* Расширяем контейнер, как обсуждалось */
+            padding: 30px; /* Увеличиваем отступы */
             color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
             position: relative;
-            background-color: rgba(0, 0, 0, 0.5); /* Добавим полупрозрачный фон для контейнера, чтобы текст был лучше виден */
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex; /* Используем flexbox для центрирования содержимого */
+            flex-direction: column; /* Элементы будут располагаться вертикально */
+            align-items: center; /* Центрирование по горизонтали */
         }
 
-        .avatar-selection {
-            margin-bottom: 20px;
-        }
-
-        .avatar-selection p {
-            margin-bottom: 10px;
-        }
-
-        .avatar-selection img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            cursor: pointer;
-            margin-right: 10px;
-            border: 2px solid transparent;
-        }
-
-        .avatar-selection img.selected {
-            border-color: #007BFF;
-        }
-
-        .profile-avatar-preview {
+        .profile-avatar-display { /* Новый стиль для отображения текущего аватара */
             width: 150px;
             height: 150px;
             border-radius: 50%;
@@ -60,203 +42,485 @@
             border: 2px solid #eee;
         }
 
-        .form-group {
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .form-group input[type=text] {
+        .profile-info {
+            text-align: left;
             width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            background-color: #0f0347;
-            color: #fff;
+            margin-bottom: 20px;
         }
 
-        .form-group button {
-            width: 100%;
-            padding: 10px;
+        .profile-info p {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+
+        .profile-info strong {
+            display: inline-block;
+            width: 150px; /* Фиксированная ширина для лейблов */
+            text-align: right; /* Выравнивание лейблов по правому краю */
+            margin-right: 10px;
+        }
+
+        .edit-button {
+            width: 80%;
+            padding: 12px;
             background-color: #007BFF;
             color: #fff;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 20px;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
         }
 
-    .back-button {
-        display: block;
-        margin-top: 30px;
-        padding: 15px 30px;
-        color: #fff;
-        text-decoration: none;
-        background-color: #000000;
-        border-radius: 8px;
-        font-size: 1.2em;
-        font-weight: bold;
-        transition: background-color 0.3s ease;
-        text-align: center;
-    }
+        .edit-button:hover {
+            background-color: #0056b3;
+        }
+
+        .back-button {
+            display: block;
+            margin-top: 30px;
+            padding: 15px 30px;
+            color: #fff;
+            text-decoration: none;
+            background-color: #000000;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            text-align: center;
+        }
+        .back-button:hover {
+            background-color: #333333;
+        }
+
+        .NID-logo {
+            width: 100px;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0);
+            background-color: rgba(255, 255, 255);
+        }
+
+        /* Стили для модального окна (контейнера) */
+        .modal-overlay {
+            display: none; /* Скрыто по умолчанию */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Чтобы было поверх всего */
+        }
+
+        .modal-content {
+            background-color: #1a1a2e;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 500px;
+            color: #fff;
+            position: relative;
+            max-height: 90vh; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 15px;
+        }
+
+        .modal-header img {
+            width: 50px;
+            height: auto;
+            border-radius: 18px;
+            box-shadow: 0 0 10px rgba(0, 0, 0);
+            background-color: rgba(255, 255, 255);
+            margin-right: 10px;
+        }
+
+        .modal-header h3 {
+            flex-grow: 1; /* Чтобы заголовок занимал доступное пространство */
+            margin: 0;
+            text-align: center; /* Центрирование заголовка */
+            font-size: 1.5em;
+            color: #fff;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.8em;
+            cursor: pointer;
+            padding: 0 10px;
+        }
+
+        .modal-body {
+            padding-top: 20px;
+            overflow-y: auto; 
+            flex-grow: 1; 
+        }
+        
+        .modal-body .form-group label {
+            display: block; /* Убедимся, что лейбл занимает всю ширину */
+            margin-bottom: 5px;
+            text-align: left;
+            margin-left: 0;
+        }
+
+        /* Общие стили для инпутов, используемые в том числе в модальном окне */
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="phone"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box; /* Важно, чтобы padding не увеличивал ширину */
+            border-radius: 4px;
+            border: 1px solid #444; /* Более темная рамка */
+            background-color: #0f0347;
+            color: #fff;
+            text-align: left; /* Убедимся, что текст внутри input'а всегда слева */
+        }
+
+        /* Стили для центрирования форм внутри модального окна */
+        .modal-body .form-group {
+            text-align: left; /* Чтобы лейблы и инпуты выравнивались по левому краю внутри их группы */
+            margin-left: auto; /* Центрируем сам form-group внутри modal-body */
+            margin-right: auto;
+            max-width: 80%; /* Ограничиваем максимальную ширину form-group для центрирования */
+            margin-bottom: 15px; /* Сохраняем отступ между группами форм */
+        }
+
+        .modal-body .avatar-selection {
+            margin-bottom: 20px;
+            text-align: center; /* Центрируем аватарки */
+        }
+
+        .modal-body .avatar-selection p {
+            margin-bottom: 10px;
+        }
+
+        .modal-body .avatar-selection img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            margin: 0 5px; /* Уменьшаем margin-right, чтобы было больше места */
+            border: 2px solid transparent;
+        }
+
+        .modal-body .avatar-selection img.selected {
+            border-color: #007BFF;
+        }
+
+        .modal-footer {
+            margin-top: 30px;
+            text-align: center;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+        }
+
+        .modal-footer p {
+            font-size: 0.9em;
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+        
+        .modal-footer button {
+            background-color: #28a745;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            color: #fff; /* Убедимся, что цвет текста кнопки белый */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .modal-footer button:hover {
+            background-color: #218838;
+        }
 
     </style>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
 </head>
 <body>
     <div class="profile-container">
-        <h2 class="gradient-sid">S-ID</h2>
-        <h2>Настройки личного кабинета</h2>
+        <img class="NID-logo" src="./assets/NID-logo.png" alt="N-ID Logo">
+        <h2>Личный кабинет</h2>
         <p id="user-info" style="margin-bottom: 15px; font-size: 0.9em;">S-ID привязан к почте: <span id="user-email"></span></p>
-        <div class="avatar-selection">
-            <p>Выберите аватар:</p>
-            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: center;">
-                <img src="./assets/default-avatar.jpg" alt="Аватар по умолчанию" data-avatar-url="./assets/default-avatar.jpg">
-                <img src="./assets/avatar1.jpg" alt="Аватар 1" data-avatar-url="./assets/avatar1.jpg">
-                <img src="./assets/avatar2.jpg" alt="Аватар 2" data-avatar-url="./assets/avatar2.jpg">
-                <img src="./assets/avatar3.jpg" alt="Аватар 3" data-avatar-url="./assets/avatar3.jpg">
-                <img src="./assets/avatar4.jpg" alt="Аватар 4" data-avatar-url="./assets/avatar4.jpg">
-                <img src="./assets/avatar5.jpg" alt="Аватар 5" data-avatar-url="./assets/avatar5.jpg">
-                <img src="./assets/avatar6.jpg" alt="Аватар 6" data-avatar-url="./assets/avatar6.jpg">
-                <img src="./assets/avatar7.jpg" alt="Аватар 7" data-avatar-url="./assets/avatar7.jpg">
-                <img src="./assets/avatar8.png" alt="Аватар 8" data-avatar-url="./assets/avatar8.png">
-                <img src="./assets/avatar9.png" alt="Аватар 9" data-avatar-url="./assets/avatar9.png">
-            </div>
+
+        <img id="current-profile-avatar" class="profile-avatar-display" src="./assets/default-avatar.jpg" alt="Ваш аватар">
+        
+        <div class="profile-info">
+            <p><strong>Ваш логин:</strong> <span id="display-username">Загрузка...</span></p>
+            <p><strong>Ваш номер телефона:</strong> <span id="display-phone">Загрузка...</span></p>
+            <p style="display: none;"><strong>Ваш email:</strong> <span id="display-email">скрыт</span></p> 
         </div>
-        <img id="profile-avatar-preview" class="profile-avatar-preview" src="./assets/default-avatar.jpg" alt="Текущий аватар">
-        <div class="form-group">
-            <label for="username">Имя пользователя:</label>
-            <input type="text" id="username" placeholder="Введите имя пользователя">
-        </div>
-        <div class="form-group">
-            <button onclick="saveProfile()">Сохранить изменения</button>
-        </div>
-        <div class="form-group">
-            <button onclick="logout()">Выйти из аккаунта</button>
-        </div>
+
+        <button class="edit-button" onclick="openEditModal()">Изменить</button>
+        <button onclick="logout()">Выйти из аккаунта</button>
         <a href="home-page.html" class="back-button">Назад на главную</a>
-        <div id="notification-container"></div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    <div id="edit-profile-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="./assets/SID-logo.png" alt="S-ID Logo">
+                <h3>Редактирование</h3>
+                <button class="close-button" onclick="closeEditModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="avatar-selection">
+                    <p>Выберите аватар:</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: center;">
+                        <img src="./assets/default-avatar.jpg" alt="Аватар по умолчанию" data-avatar-url="./assets/default-avatar.jpg">
+                        <img src="./assets/avatar1.jpg" alt="Аватар 1" data-avatar-url="./assets/avatar1.jpg">
+                        <img src="./assets/avatar2.jpg" alt="Аватар 2" data-avatar-url="./assets/avatar2.jpg">
+                        <img src="./assets/avatar3.jpg" alt="Аватар 3" data-avatar-url="./assets/avatar3.jpg">
+                        <img src="./assets/avatar4.jpg" alt="Аватар 4" data-avatar-url="./assets/avatar4.jpg">
+                        <img src="./assets/avatar5.jpg" alt="Аватар 5" data-avatar-url="./assets/avatar5.jpg">
+                        <img src="./assets/avatar6.jpg" alt="Аватар 6" data-avatar-url="./assets/avatar6.jpg">
+                        <img src="./assets/avatar7.jpg" alt="Аватар 7" data-avatar-url="./assets/avatar7.jpg">
+                        <img src="./assets/avatar8.png" alt="Аватар 8" data-avatar-url="./assets/avatar8.png">
+                        <img src="./assets/avatar9.png" alt="Аватар 9" data-avatar-url="./assets/avatar9.png">
+                    </div>
+                </div>
+                <img id="modal-profile-avatar-preview" class="profile-avatar-display" src="./assets/default-avatar.jpg" alt="Текущий аватар">
 
-        // Firebase конфигурация (из config.js)
+                <div class="form-group">
+                    <label for="modal-username">Логин:</label>
+                    <input type="text" id="modal-username" placeholder="Введите логин">
+                </div>
+                <div class="form-group">
+                    <label for="modal-email">Email:</label>
+                    <input type="email" id="modal-email" placeholder="Введите email">
+                </div>
+                <div class="form-group">
+                    <label for="modal-phone">Номер телефона:</label>
+                    <input type="text" id="modal-phone" placeholder="Введите номер телефона">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <p> © nexus ecosystem</p>
+                <button onclick="saveProfileChanges()">Сохранить изменения</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Firebase конфигурация (ВАЖНО: должна быть та же, что и в auth.html)
         const firebaseConfig = {
-            apiKey: "AIzaSyBIF6s94-IuXl3accPXPQzVYWYciO5D5lg",
-            authDomain: "super-app-1872b.firebaseapp.com",
-            projectId: "super-app-1872b",
-            storageBucket: "super-app-1872b.appspot.com",
-            messagingSenderId: "19947702298",
-            appId: "1:19947702298:web:6d962472fbb3a92b5c69a3",
-            measurementId: "G-5PMEEJFMDT"
+            apiKey: "AIzaSyAP04srkFeyQPsp1iuhn0RwzMav9fhqCRw", // Убедись, что это твои данные!
+            authDomain: "nexus-90a19.firebaseapp.com",
+            projectId: "nexus-90a19",
+            storageBucket: "nexus-90a19.firebasestorage.app",
+            messagingSenderId: "78051357921",
+            appId: "1:78051357921:web:477ab2794b67e0c706b3a0",
+            measurementId: "G-X65550ENG3"
         };
 
-        // Инициализация Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        // Инициализация Firebase (используем compat-версии)
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-        const userInfo = document.getElementById("user-info");
-        const userEmail = document.getElementById("user-email");
-        const avatarImages = document.querySelectorAll('.avatar-selection img');
-        const profileAvatarPreview = document.getElementById('profile-avatar-preview');
-        const usernameInput = document.getElementById("username");
-        const notificationContainer = document.getElementById('notification-container'); // Хотя мы его не используем, лучше оставить, чтобы не было ошибок
-        const defaultAvatarUrl = "./assets/default-avatar.jpg"; // Определяем URL дефолтного аватара
+        // --- Элементы для отображения информации о пользователе на основной странице ---
+        const userInfoText = document.getElementById("user-info");
+        const userEmailSpan = document.getElementById("user-email"); // Почта, привязанная к S-ID
+        const currentProfileAvatar = document.getElementById('current-profile-avatar'); // Аватар на основной странице
 
-        let currentUser;
-        let selectedAvatarUrl = defaultAvatarUrl; // Изначально выбран дефолтный аватар
+        const displayUsername = document.getElementById('display-username');
+        // const displayName = document.getElementById('display-name'); // Эта константа больше не нужна
+        const displayPhone = document.getElementById('display-phone');
+        const displayEmail = document.getElementById('display-email'); // Этот элемент теперь всегда будет содержать "скрыт"
 
-        // Находим элемент дефолтного аватара и добавляем класс 'selected'
-        avatarImages.forEach(img => {
-            if (img.dataset.avatarUrl === defaultAvatarUrl) {
-                img.classList.add('selected');
+
+        // --- Элементы модального окна ---
+        const editProfileModal = document.getElementById('edit-profile-modal');
+        const modalUsernameInput = document.getElementById('modal-username');
+        const modalEmailInput = document.getElementById('modal-email');
+        const modalPhoneInput = document.getElementById('modal-phone');
+        const modalProfileAvatarPreview = document.getElementById('modal-profile-avatar-preview'); // Аватар в модальном окне
+        const modalAvatarImages = document.querySelectorAll('#edit-profile-modal .avatar-selection img'); // Аватары для выбора в модальном окне
+
+        const defaultAvatarUrl = "./assets/default-avatar.jpg"; 
+        let currentUser = null;
+        let selectedAvatarUrl = defaultAvatarUrl; // Аватар, выбранный в модальном окне
+
+        // --- Функции для модального окна ---
+        window.openEditModal = async function() {
+            if (!currentUser) {
+                alert("Пожалуйста, авторизуйтесь для редактирования профиля.");
+                window.location.href = "auth.html";
+                return;
             }
+
+            // Заполняем поля модального окна текущими данными
+            // Теперь modalUsernameInput будет брать значение из displayUsername (логина)
+            modalUsernameInput.value = displayUsername.textContent === 'Не указан' ? '' : displayUsername.textContent.trim();
+            // В modalEmailInput передаем реальный email пользователя (из Firebase Auth)
+            modalEmailInput.value = currentUser.email ? currentUser.email.trim() : ''; 
+            modalPhoneInput.value = displayPhone.textContent === 'Не указан' ? '' : displayPhone.textContent.trim();
+
+            // Устанавливаем текущий аватар в модальном окне
+            modalProfileAvatarPreview.src = currentProfileAvatar.src;
+            selectedAvatarUrl = currentProfileAvatar.src;
+
+            // Отмечаем выбранный аватар в списке модального окна
+            modalAvatarImages.forEach(img => {
+                img.classList.remove('selected');
+                if (img.dataset.avatarUrl === selectedAvatarUrl) {
+                    img.classList.add('selected');
+                }
+            });
+
+            editProfileModal.style.display = 'flex'; // Показать модальное окно
+        };
+
+        window.closeEditModal = function() {
+            editProfileModal.style.display = 'none'; // Скрыть модальное окно
+        };
+
+        // Обработчики кликов для выбора аватара в МОДАЛЬНОМ ОКНЕ
+        modalAvatarImages.forEach(img => {
             img.addEventListener('click', function() {
                 selectedAvatarUrl = this.dataset.avatarUrl;
-                profileAvatarPreview.src = selectedAvatarUrl;
-                // Убираем класс 'selected' у всех аватаров
-                avatarImages.forEach(i => i.classList.remove('selected'));
-                // Добавляем класс 'selected' к выбранному аватару
+                modalProfileAvatarPreview.src = selectedAvatarUrl;
+                modalAvatarImages.forEach(i => i.classList.remove('selected'));
                 this.classList.add('selected');
             });
         });
 
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                userInfo.style.display = "block"; // Показываем блок с информацией
-                userEmail.textContent = user.email; // Отображаем email
+        window.saveProfileChanges = async function() {
+            if (!currentUser) {
+                alert("Ошибка: пользователь не авторизован.");
+                window.location.href = "auth.html";
+                return;
+            }
 
-                const userRef = doc(db, "users", user.uid);
-                const docSnap = await getDoc(userRef);
+            const newUsername = modalUsernameInput.value.trim();
+            const newEmail = modalEmailInput.value.trim();
+            const newPhone = modalPhoneInput.value.trim();
+            
+            // Проверка на заполненность обязательных полей, если необходимо
+            if (!newUsername || !newEmail) {
+                alert("Имя пользователя и Email обязательны для заполнения.");
+                return;
+            }
 
-                // Всегда показываем дефолтный аватар при загрузке
-                profileAvatarPreview.src = defaultAvatarUrl;
-                selectedAvatarUrl = defaultAvatarUrl;
+            const userRef = db.collection("users").doc(currentUser.uid);
 
-                if (docSnap.exists()) {
-                    const userData = docSnap.data();
-                    usernameInput.value = userData.username || "";
-                    // Обновляем selectedAvatarUrl, только если в Firestore есть сохраненный аватар
-                    if (userData.avatarUrl) {
-                        selectedAvatarUrl = userData.avatarUrl;
-                        profileAvatarPreview.src = userData.avatarUrl;
-                    }
-                    // Отмечаем выбранный аватар при загрузке
-                    avatarImages.forEach(img => {
-                        if (img.dataset.avatarUrl === selectedAvatarUrl) {
-                            img.classList.add('selected');
-                        } else {
-                            img.classList.remove('selected');
-                        }
-                    });
-                } else {
-                    console.log("Документ пользователя не найден:", user.uid);
-                    // Убеждаемся, что дефолтный аватар выделен, даже если нет данных пользователя
-                    avatarImages.forEach(img => {
-                        if (img.dataset.avatarUrl === defaultAvatarUrl) {
-                            img.classList.add('selected');
-                        } else {
-                            img.classList.remove('selected');
-                        }
+            try {
+                // Обновляем DisplayName в Firebase Auth, если имя изменилось
+                // Если мы используем modalUsernameInput для логина, то displayName будет логином
+                if (currentUser.displayName !== newUsername) {
+                    await currentUser.updateProfile({
+                        displayName: newUsername
                     });
                 }
+                
+                // Обновляем email в Firebase Auth (если он изменился)
+                // ВНИМАНИЕ: Это вызовет отправку письма подтверждения на новый email
+                // Пользователю придется подтвердить новый email, чтобы он стал активным
+                if (currentUser.email !== newEmail) {
+                    await currentUser.updateEmail(newEmail);
+                    alert("Email обновлен. Пожалуйста, проверьте свой новый Email для подтверждения.");
+                }
+
+                // Обновляем данные в Firestore
+                await userRef.set({ // Используем set вместо update, чтобы создать документ, если его нет
+                    username: newUsername,
+                    email: newEmail, // Сохраняем реальный email в Firestore
+                    phoneNumber: newPhone,
+                    avatarUrl: selectedAvatarUrl
+                }, { merge: true }); // merge: true позволяет обновить существующие поля или создать новые, не перезаписывая весь документ
+                
+                alert('Изменения профиля сохранены!');
+                closeEditModal(); // Закрываем модальное окно после сохранения
+                // Перезагружаем данные на основной странице профиля
+                await loadUserProfileData(currentUser); 
+
+            } catch (error) {
+                console.error("Ошибка при сохранении изменений профиля:", error);
+                let errorMessage = "Произошла ошибка при сохранении изменений.";
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'Этот Email уже используется другим аккаунтом.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Некорректный формат Email.';
+                } else if (error.code === 'auth/requires-recent-login') {
+                    errorMessage = 'Пожалуйста, войдите в систему еще раз, чтобы изменить Email (требуется недавний вход).';
+                }
+                alert(errorMessage + " " + error.message);
+            }
+        };
+
+
+        // --- Основная логика загрузки данных профиля ---
+        async function loadUserProfileData(user) {
+            currentUser = user;
+            userEmailSpan.textContent = user.email; // S-ID привязан к почте
+
+            const userRef = db.collection("users").doc(user.uid);
+            const docSnap = await userRef.get();
+
+            // Сначала устанавливаем дефолтные значения или пустые
+            displayUsername.textContent = 'Не указан';
+            // displayName.textContent = user.displayName || 'Не указано'; // Эта строка больше не нужна
+            displayPhone.textContent = 'Не указан';
+            
+            // EMAIL НА ГЛАВНОЙ СТРАНИЦЕ ВСЕГДА "скрыт"
+            displayEmail.textContent = 'скрыт'; 
+
+            currentProfileAvatar.src = defaultAvatarUrl; // Устанавливаем дефолтный аватар
+
+            if (docSnap.exists) {
+                const userData = docSnap.data();
+                displayUsername.textContent = userData.username || 'Не указан';
+                // displayName.textContent = userData.username || 'Не указано'; // Эта строка больше не нужна
+                displayPhone.textContent = userData.phoneNumber || 'Не указан';
+                
+                // Email на главной странице остается "скрыт", но в Firestore он сохраняется
+                
+                if (userData.avatarUrl) {
+                    currentProfileAvatar.src = userData.avatarUrl;
+                }
             } else {
+                console.log("Документ пользователя не найден в Firestore для UID:", user.uid);
+            }
+        }
+
+        // --- Обработчик состояния аутентификации ---
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                await loadUserProfileData(user); // Загружаем данные при авторизации
+            } else {
+                console.log("Пользователь не авторизован, перенаправляем на auth.html");
                 window.location.href = "auth.html";
             }
         });
 
-        window.saveProfile = async function() {
-            if (currentUser) {
-                const username = usernameInput.value;
-                const userRef = doc(db, "users", currentUser.uid);
-
-                try {
-                    await updateDoc(userRef, { username: username, avatarUrl: selectedAvatarUrl });
-                    alert('Изменения сохранены'); // Уведомление через alert
-
-                } catch (error) {
-                    console.error("Ошибка при обновлении профиля:", error);
-                    alert("Произошла ошибка при обновлении профиля: " + error.message);
-                }
-            } else {
-                alert("Пожалуйста, авторизуйтесь.");
-                window.location.href = "auth.html";
-            }
-        };
-
+        // --- Функция выхода из аккаунта ---
         window.logout = function() {
-            signOut(auth).then(() => {
+            auth.signOut().then(() => {
                 alert("Вы вышли из аккаунта");
-                window.location.href = "home-page.html"; // Перенаправляем на главную после выхода
+                window.location.href = "home-page.html";
             }).catch((error) => {
                 console.error("Ошибка при выходе:", error);
                 alert("Произошла ошибка при выходе.");

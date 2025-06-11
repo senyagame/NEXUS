@@ -2,15 +2,15 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, collection, addDoc, deleteDoc, doc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// Firebase конфигурация (из config.js)
+// === ВАША ПРАВИЛЬНАЯ FIREBASE КОНФИГУРАЦИЯ ДЛЯ ПРОЕКТА nexus-90a19 ===
 const firebaseConfig = {
-    apiKey: "AIzaSyBIF6s94-IuXl3accPXPQzVYWYciO5D5lg",
-    authDomain: "super-app-1872b.firebaseapp.com",
-    projectId: "super-app-1872b",
-    storageBucket: "super-app-1872b.appspot.com",
-    messagingSenderId: "19947702298",
-    appId: "1:19947702298:web:6d962472fbb3a92b5c69a3",
-    measurementId: "G-5PMEEJFMDT"
+  apiKey: "AIzaSyAP04srkFeyQPsp1iuhn0RwzMav9fhqCRw",
+  authDomain: "nexus-90a19.firebaseapp.com",
+  projectId: "nexus-90a19",
+  storageBucket: "nexus-90a19.firebasestorage.app",
+  messagingSenderId: "78051357921",
+  appId: "1:78051357921:web:477ab2794b67e0c706b3a0",
+  measurementId: "G-X65550ENG3"
 };
 
 // Инициализация Firebase
@@ -20,7 +20,7 @@ const db = getFirestore(app);
 
 // Получаем ссылки на модальные окна и элементы
 const postModal = document.getElementById("post-modal");
-const mainModal = document.getElementById("modal"); // Это ваше второе модальное окно
+const mainModal = document.getElementById("modal");
 
 // Глобальные функции для открытия/закрытия модальных окон
 // Эти функции должны быть доступны глобально, так как они вызываются из onclick в HTML
@@ -36,9 +36,6 @@ window.closePostModal = function () {
     }
 };
 
-// Функция для открытия основного модального окна (из modal-window.js, но на всякий случай продублирую)
-// Если у вас уже есть openModal/closeModal в modal-window.js,
-// убедитесь, что они тоже глобальные или вызывают их через addEventListener.
 window.openModal = function () {
     if (mainModal) {
         mainModal.style.display = "block";
@@ -51,29 +48,20 @@ window.closeModal = function () {
     }
 };
 
-
 document.addEventListener("DOMContentLoaded", function () {
     const headerText = document.getElementById("header-text");
-    // const newsText = document.getElementById("news-text"); // Удален, так как его нет в новом HTML
-    // const comingSoonText = document.getElementById("coming-soon"); // Удален, так как его нет в новом HTML
     const postForm = document.getElementById("post-form");
     const postsContainer = document.getElementById("posts-container");
 
-    let currentUserUid = null;
-    let unsubscribe; // Слушатель изменений коллекции заметок
+    let currentUserUid = null; // Переменная для хранения UID текущего пользователя
+    let unsubscribe; // Для отписки от слушателя Firestore
 
-    // Анимации заголовков и текстов, если они есть
-    // Убедитесь, что элементы с ID "news-text" и "coming-soon" существуют в HTML
-    // Если их нет, этот код будет вызывать ошибки.
-    // Судя по последнему HTML, эти элементы были удалены.
-    // Если они нужны, добавьте их обратно в HTML.
-    // Если они больше не используются, удалите этот блок.
-
-    // Пример адаптации, если newsText и comingSoonText все же нужны
+    // Анимации заголовков и текстов - убедитесь, что эти элементы существуют в вашем HTML
+    // Если их нет, этот код можно удалить или закомментировать
     const newsText = document.getElementById("news-text");
     const comingSoonText = document.getElementById("coming-soon");
 
-    if (headerText) { // Проверяем, существует ли элемент, прежде чем добавлять слушателя
+    if (headerText) {
         headerText.addEventListener("animationend", function () {
             if (newsText) {
                 newsText.style.display = "block";
@@ -82,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    if (newsText) { // Проверяем, существует ли элемент
+    if (newsText) {
         newsText.addEventListener("animationend", function () {
             if (comingSoonText) {
                 comingSoonText.style.display = "block";
@@ -91,23 +79,28 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-
     // Обработчик изменения состояния авторизации
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            currentUserUid = user.uid;
-            loadPosts(currentUserUid); // Загружаем заметки при авторизации
+            currentUserUid = user.uid; // Пользователь вошел, сохраняем его UID
+            console.log("🔥 [post.js]: Пользователь вошел. UID:", currentUserUid); // Отладочное сообщение
+            loadPosts(currentUserUid); // Загружаем заметки для этого пользователя
+            // Если у вас есть элементы, которые должны быть видимы только для авторизованных,
+            // можно управлять их видимостью здесь.
         } else {
-            currentUserUid = null;
-            postsContainer.innerHTML = ""; // Очищаем заметки при выходе
+            currentUserUid = null; // Пользователь вышел
+            console.log("❌ [post.js]: Пользователь не вошел."); // Отладочное сообщение
+            postsContainer.innerHTML = ""; // Очищаем заметки
             if (unsubscribe) {
-                unsubscribe(); // Отписываемся от слушателя
+                unsubscribe(); // Отписываемся от слушателя, если он был активен
             }
+            // Если у вас есть элементы, которые должны быть видимы только для неавторизованных,
+            // можно управлять их видимостью здесь.
         }
     });
 
     // Обработка формы добавления поста
-    if (postForm) { // Проверяем, существует ли форма
+    if (postForm) {
         postForm.addEventListener("submit", function (event) {
             event.preventDefault();
             const titleInput = document.getElementById("title");
@@ -116,27 +109,28 @@ document.addEventListener("DOMContentLoaded", function () {
             const title = titleInput.value;
             const description = descriptionInput.value;
 
-            if (currentUserUid) {
+            if (currentUserUid) { // Проверяем, авторизован ли пользователь перед добавлением заметки
+                console.log("Attempting to add post with UID:", currentUserUid); // Отладочное сообщение
                 addPost({ title, description, uid: currentUserUid });
                 closePostModal();
-                titleInput.value = ""; // Очищаем поля формы
+                titleInput.value = "";
                 descriptionInput.value = "";
             } else {
                 alert("Пожалуйста, войдите в аккаунт, чтобы добавить заметку.");
+                console.warn("User not logged in. Cannot add post."); // Отладочное сообщение
             }
         });
     }
-
 
     // Функция добавления поста в Firebase
     async function addPost(post) {
         try {
             const notesCollectionRef = collection(db, "notes");
-            const docRef = await addDoc(notesCollectionRef, post); // Получаем DocumentReference
-            console.log("Заметка добавлена с ID: ", docRef.id);
+            const docRef = await addDoc(notesCollectionRef, post);
+            console.log("✅ Заметка добавлена с ID: ", docRef.id);
         } catch (error) {
-            console.error("Ошибка при добавлении заметки: ", error);
-            alert("Произошла ошибка при добавлении заметки.");
+            console.error("❌ Ошибка при добавлении заметки: ", error);
+            alert("Произошла ошибка при добавлении заметки. Проверьте консоль для деталей.");
         }
     }
 
@@ -144,9 +138,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function displayPost(post) {
         const postElement = document.createElement("div");
         postElement.className = "post";
-        // Убедитесь, что post.nickname существует, если вы хотите его отображать.
-        // В вашем текущем HTML и JS, nickname не добавляется в пост.
-        // Если он нужен, его нужно добавить при создании поста (addPost).
         postElement.innerHTML = `
             <div class="title">${post.title}</div>
             <div class="description">${post.description}</div>
@@ -155,8 +146,7 @@ document.addEventListener("DOMContentLoaded", function () {
         postsContainer.appendChild(postElement);
     }
 
-    // Функция подтверждения удаления поста
-    // Эта функция также должна быть глобальной, так как вызывается из onclick
+    // Функция подтверждения удаления поста (глобальная)
     window.confirmDelete = function (postId) {
         const confirmAction = confirm("Вы уверены, что хотите удалить эту запись? Вы не сможете её восстановить!");
         if (confirmAction) {
@@ -167,28 +157,49 @@ document.addEventListener("DOMContentLoaded", function () {
     // Функция удаления поста из Firebase
     async function deletePost(postId) {
         try {
+            // Проверяем, что пользователь авторизован, прежде чем пытаться удалить
+            // Это также контролируется правилами безопасности Firestore, но полезно для UI.
+            if (!currentUserUid) {
+                alert("Вы должны быть авторизованы, чтобы удалить заметку.");
+                return;
+            }
+
             const noteDocRef = doc(db, "notes", postId);
             await deleteDoc(noteDocRef);
-            console.log("Заметка удалена с ID: ", postId);
+            console.log("🗑️ Заметка удалена с ID: ", postId);
         } catch (error) {
-            console.error("Ошибка при удалении заметки: ", error);
-            alert("Произошла ошибка при удалении заметки.");
+            console.error("❌ Ошибка при удалении заметки: ", error);
+            alert("Произошла ошибка при удалении заметки. Проверьте консоль для деталей.");
         }
     }
 
     // Функция загрузки постов из Firebase для текущего пользователя и подписка на обновления
     function loadPosts(uid) {
         postsContainer.innerHTML = ""; // Очищаем контейнер перед загрузкой
+
+        // Проверяем, что UID не null перед формированием запроса
+        if (!uid) {
+            console.warn("UID is null in loadPosts. Cannot load user-specific notes.");
+            return;
+        }
+
+        // Запрос заметок только для текущего пользователя
         const q = query(collection(db, "notes"), where("uid", "==", uid));
+
+        // Отписываемся от предыдущего слушателя, чтобы избежать дублирования
+        if (unsubscribe) {
+            unsubscribe();
+        }
 
         unsubscribe = onSnapshot(q, (querySnapshot) => {
             postsContainer.innerHTML = ""; // Очищаем контейнер при каждом обновлении
             querySnapshot.forEach((doc) => {
                 displayPost({ id: doc.id, ...doc.data() });
             });
+            console.log("📝 Заметки успешно загружены/обновлены."); // Отладочное сообщение
         }, (error) => {
-            console.error("Ошибка при получении заметок: ", error);
-            alert("Произошла ошибка при загрузке заметок.");
+            console.error("❌ Ошибка при получении заметок: ", error);
+            alert("Произошла ошибка при загрузке заметок. Проверьте консоль для деталей.");
         });
     }
 });
