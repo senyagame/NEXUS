@@ -6,7 +6,9 @@
     <title>Личный кабинет</title>
     <link rel="stylesheet" href="styles.css"> 
     <style>
-        /* Стили из твоего предоставленного кода */
+        /* Вставьте сюда ВЕСЬ код CSS, который я предоставил выше, заменив старый <style> блок */
+        /* ... (ваш новый CSS) ... */
+        /* 1. Общие стили для "ПК-приложения" */
         body {
             background-image: url('./assets/auth_mountains.jpg');
             background-size: cover;
@@ -17,29 +19,42 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            color: #e0e0e0;
+            line-height: 1.6;
         }
 
+        /* 2. Контейнер профиля - имитация окна приложения */
         .profile-container {
-            max-width: 1200px; /* Расширяем контейнер, как обсуждалось */
-            padding: 30px; /* Увеличиваем отступы */
-            color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+            padding: 40px;
+            background-color: rgba(30, 30, 45, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             text-align: center;
             position: relative;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex; /* Используем flexbox для центрирования содержимого */
-            flex-direction: column; /* Элементы будут располагаться вертикально */
-            align-items: center; /* Центрирование по горизонтали */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .profile-avatar-display { /* Новый стиль для отображения текущего аватара */
+        .profile-container h2 {
+            font-size: 2.2em;
+            color: #ffffff;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .profile-avatar-display {
             width: 150px;
             height: 150px;
             border-radius: 50%;
             object-fit: cover;
             margin: 20px auto;
             border: 2px solid #eee;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Добавил тень для аватара */
         }
 
         .profile-info {
@@ -49,95 +64,178 @@
         }
 
         .profile-info p {
-            margin: 10px 0;
-            font-size: 1.1em;
+            margin: 12px 0;
+            font-size: 1.05em;
+            color: #c0c0c0;
         }
 
         .profile-info strong {
             display: inline-block;
-            width: 150px; /* Фиксированная ширина для лейблов */
-            text-align: right; /* Выравнивание лейблов по правому краю */
-            margin-right: 10px;
+            width: 180px;
+            text-align: right;
+            margin-right: 15px;
+            color: #ffffff;
         }
 
-        .edit-button {
-            width: 80%;
-            padding: 12px;
-            background-color: #007BFF;
-            color: #fff;
+        /* 3. Логотип N-ID */
+        .NID-logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 5px;
+        }
+
+        /* 4. Кнопки (универсальный стиль) */
+        .app-button {
+            padding: 14px 30px;
+            font-size: 1.15em;
+            font-weight: 500;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            margin-top: 20px;
-            font-size: 1.1em;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            width: 70%;
+            margin-top: 15px;
+            letter-spacing: 0.5px;
         }
 
-        .edit-button:hover {
-            background-color: #0056b3;
+        .app-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .app-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Специфические цвета для кнопок */
+        .primary-action-button {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+
+        .primary-action-button:hover {
+            background-color: #0069d9;
+        }
+
+        .danger-button {
+            background-color: #dc3545;
+            color: #ffffff;
+        }
+
+        .danger-button:hover {
+            background-color: #c82333;
+        }
+
+        .success-button {
+            background-color: #28a745;
+            color: #ffffff;
+        }
+
+        .success-button:hover {
+            background-color: #218838;
         }
 
         .back-button {
             display: block;
-            margin-top: 30px;
-            padding: 15px 30px;
+            margin-top: 40px;
+            padding: 14px 30px;
             color: #fff;
             text-decoration: none;
-            background-color: #000000;
-            border-radius: 8px;
-            font-size: 1.2em;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
+            background-color: #4a4a5a;
+            border-radius: 6px;
+            font-size: 1.15em;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             text-align: center;
+            width: 70%;
+            letter-spacing: 0.5px;
         }
         .back-button:hover {
-            background-color: #333333;
+            background-color: #5a5a6a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+        .back-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
-        .NID-logo {
-            width: 100px;
-            height: auto;
-            margin-bottom: 20px;
-            border-radius: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0);
-            background-color: rgba(255, 255, 255);
+        /* 5. Инпуты */
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="phone"] {
+            width: 100%;
+            padding: 10px 12px;
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #2a2a3e;
+            color: #f0f0f0;
+            font-size: 1em;
+            text-align: left;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
-        /* Стили для модального окна (контейнера) */
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group input[type="phone"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Стили для центрирования форм внутри модального окна */
+        .modal-body .form-group {
+            text-align: left;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 80%;
+            margin-bottom: 15px;
+        }
+
+        /* 6. Модальное окно */
         .modal-overlay {
-            display: none; /* Скрыто по умолчанию */
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.8);
             justify-content: center;
             align-items: center;
-            z-index: 1000; /* Чтобы было поверх всего */
+            z-index: 1000;
         }
 
         .modal-content {
-            background-color: #1a1a2e;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            background-color: #28283e;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
             width: 90%;
-            max-width: 500px;
+            max-width: 550px;
             color: #fff;
             position: relative;
             max-height: 90vh; 
             display: flex;
             flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 15px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 20px;
         }
 
         .modal-header img {
@@ -150,20 +248,25 @@
         }
 
         .modal-header h3 {
-            flex-grow: 1; /* Чтобы заголовок занимал доступное пространство */
+            flex-grow: 1;
             margin: 0;
-            text-align: center; /* Центрирование заголовка */
-            font-size: 1.5em;
+            text-align: center;
+            font-size: 1.7em;
             color: #fff;
+            font-weight: 600;
         }
 
         .close-button {
             background: none;
             border: none;
-            color: #fff;
-            font-size: 1.8em;
+            color: #e0e0e0;
+            font-size: 2.2em;
             cursor: pointer;
             padding: 0 10px;
+            transition: color 0.2s ease;
+        }
+        .close-button:hover {
+            color: #ffffff;
         }
 
         .modal-body {
@@ -173,85 +276,56 @@
         }
         
         .modal-body .form-group label {
-            display: block; /* Убедимся, что лейбл занимает всю ширину */
+            display: block;
             margin-bottom: 5px;
             text-align: left;
             margin-left: 0;
-        }
-
-        /* Общие стили для инпутов, используемые в том числе в модальном окне */
-        .form-group input[type="text"],
-        .form-group input[type="email"],
-        .form-group input[type="phone"] {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box; /* Важно, чтобы padding не увеличивал ширину */
-            border-radius: 4px;
-            border: 1px solid #444; /* Более темная рамка */
-            background-color: #0f0347;
-            color: #fff;
-            text-align: left; /* Убедимся, что текст внутри input'а всегда слева */
-        }
-
-        /* Стили для центрирования форм внутри модального окна */
-        .modal-body .form-group {
-            text-align: left; /* Чтобы лейблы и инпуты выравнивались по левому краю внутри их группы */
-            margin-left: auto; /* Центрируем сам form-group внутри modal-body */
-            margin-right: auto;
-            max-width: 80%; /* Ограничиваем максимальную ширину form-group для центрирования */
-            margin-bottom: 15px; /* Сохраняем отступ между группами форм */
+            color: #e0e0e0; /* Светлый цвет для лейблов */
         }
 
         .modal-body .avatar-selection {
             margin-bottom: 20px;
-            text-align: center; /* Центрируем аватарки */
+            text-align: center;
         }
 
         .modal-body .avatar-selection p {
             margin-bottom: 10px;
+            color: #e0e0e0;
         }
 
         .modal-body .avatar-selection img {
-            width: 50px;
-            height: 50px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
             object-fit: cover;
             cursor: pointer;
-            margin: 0 5px; /* Уменьшаем margin-right, чтобы было больше места */
+            margin: 0 5px;
             border: 2px solid transparent;
+            transition: border-color 0.2s ease, transform 0.1s ease;
         }
 
         .modal-body .avatar-selection img.selected {
             border-color: #007BFF;
+            transform: scale(1.1);
+        }
+        .modal-body .avatar-selection img:hover:not(.selected) {
+            border-color: #555;
+            transform: scale(1.05);
         }
 
         .modal-footer {
-            margin-top: 30px;
+            margin-top: 35px;
             text-align: center;
-            border-top: 1px solid #333;
-            padding-top: 20px;
+            border-top: 1px solid #444;
+            padding-top: 25px;
         }
 
         .modal-footer p {
-            font-size: 0.9em;
-            color: #aaa;
+            font-size: 0.85em;
+            color: #999;
             margin-bottom: 15px;
         }
         
-        .modal-footer button {
-            background-color: #28a745;
-            padding: 12px 25px;
-            font-size: 1.1em;
-            color: #fff; /* Убедимся, что цвет текста кнопки белый */
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .modal-footer button:hover {
-            background-color: #218838;
-        }
-
     </style>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -263,7 +337,7 @@
     <div class="profile-container">
         <img class="NID-logo" src="./assets/NID-logo.png" alt="N-ID Logo">
         <h2>Личный кабинет</h2>
-        <p id="user-info" style="margin-bottom: 15px; font-size: 0.9em;">N-ID привязан к почте: <span id="user-email"></span></p>
+        <p id="user-info" style="margin-bottom: 15px; font-size: 0.9em; color: #c0c0c0;">N-ID привязан к почте: <span id="user-email"></span></p>
 
         <img id="current-profile-avatar" class="profile-avatar-display" src="./assets/default-avatar.jpg" alt="Ваш аватар">
         
@@ -273,8 +347,8 @@
             <p style="display: none;"><strong>Ваш email:</strong> <span id="display-email">скрыт</span></p> 
         </div>
 
-        <button class="edit-button" onclick="openEditModal()">Изменить</button>
-        <button onclick="logout()">Выйти из аккаунта</button>
+        <button class="app-button primary-action-button" onclick="openEditModal()">Изменить</button>
+        <button class="app-button danger-button" onclick="logout()">Выйти из аккаунта</button>
         <a href="home-page.html" class="back-button">Назад на главную</a>
     </div>
 
@@ -318,7 +392,7 @@
             </div>
             <div class="modal-footer">
                 <p> © nexus ecosystem</p>
-                <button onclick="saveProfileChanges()">Сохранить изменения</button>
+                <button class="app-button success-button" onclick="saveProfileChanges()">Сохранить изменения</button>
             </div>
         </div>
     </div>
@@ -347,7 +421,6 @@
         const currentProfileAvatar = document.getElementById('current-profile-avatar'); // Аватар на основной странице
 
         const displayUsername = document.getElementById('display-username');
-        // const displayName = document.getElementById('display-name'); // Эта константа больше не нужна
         const displayPhone = document.getElementById('display-phone');
         const displayEmail = document.getElementById('display-email'); // Этот элемент теперь всегда будет содержать "скрыт"
 
@@ -373,9 +446,7 @@
             }
 
             // Заполняем поля модального окна текущими данными
-            // Теперь modalUsernameInput будет брать значение из displayUsername (логина)
             modalUsernameInput.value = displayUsername.textContent === 'Не указан' ? '' : displayUsername.textContent.trim();
-            // В modalEmailInput передаем реальный email пользователя (из Firebase Auth)
             modalEmailInput.value = currentUser.email ? currentUser.email.trim() : ''; 
             modalPhoneInput.value = displayPhone.textContent === 'Не указан' ? '' : displayPhone.textContent.trim();
 
@@ -429,7 +500,6 @@
 
             try {
                 // Обновляем DisplayName в Firebase Auth, если имя изменилось
-                // Если мы используем modalUsernameInput для логина, то displayName будет логином
                 if (currentUser.displayName !== newUsername) {
                     await currentUser.updateProfile({
                         displayName: newUsername
@@ -437,24 +507,21 @@
                 }
                 
                 // Обновляем email в Firebase Auth (если он изменился)
-                // ВНИМАНИЕ: Это вызовет отправку письма подтверждения на новый email
-                // Пользователю придется подтвердить новый email, чтобы он стал активным
                 if (currentUser.email !== newEmail) {
                     await currentUser.updateEmail(newEmail);
                     alert("Email обновлен. Пожалуйста, проверьте свой новый Email для подтверждения.");
                 }
 
                 // Обновляем данные в Firestore
-                await userRef.set({ // Используем set вместо update, чтобы создать документ, если его нет
+                await userRef.set({
                     username: newUsername,
-                    email: newEmail, // Сохраняем реальный email в Firestore
+                    email: newEmail,
                     phoneNumber: newPhone,
                     avatarUrl: selectedAvatarUrl
-                }, { merge: true }); // merge: true позволяет обновить существующие поля или создать новые, не перезаписывая весь документ
+                }, { merge: true });
                 
                 alert('Изменения профиля сохранены!');
-                closeEditModal(); // Закрываем модальное окно после сохранения
-                // Перезагружаем данные на основной странице профиля
+                closeEditModal();
                 await loadUserProfileData(currentUser); 
 
             } catch (error) {
@@ -473,44 +540,42 @@
 
 
         async function loadUserProfileData(user) {
-    currentUser = user;
-    console.log("--- Загрузка данных профиля ---");
-    console.log("Current user UID:", user.uid);
-    console.log("Current user Email:", user.email);
-    userEmailSpan.textContent = user.email;
+            currentUser = user;
+            console.log("--- Загрузка данных профиля ---");
+            console.log("Current user UID:", user.uid);
+            console.log("Current user Email:", user.email);
+            userEmailSpan.textContent = user.email;
 
-    const userRef = db.collection("users").doc(user.uid);
-    console.log("Firestore User Ref Path:", userRef.path); // Проверить путь
-    console.log("Attempting to get document from Firestore...");
+            const userRef = db.collection("users").doc(user.uid);
+            console.log("Firestore User Ref Path:", userRef.path);
+            console.log("Attempting to get document from Firestore...");
 
-    try {
-        const docSnap = await userRef.get(); // Эта строка выдает ошибку
+            try {
+                const docSnap = await userRef.get();
 
-        if (docSnap.exists) {
-            console.log("User document exists! Data:", docSnap.data());
-            const userData = docSnap.data();
-            displayUsername.textContent = userData.username || 'Не указан';
-            displayPhone.textContent = userData.phoneNumber || 'Не указан';
-            if (userData.avatarUrl) {
-                currentProfileAvatar.src = userData.avatarUrl;
+                if (docSnap.exists) {
+                    console.log("User document exists! Data:", docSnap.data());
+                    const userData = docSnap.data();
+                    displayUsername.textContent = userData.username || 'Не указан';
+                    displayPhone.textContent = userData.phoneNumber || 'Не указан';
+                    if (userData.avatarUrl) {
+                        currentProfileAvatar.src = userData.avatarUrl;
+                    }
+                } else {
+                    console.warn("User document DOES NOT exist in Firestore for UID:", user.uid);
+                    displayUsername.textContent = 'Не указан';
+                    displayPhone.textContent = 'Не указан';
+                    currentProfileAvatar.src = defaultAvatarUrl;
+                }
+            } catch (error) {
+                console.error("⛔️ ОШИБКА FIREBASE ПРИ ЗАГРУЗКЕ ПРОФИЛЯ:", error);
             }
-        } else {
-            console.warn("User document DOES NOT exist in Firestore for UID:", user.uid);
-            // Установить дефолтные значения, если документа нет
-            displayUsername.textContent = 'Не указан';
-            displayPhone.textContent = 'Не указан';
-            currentProfileAvatar.src = defaultAvatarUrl;
         }
-    } catch (error) {
-        console.error("⛔️ ОШИБКА FIREBASE ПРИ ЗАГРУЗКЕ ПРОФИЛЯ:", error);
-        // Возможно, здесь можно вывести более дружелюбное сообщение пользователю
-    }
-}
 
         // --- Обработчик состояния аутентификации ---
         auth.onAuthStateChanged(async (user) => {
             if (user) {
-                await loadUserProfileData(user); // Загружаем данные при авторизации
+                await loadUserProfileData(user);
             } else {
                 console.log("Пользователь не авторизован, перенаправляем на auth.html");
                 window.location.href = "auth.html";
