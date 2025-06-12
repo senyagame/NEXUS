@@ -13,9 +13,11 @@ service cloud.firestore {
       allow delete: if request.auth != null && request.auth.uid == resource.data.uid;
     }
 
-    // === НОВЫЕ ПРАВИЛА ДЛЯ КОЛЛЕКЦИИ 'users' ===
+    // === ИЗМЕНЕННЫЕ ПРАВИЛА ДЛЯ КОЛЛЕКЦИИ 'users' ===
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null && request.auth.uid == userId; // Чтение своего профиля
+      allow write: if request.auth != null && request.auth.uid == userId; // Запись своего профиля
+      allow read: if true; // Это временно разрешит чтение для всех.
     }
   }
 }
