@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Личный кабинет</title>
-    <link rel="stylesheet" href="styles.css">
     <style>
         /* 1. Общие стили для "ПК-приложения" */
         body {
@@ -349,6 +348,26 @@
             opacity: 0;
             pointer-events: none;
             /* Отключаем взаимодействие с элементами под оверлеем */
+        }
+                .header-logo {
+            max-height: 50px;
+            width: auto;
+        }
+
+        .header-logo-mobile {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header-logo {
+                display: none;
+            }
+
+            .header-logo-mobile {
+                display: block;
+                max-height: 80px;
+                width: auto;
+            }
         }
     </style>
 
