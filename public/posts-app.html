@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 </head>
+
 <body>
     <header id="main-header">
         <a href="./home-page.html" class="return-link">
@@ -19,6 +21,9 @@
         </h3>
         <div class="header-right-actions">
             <img src="./assets/information-icon.png" alt="Information Icon" id="info-icon" onclick="openModal()">
+            <a style="margin-left: 20px;" href="./auth.html" class="profile-button">
+                <img src="./assets/Profile2.png" alt="Avatar" id="info-icon">
+            </a>
         </div>
     </header>
     <main>
@@ -46,13 +51,17 @@
             </div>
             <h3>Информация о Nexus Notes App</h3>
             <p>Создайте быструю заметку одной кнопкой!</p>
-            <p>Notes App использует нашу базу данных S-ID для хранения ваших заметок, поэтому вы имеете досуп к ним на любом устройстве.</p>
-            <p>Вы можете удалить заметку и через само приложение, нажав кнопку "Удалить" и подтвердив удаление нажав на "Ок".</p>
+            <p>Notes App использует нашу базу данных S-ID для хранения ваших заметок, поэтому вы имеете досуп к ним на
+                любом устройстве.</p>
+            <p>Вы можете удалить заметку и через само приложение, нажав кнопку "Удалить" и подтвердив удаление нажав на
+                "Ок".</p>
             <p class="attention">Будтье внимательны! После удаления заметки вы не сможете её восстановить!</p>
+            <p class="google-form">Остались вопросы? Обратитесь в поддержку по кнопке на главном экране приложения!</p>
             <a class="developer" href="https://github.com/senyagame">©️ Разработчик: senyagame (ссылка на GitHub)😺</a>
         </div>
     </div>
     <script type="module" src="posts.js"></script>
     <script src="./modal-window.js"></script>
 </body>
+
 </html>

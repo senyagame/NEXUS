@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music App</title>
     <link rel="stylesheet" href="styles/music-styles.css">
 </head>
+
 <body>
     <header id="main-header">
         <a href="./home-page.html" class="return-link">
@@ -16,6 +18,9 @@
         </h3>
         <div class="header-right-actions">
             <img src="./assets/information-icon.png" alt="Information Icon" id="info-icon" onclick="openModal()">
+            <a style="margin-left: 20px;" href="./auth.html" class="profile-button">
+                <img src="./assets/Profile.png" alt="Avatar" id="info-icon">
+            </a>
         </div>
     </header>
     <main>
@@ -28,15 +33,19 @@
                 </div>
                 <h3>Информация о приложении Music app 🎵</h3>
                 <p>В Music App мы используем музыку только от исполнителя scara-kru$her</p>
-                <p>Наше приложение использует API сервисов Яндекс, поэтому данное приложение доступно только для стран у которых есть Яндекс (Yandex)</p>
-                <p>В приложении есть возможность поиска треков, но только тех, которые были добавлены! Вы можете спокойно добавить любую песню в любимые в нашем приложении или на Яндекс музыке.</p>
+                <p>Наше приложение использует API сервисов Яндекс, поэтому данное приложение доступно только для стран у
+                    которых есть Яндекс (Yandex)</p>
+                <p>В приложении есть возможность поиска треков, но только тех, которые были добавлены! Вы можете
+                    спокойно добавить любую песню в любимые в нашем приложении или на Яндекс музыке.</p>
                 <p>Перейти на сайт Яндекс Музыки вы можете по кнопке ниже.</p>
-                <a href="https://music.yandex.kz/"><img src="./assets/Yandex_Music_logo.png" alt="yandex music" class="logo-Yandex_music"></a>
+                <a href="https://music.yandex.kz/"><img src="./assets/Yandex_Music_logo.png" alt="yandex music"
+                        class="logo-Yandex_music"></a>
                 <p>Если хотите с нами сотрудничать, напишите нам на почту:
                     <span class="email" onclick="copyEmail()">senyaentertainment@yandex.ru</span>📩
                 </p>
-                <p class="google-form">Остались вопросы? Заполните эту форму: <a href="https://forms.gle/K3ZE3YuNEK689UGY7">google form</a></p>
-                <a class="developer" href="https://github.com/senyagame">©️ Разработчик: senyagame (ссылка на GitHub)😺</a>
+                <p class="google-form">Остались вопросы? Обратитесь в поддержку по кнопке на главном экране приложения!</p>
+                <a class="developer" href="https://github.com/senyagame">©️ Разработчик: senyagame (ссылка на
+                    GitHub)😺</a>
             </div>
         </div>
         <section id="search-section">
@@ -47,7 +56,10 @@
         </section>
 
         <div id="music-players">
-            <div class="music-container" data-song="Intro" data-artist="Dreamtale, Hans Zimmer" data-date="29.12.24" data-duration="4:06" data-img="./assets/Intro_005.jpg" data-yandex-link="https://music.yandex.kz/album/4418483/track/35431736" data-audio-src="./assets/music/intro.wav">
+            <div class="music-container" data-song="Intro" data-artist="Dreamtale, Hans Zimmer" data-date="29.12.24"
+                data-duration="4:06" data-img="./assets/Intro_005.jpg"
+                data-yandex-link="https://music.yandex.kz/album/4418483/track/35431736"
+                data-audio-src="./assets/music/intro.wav">
                 <div class="song-title-container">
                     <hr>
                     <p class="song-title">Intro</p>
@@ -67,13 +79,17 @@
                     </div>
                     <audio id="audio-player-1" src="./assets/Intro.wav"></audio>
 
-                    <a href="https://music.yandex.kz/album/4418483/track/35431736" target="_blank" class="goto-yandex-btn">
+                    <a href="https://music.yandex.kz/album/4418483/track/35431736" target="_blank"
+                        class="goto-yandex-btn">
                         Альбом на Яндекс Музыке
                     </a>
                 </div>
-                </div>
+            </div>
 
-            <div class="music-container" data-song="Horns 2.0" data-artist="Groove Delight, Evoxx" data-date="29.12.24" data-duration="2:29" data-img="./assets/Horns_004.jpg" data-yandex-link="https://music.yandex.kz/album/8039282/track/55212174" data-audio-src="./assets/Horns_2.0.mp3">
+            <div class="music-container" data-song="Horns 2.0" data-artist="Groove Delight, Evoxx" data-date="29.12.24"
+                data-duration="2:29" data-img="./assets/Horns_004.jpg"
+                data-yandex-link="https://music.yandex.kz/album/8039282/track/55212174"
+                data-audio-src="./assets/Horns_2.0.mp3">
                 <div class="song-title-container">
                     <hr>
                     <p class="song-title">Horns 2.0</p>
@@ -93,13 +109,17 @@
                     </div>
                     <audio id="audio-player-2" src="./assets/Horns_2.0.mp3"></audio>
 
-                    <a href="https://music.yandex.kz/album/8039282/track/55212174" target="_blank" class="goto-yandex-btn">
+                    <a href="https://music.yandex.kz/album/8039282/track/55212174" target="_blank"
+                        class="goto-yandex-btn">
                         Альбом на Яндекс Музыке
                     </a>
                 </div>
-                </div>
+            </div>
 
-            <div class="music-container" data-song="Final Boss" data-artist="scara-kru$her" data-date="29.12.24" data-duration="1:20" data-img="./assets/FB-sp-001.jpg" data-yandex-link="https://music.yandex.ru/album/35659381/track/136733632" data-audio-src="./assets/final_boss.wav">
+            <div class="music-container" data-song="Final Boss" data-artist="scara-kru$her" data-date="29.12.24"
+                data-duration="1:20" data-img="./assets/FB-sp-001.jpg"
+                data-yandex-link="https://music.yandex.ru/album/35659381/track/136733632"
+                data-audio-src="./assets/final_boss.wav">
                 <div class="song-title-container">
                     <hr>
                     <p class="song-title">Final Boss</p>
@@ -120,13 +140,17 @@
                     </div>
                     <audio id="audio-player-4" src="./assets/final_boss.wav"></audio>
 
-                    <a href="https://music.yandex.ru/album/35659381/track/136733632" target="_blank" class="goto-yandex-btn">
+                    <a href="https://music.yandex.ru/album/35659381/track/136733632" target="_blank"
+                        class="goto-yandex-btn">
                         Альбом на Яндекс Музыке
                     </a>
                 </div>
-                </div>
+            </div>
 
-            <div class="music-container" data-song="Adrenaline Night Funk" data-artist="scara-kru$her" data-date="20.07.24" data-duration="2:30" data-img="./assets/ANF-sp-002.jpg" data-yandex-link="https://music.yandex.ru/album/32207638/track/128397158" data-audio-src="./assets/Adrenaline_night_funk.wav">
+            <div class="music-container" data-song="Adrenaline Night Funk" data-artist="scara-kru$her"
+                data-date="20.07.24" data-duration="2:30" data-img="./assets/ANF-sp-002.jpg"
+                data-yandex-link="https://music.yandex.ru/album/32207638/track/128397158"
+                data-audio-src="./assets/Adrenaline_night_funk.wav">
                 <div class="song-title-container">
                     <hr>
                     <p class="song-title">Adrenaline Night Funk</p>
@@ -147,13 +171,17 @@
                     </div>
                     <audio id="audio-player-5" src="./assets/Adrenaline_night_funk.wav"></audio>
 
-                    <a href="https://music.yandex.ru/album/32207638/track/128397158" target="_blank" class="goto-yandex-btn">
+                    <a href="https://music.yandex.ru/album/32207638/track/128397158" target="_blank"
+                        class="goto-yandex-btn">
                         Альбом на Яндекс Музыке
                     </a>
                 </div>
-                </div>
+            </div>
 
-            <div class="music-container" data-song="Legendary Dombra" data-artist="scara-kru$her" data-date="07.03.24" data-duration="1:20" data-img="./assets/LD-sp-003.jpg" data-yandex-link="https://music.yandex.ru/album/31931296/track/127729662" data-audio-src="./assets/Legendary_Dombra.mp3">
+            <div class="music-container" data-song="Legendary Dombra" data-artist="scara-kru$her" data-date="07.03.24"
+                data-duration="1:20" data-img="./assets/LD-sp-003.jpg"
+                data-yandex-link="https://music.yandex.ru/album/31931296/track/127729662"
+                data-audio-src="./assets/Legendary_Dombra.mp3">
                 <div class="song-title-container">
                     <hr>
                     <p class="song-title">Legendary Dombra</p>
@@ -174,21 +202,24 @@
                     </div>
                     <audio id="audio-player-6" src="./assets/Legendary_Dombra.mp3"></audio>
 
-                    <a href="https://music.yandex.ru/album/31931296/track/127729662" target="_blank" class="goto-yandex-btn">
+                    <a href="https://music.yandex.ru/album/31931296/track/127729662" target="_blank"
+                        class="goto-yandex-btn">
                         Альбом на Яндекс Музыке
                     </a>
                 </div>
-                </div>
+            </div>
         </div>
     </main>
     <footer class="footer">
         <h5>Музыкальные плееры (Яндекс музыка) заряжены:</h5>
         <a href="https://yandex.kz/"><img src="./assets/Yandex-logo.png" alt="yandex" class="footer-logo"></a>
         <h5>и</h5>
-        <a href="https://music.yandex.kz/"><img src="./assets/Yandex_Music_logo.png" alt="yandex music" class="logo-Yandex_music"></a>
+        <a href="https://music.yandex.kz/"><img src="./assets/Yandex_Music_logo.png" alt="yandex music"
+                class="logo-Yandex_music"></a>
     </footer>
     <script type="module" src="script.js"></script>
     <script type="module" src="music.js"></script>
     <script src="./modal-window.js"></script>
 </body>
+
 </html>

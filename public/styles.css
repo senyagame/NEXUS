@@ -88,6 +88,7 @@ body {
     width: 32px; /* Размер иконки */
     height: 32px;
     cursor: pointer;
+    color: #ffffff;
 }
 
 /* Отступ для основного контента, чтобы он не перекрывался хедером */
@@ -1648,7 +1649,6 @@ header h1 {
 }
 
 .custom-player .custom-progress-bar {
-    -webkit-appearance: none;
     width: 100%;
     height: 8px;
     background: linear-gradient(to right, #a0f0ed, #007bff); /* Градиентный фон */

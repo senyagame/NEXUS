@@ -1,12 +1,106 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Приложение "Погода"</title>
     <link rel="stylesheet" href="styles/weather-styles.css">
+    <style>
+        /* Стили для модального окна */
+        .modal {
+            display: none;
+            /* Скрыто по умолчанию */
+            position: fixed;
+            /* Оставаться на месте */
+            z-index: 2000;
+            /* Поверх всего */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Полная ширина */
+            height: 100%;
+            /* Полная высота */
+            overflow: auto;
+            /* Включить прокрутку, если содержимое слишком большое */
+            background-color: rgba(0, 0, 0, 0.7);
+            /* Черный фон с прозрачностью */
+            padding-top: 100px;
+            /* Отступ сверху для центрирования */
+            box-sizing: border-box;
+        }
+
+        .modal-content {
+            background-color: #0e0a4f;
+            margin: 5% auto;
+            /* 5% сверху/снизу, auto по бокам для центрирования */
+            padding: 25px;
+            border: 1px solid #888;
+            width: 85%;
+            /* Ширина модального окна */
+            max-width: 500px;
+            /* Максимальная ширина */
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            box-sizing: border-box;
+        }
+
+        .modal-content h3 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .modal-content p {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .modal-content .email {
+            color: #8a2be2;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .modal-content .google-form a,
+        .modal-content .developer {
+            color: #8a2be2;
+            text-decoration: none;
+            font-weight: bold;
+            display: block;
+            /* Ссылки как блоки для отдельных строк */
+            margin-top: 10px;
+        }
+
+        .modal-content .google-form a:hover,
+        .modal-content .developer:hover,
+        .modal-content .email:hover {
+            color: #aa5ce2;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 30px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
-<body id="weather-page-body"> <div id="background-clouds">
+
+<body id="weather-page-body">
+    <div id="background-clouds">
         <span class="cloud-effect c1"></span>
         <span class="cloud-effect c2"></span>
         <span class="cloud-effect c3"></span>
@@ -16,7 +110,7 @@
         <a href="./home-page.html" class="return-link">
             &#8592; </a>
         <h3 id="header-text">
-            <span class="full-title">NEXUS 🌤️ WEATHER</span>
+            <span class="full-title">🌤️ WEATHER</span>
         </h3>
         <div class="header-right-actions">
             <img src="./assets/information-icon.png" alt="Information Icon" id="info-icon" onclick="openModal()">
@@ -29,8 +123,27 @@
             <p id="feels-like"></p>
             <p id="description"></p>
         </div>
+        <div id="modal" class="modal" style="padding-top: 140px;">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <div id="cat-facenonload">
+                    <div class="eye-left"></div>
+                    <div class="eye-right"></div>
+                </div>
+                <h3>Информация о приложении</h3>
+                <p>Наше приложение Weather использует API Openweathermap и мы не можем получить данные о вашей
+                    геолокации, это получает именно OpenWeatherMap</p>
+                <p>С жалобами на работу приложения или ваших предложений, пишите на нашу почту:
+                    <span class="email" onclick="copyEmail()">senyaentertainment@yandex.ru</span>📩
+                </p>
+                <p class="google-form">Остались вопросы? Обратитесь в поддержку по кнопке на главном экране приложения!</p>
+                <a class="developer" href="https://github.com/senyagame">©️ Разработчик: senyagame (ссылка на
+                    GitHub)😺</a>
+            </div>
+        </div>
     </main>
     <script src="weather.js"></script>
     <script src="modal-window.js"></script>
 </body>
+
 </html>
