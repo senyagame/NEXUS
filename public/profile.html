@@ -349,7 +349,8 @@
             pointer-events: none;
             /* Отключаем взаимодействие с элементами под оверлеем */
         }
-                .header-logo {
+
+        .header-logo {
             max-height: 50px;
             width: auto;
         }
@@ -406,7 +407,8 @@
         </div>
 
         <button class="app-button primary-action-button" onclick="openEditModal()">Изменить</button>
-        <button class="app-button danger-button" onclick="logout()">Выйти из аккаунта</button>
+        <button class="app-button primary-action-button" onclick="logout()">Выйти из аккаунта</button>
+        <button class="app-button danger-button" onclick="deleteAccount()">Удалить аккаунт</button>
         <a href="home-page.html" class="back-button">Назад на главную</a>
     </div>
 
@@ -657,6 +659,16 @@
                 alert("Произошла ошибка при выходе.");
             });
         };
+
+        function deleteAccount() {
+            const userConfirmed = confirm("Удалить аккаунт можно только Nexus ID.\n\nХотите перейти на страницу удаления аккаунта?");
+
+            if (userConfirmed) {
+                window.location.href = "https://nexus-id-site.vercel.app/delete-account.html";
+            } else {
+                console.log("Пользователь отменил удаление аккаунта.");
+            }
+        }
 
         // --- Обработчик окончания видео загрузки, контролирующий ВРЕМЯ ПОКАЗА ВИДЕО ---
         document.addEventListener("DOMContentLoaded", () => {
