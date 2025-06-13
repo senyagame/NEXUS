@@ -165,7 +165,7 @@
             <p>Вы вошли как: <span id="user-email"></span></p>
             <button id="logout-button">Выйти из S-ID</button>
         </div>
-        <a href="profile.html" id="back-to-profile-link" class="back-to-profile" style="display: none; color: #000000; font-weight: 700;">Вернуться в профиль</a>
+        <a href="profile.html" id="back-to-profile-link" class="back-to-profile" style="display: none; color: #000000; font-weight: 700;">Личный кабинет</a>
     </div>
     <script>
         // Инициализация Firebase SDK
@@ -387,7 +387,7 @@
                         errorMessage = 'Некорректный формат Email.';
                         break;
                     case 'auth/user-disabled':
-                        errorMessage = 'Пользователь заблокирован.';
+                        errorMessage = 'Аккаунт отключен.';
                         break;
                     case 'auth/user-not-found': // Эта ошибка Firebase может быть вызвана, если email, полученный из Firestore, не соответствует пользователю в Authentication
                         errorMessage = 'Неверные данные для входа.';
