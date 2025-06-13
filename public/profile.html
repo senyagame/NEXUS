@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Личный кабинет</title>
-    <link rel="stylesheet" href="styles.css">    
+    <link rel="stylesheet" href="styles.css">
     <style>
         /* 1. Общие стили для "ПК-приложения" */
         body {
@@ -52,7 +53,8 @@
             object-fit: cover;
             margin: 20px auto;
             border: 2px solid #686868;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Добавил тень для аватара */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            /* Добавил тень для аватара */
         }
 
         .profile-info {
@@ -73,17 +75,6 @@
             text-align: right;
             margin-right: 15px;
             color: #000000;
-        }
-
-        /* 3. Логотип N-ID */
-        .NID-logo {
-            width: 80px;
-            height: auto;
-            margin-bottom: 30px;
-            border-radius: 15px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 5px;
         }
 
         /* 4. Кнопки (универсальный стиль) */
@@ -155,11 +146,13 @@
             width: 70%;
             letter-spacing: 0.5px;
         }
+
         .back-button:hover {
             background-color: #5a5a6a;
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
         }
+
         .back-button:active {
             transform: translateY(0);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -221,7 +214,7 @@
             max-width: 550px;
             color: #fff;
             position: relative;
-            max-height: 90vh; 
+            max-height: 90vh;
             display: flex;
             flex-direction: column;
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -263,22 +256,24 @@
             padding: 0 10px;
             transition: color 0.2s ease;
         }
+
         .close-button:hover {
             color: #ffffff;
         }
 
         .modal-body {
             padding-top: 20px;
-            overflow-y: auto; 
-            flex-grow: 1; 
+            overflow-y: auto;
+            flex-grow: 1;
         }
-        
+
         .modal-body .form-group label {
             display: block;
             margin-bottom: 5px;
             text-align: left;
             margin-left: 0;
-            color: #e0e0e0; /* Светлый цвет для лейблов */
+            color: #e0e0e0;
+            /* Светлый цвет для лейблов */
         }
 
         .modal-body .avatar-selection {
@@ -306,6 +301,7 @@
             border-color: #007BFF;
             transform: scale(1.1);
         }
+
         .modal-body .avatar-selection img:hover:not(.selected) {
             border-color: #555;
             transform: scale(1.05);
@@ -331,12 +327,15 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgb(255, 255, 255); /* Белый фон, как в твоем примере */
+            background: rgb(255, 255, 255);
+            /* Белый фон, как в твоем примере */
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 9999; /* Убедимся, что он поверх всего */
-            transition: opacity 0.5s ease-out; /* Время исчезновения 2 секунды */
+            z-index: 9999;
+            /* Убедимся, что он поверх всего */
+            transition: opacity 0.5s ease-out;
+            /* Время исчезновения 2 секунды */
         }
 
         #loading-video {
@@ -348,9 +347,9 @@
         /* Скрытие видео (для JavaScript) */
         .hidden {
             opacity: 0;
-            pointer-events: none; /* Отключаем взаимодействие с элементами под оверлеем */
+            pointer-events: none;
+            /* Отключаем взаимодействие с элементами под оверлеем */
         }
-        
     </style>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -358,6 +357,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 </head>
+
 <body>
     <div id="video-overlay">
         <video id="loading-video" autoplay muted playsinline>
@@ -367,16 +367,23 @@
     </div>
 
     <div class="profile-container">
-        <img class="NID-logo" src="./assets/NID-logo.png" alt="N-ID Logo">
+        <div class="header-content">
+            <img src="./assets/NID-long-logo.png" alt="Nexus ID Logo" class="header-logo">
+        </div>
+        <div class="header-content-mobile">
+            <img src="./assets/NID-logo.png" alt="Nexus ID Logo" class="header-logo-mobile">
+        </div>
         <h2>Личный кабинет</h2>
-        <p id="user-info" style="margin-bottom: 15px; font-size: 0.9em; color: #000000;">N-ID привязан к почте: <span id="user-email"></span></p>
+        <p id="user-info" style="margin-bottom: 15px; font-size: 0.9em; color: #000000;">N-ID привязан к почте: <span
+                id="user-email"></span></p>
 
-        <img id="current-profile-avatar" class="profile-avatar-display" src="./assets/default-avatar.jpg" alt="Ваш аватар">
-        
+        <img id="current-profile-avatar" class="profile-avatar-display" src="./assets/default-avatar.jpg"
+            alt="Ваш аватар">
+
         <div class="profile-info">
             <p><strong>Ваш логин:</strong> <span id="display-username">Загрузка...</span></p>
             <p><strong>Ваш номер телефона:</strong> <span id="display-phone">Загрузка...</span></p>
-            <p style="display: none;"><strong>Ваш email:</strong> <span id="display-email">скрыт</span></p>  
+            <p style="display: none;"><strong>Ваш email:</strong> <span id="display-email">скрыт</span></p>
         </div>
 
         <button class="app-button primary-action-button" onclick="openEditModal()">Изменить</button>
@@ -394,8 +401,10 @@
             <div class="modal-body">
                 <div class="avatar-selection">
                     <p>Выберите аватар:</p>
-                    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: center;">
-                        <img src="./assets/default-avatar.jpg" alt="Аватар по умолчанию" data-avatar-url="./assets/default-avatar.jpg">
+                    <div
+                        style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: center;">
+                        <img src="./assets/default-avatar.jpg" alt="Аватар по умолчанию"
+                            data-avatar-url="./assets/default-avatar.jpg">
                         <img src="./assets/avatar1.jpg" alt="Аватар 1" data-avatar-url="./assets/avatar1.jpg">
                         <img src="./assets/avatar2.jpg" alt="Аватар 2" data-avatar-url="./assets/avatar2.jpg">
                         <img src="./assets/avatar3.jpg" alt="Аватар 3" data-avatar-url="./assets/avatar3.jpg">
@@ -407,7 +416,8 @@
                         <img src="./assets/avatar9.png" alt="Аватар 9" data-avatar-url="./assets/avatar9.png">
                     </div>
                 </div>
-                <img id="modal-profile-avatar-preview" class="profile-avatar-display" src="./assets/default-avatar.jpg" alt="Текущий аватар">
+                <img id="modal-profile-avatar-preview" class="profile-avatar-display" src="./assets/default-avatar.jpg"
+                    alt="Текущий аватар">
 
                 <div class="form-group">
                     <label for="modal-username">Логин:</label>
@@ -431,220 +441,221 @@
 
 
     <script>
-    // Firebase конфигурация (ВАЖНО: должна быть та же, что и в auth.html)
-    const firebaseConfig = {
-        apiKey: "AIzaSyAP04srkFeyQPsp1iuhn0RwzMav9fhqCRw", // Убедись, что это твои данные!
-        authDomain: "nexus-90a19.firebaseapp.com",
-        projectId: "nexus-90a19",
-        storageBucket: "nexus-90a19.firebasestorage.app",
-        messagingSenderId: "78051357921",
-        appId: "1:78051357921:web:477ab2794b67e0c706b3a0",
-        measurementId: "G-X65550ENG3"
-    };
+        // Firebase конфигурация (ВАЖНО: должна быть та же, что и в auth.html)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAP04srkFeyQPsp1iuhn0RwzMav9fhqCRw", // Убедись, что это твои данные!
+            authDomain: "nexus-90a19.firebaseapp.com",
+            projectId: "nexus-90a19",
+            storageBucket: "nexus-90a19.firebasestorage.app",
+            messagingSenderId: "78051357921",
+            appId: "1:78051357921:web:477ab2794b67e0c706b3a0",
+            measurementId: "G-X65550ENG3"
+        };
 
-    // Инициализация Firebase (используем compat-версии)
-    const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+        // Инициализация Firebase (используем compat-версии)
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-    // --- Элементы для отображения информации о пользователе на основной странице ---
-    const userInfoText = document.getElementById("user-info");
-    const userEmailSpan = document.getElementById("user-email"); // Почта, привязанная к S-ID
-    const currentProfileAvatar = document.getElementById('current-profile-avatar'); // Аватар на основной странице
+        // --- Элементы для отображения информации о пользователе на основной странице ---
+        const userInfoText = document.getElementById("user-info");
+        const userEmailSpan = document.getElementById("user-email"); // Почта, привязанная к S-ID
+        const currentProfileAvatar = document.getElementById('current-profile-avatar'); // Аватар на основной странице
 
-    const displayUsername = document.getElementById('display-username');
-    const displayPhone = document.getElementById('display-phone');
-    const displayEmail = document.getElementById('display-email'); // Этот элемент теперь всегда будет содержать "скрыт"
+        const displayUsername = document.getElementById('display-username');
+        const displayPhone = document.getElementById('display-phone');
+        const displayEmail = document.getElementById('display-email'); // Этот элемент теперь всегда будет содержать "скрыт"
 
 
-    // --- Элементы модального окна ---
-    const editProfileModal = document.getElementById('edit-profile-modal');
-    const modalUsernameInput = document.getElementById('modal-username');
-    const modalEmailInput = document.getElementById('modal-email');
-    const modalPhoneInput = document.getElementById('modal-phone');
-    const modalProfileAvatarPreview = document.getElementById('modal-profile-avatar-preview'); // Аватар в модальном окне
-    const modalAvatarImages = document.querySelectorAll('#edit-profile-modal .avatar-selection img'); // Аватары для выбора в модальном окне
+        // --- Элементы модального окна ---
+        const editProfileModal = document.getElementById('edit-profile-modal');
+        const modalUsernameInput = document.getElementById('modal-username');
+        const modalEmailInput = document.getElementById('modal-email');
+        const modalPhoneInput = document.getElementById('modal-phone');
+        const modalProfileAvatarPreview = document.getElementById('modal-profile-avatar-preview'); // Аватар в модальном окне
+        const modalAvatarImages = document.querySelectorAll('#edit-profile-modal .avatar-selection img'); // Аватары для выбора в модальном окне
 
-    const defaultAvatarUrl = "./assets/default-avatar.jpg"; 	
-    let currentUser = null;
-    let selectedAvatarUrl = defaultAvatarUrl; // Аватар, выбранный в модальном окне
+        const defaultAvatarUrl = "./assets/default-avatar.jpg";
+        let currentUser = null;
+        let selectedAvatarUrl = defaultAvatarUrl; // Аватар, выбранный в модальном окне
 
-    // --- Элементы видео-оверлея ---
-    const videoOverlay = document.getElementById("video-overlay");
-    const loadingVideo = document.getElementById("loading-video");
+        // --- Элементы видео-оверлея ---
+        const videoOverlay = document.getElementById("video-overlay");
+        const loadingVideo = document.getElementById("loading-video");
 
-    // --- Функции для модального окна ---
-    window.openEditModal = async function() {
-        if (!currentUser) {
-            alert("Пожалуйста, авторизуйтесь для редактирования профиля.");
-            window.location.href = "auth.html";
-            return;
-        }
-
-        // Заполняем поля модального окна текущими данными
-        modalUsernameInput.value = displayUsername.textContent === 'Не указан' ? '' : displayUsername.textContent.trim();
-        modalEmailInput.value = currentUser.email ? currentUser.email.trim() : ''; 	
-        modalPhoneInput.value = displayPhone.textContent === 'Не указан' ? '' : displayPhone.textContent.trim();
-
-        // Устанавливаем текущий аватар в модальном окне
-        modalProfileAvatarPreview.src = currentProfileAvatar.src;
-        selectedAvatarUrl = currentProfileAvatar.src;
-
-        // Отмечаем выбранный аватар в списке модального окна
-        modalAvatarImages.forEach(img => {
-            img.classList.remove('selected');
-            if (img.dataset.avatarUrl === selectedAvatarUrl) {
-                img.classList.add('selected');
-            }
-        });
-
-        editProfileModal.style.display = 'flex'; // Показать модальное окно
-    };
-
-    window.closeEditModal = function() {
-        editProfileModal.style.display = 'none'; // Скрыть модальное окно
-    };
-
-    // Обработчики кликов для выбора аватара в МОДАЛЬНОМ ОКНЕ
-    modalAvatarImages.forEach(img => {
-        img.addEventListener('click', function() {
-            selectedAvatarUrl = this.dataset.avatarUrl;
-            modalProfileAvatarPreview.src = selectedAvatarUrl;
-            modalAvatarImages.forEach(i => i.classList.remove('selected'));
-            this.classList.add('selected');
-        });
-    });
-
-    window.saveProfileChanges = async function() {
-        if (!currentUser) {
-            alert("Ошибка: пользователь не авторизован.");
-            window.location.href = "auth.html";
-            return;
-        }
-
-        const newUsername = modalUsernameInput.value.trim();
-        const newEmail = modalEmailInput.value.trim();
-        const newPhone = modalPhoneInput.value.trim();
-        
-        // Проверка на заполненность обязательных полей
-        if (!newUsername || !newEmail) {
-            alert("Имя пользователя и Email обязательны для заполнения.");
-            return;
-        }
-
-        const userRef = db.collection("users").doc(currentUser.uid);
-
-        try {
-            // Обновляем DisplayName в Firebase Auth, если имя изменилось
-            if (currentUser.displayName !== newUsername) {
-                await currentUser.updateProfile({
-                    displayName: newUsername
-                });
-            }
-            
-            // Обновляем email в Firebase Auth (если он изменился)
-            if (currentUser.email !== newEmail) {
-                await currentUser.updateEmail(newEmail);
-                alert("Email обновлен. Пожалуйста, проверьте свой новый Email для подтверждения.");
+        // --- Функции для модального окна ---
+        window.openEditModal = async function () {
+            if (!currentUser) {
+                alert("Пожалуйста, авторизуйтесь для редактирования профиля.");
+                window.location.href = "auth.html";
+                return;
             }
 
-            // Обновляем данные в Firestore
-            await userRef.set({
-                username: newUsername,
-                email: newEmail,
-                phoneNumber: newPhone,
-                avatarUrl: selectedAvatarUrl
-            }, { merge: true });
-            
-            alert('Изменения профиля сохранены!');
-            closeEditModal();
-            await loadUserProfileData(currentUser); 	// Перезагружаем данные для отображения
-        } catch (error) {
-            console.error("Ошибка при сохранении изменений профиля:", error);
-            let errorMessage = "Произошла ошибка при сохранении изменений.";
-            if (error.code === 'auth/email-already-in-use') {
-                errorMessage = 'Этот Email уже используется другим аккаунтом.';
-            } else if (error.code === 'auth/invalid-email') {
-                errorMessage = 'Некорректный формат Email.';
-            } else if (error.code === 'auth/requires-recent-login') {
-                errorMessage = 'Пожалуйста, войдите в систему еще раз, чтобы изменить Email (требуется недавний вход).';
-            }
-            alert(errorMessage + " " + error.message);
-        }
-    };
+            // Заполняем поля модального окна текущими данными
+            modalUsernameInput.value = displayUsername.textContent === 'Не указан' ? '' : displayUsername.textContent.trim();
+            modalEmailInput.value = currentUser.email ? currentUser.email.trim() : '';
+            modalPhoneInput.value = displayPhone.textContent === 'Не указан' ? '' : displayPhone.textContent.trim();
 
+            // Устанавливаем текущий аватар в модальном окне
+            modalProfileAvatarPreview.src = currentProfileAvatar.src;
+            selectedAvatarUrl = currentProfileAvatar.src;
 
-    async function loadUserProfileData(user) {
-        currentUser = user;
-        console.log("--- Загрузка данных профиля ---");
-        console.log("Current user UID:", user.uid);
-        console.log("Current user Email:", user.email);
-        userEmailSpan.textContent = user.email;
-
-        const userRef = db.collection("users").doc(user.uid);
-        console.log("Firestore User Ref Path:", userRef.path);
-        console.log("Attempting to get document from Firestore...");
-
-        try {
-            const docSnap = await userRef.get();
-
-            if (docSnap.exists) {
-                console.log("User document exists! Data:", docSnap.data());
-                const userData = docSnap.data();
-                displayUsername.textContent = userData.username || 'Не указан';
-                displayPhone.textContent = userData.phoneNumber || 'Не указан';
-                if (userData.avatarUrl) {
-                    currentProfileAvatar.src = userData.avatarUrl;
+            // Отмечаем выбранный аватар в списке модального окна
+            modalAvatarImages.forEach(img => {
+                img.classList.remove('selected');
+                if (img.dataset.avatarUrl === selectedAvatarUrl) {
+                    img.classList.add('selected');
                 }
-            } else {
-                console.warn("User document DOES NOT exist in Firestore for UID:", user.uid);
-                displayUsername.textContent = 'Не указан';
-                displayPhone.textContent = 'Не указан';
-                currentProfileAvatar.src = defaultAvatarUrl;
-            }
-        } catch (error) {
-            console.error("⛔️ ОШИБКА FIREBASE ПРИ ЗАГРУЗКЕ ПРОФИЛЯ:", error);
-        }
-    }
+            });
 
-    // --- Обработчик состояния аутентификации ---
-    auth.onAuthStateChanged(async (user) => {
-        if (user) {
-            await loadUserProfileData(user);
-            // Загрузка данных профиля происходит, но оверлей скрывается независимо по таймеру
-        } else {
-            console.log("Пользователь не авторизован, перенаправляем на auth.html");
-            window.location.href = "auth.html";
-        }
-    });
+            editProfileModal.style.display = 'flex'; // Показать модальное окно
+        };
 
-    // --- Функция выхода из аккаунта ---
-    window.logout = function() {
-        auth.signOut().then(() => {
-            alert("Вы вышли из аккаунта");
-            window.location.href = "home-page.html";
-        }).catch((error) => {
-            console.error("Ошибка при выходе:", error);
-            alert("Произошла ошибка при выходе.");
+        window.closeEditModal = function () {
+            editProfileModal.style.display = 'none'; // Скрыть модальное окно
+        };
+
+        // Обработчики кликов для выбора аватара в МОДАЛЬНОМ ОКНЕ
+        modalAvatarImages.forEach(img => {
+            img.addEventListener('click', function () {
+                selectedAvatarUrl = this.dataset.avatarUrl;
+                modalProfileAvatarPreview.src = selectedAvatarUrl;
+                modalAvatarImages.forEach(i => i.classList.remove('selected'));
+                this.classList.add('selected');
+            });
         });
-    };
 
-    // --- Обработчик окончания видео загрузки, контролирующий ВРЕМЯ ПОКАЗА ВИДЕО ---
-    document.addEventListener("DOMContentLoaded", () => {
-        // Убедимся, что оверлей изначально показан
-        videoOverlay.style.display = "flex"; 	
+        window.saveProfileChanges = async function () {
+            if (!currentUser) {
+                alert("Ошибка: пользователь не авторизован.");
+                window.location.href = "auth.html";
+                return;
+            }
 
-        // Запускаем скрытие оверлея через 2 секунды (время показа видео)
-        setTimeout(() => {
-            videoOverlay.classList.add("hidden"); // Запускаем анимацию исчезновения (opacity: 0)
-            
-            // Через 0.3 секунды после начала исчезновения (это время transition)
-            // полностью скрываем элемент, чтобы он не мешал взаимодействию
+            const newUsername = modalUsernameInput.value.trim();
+            const newEmail = modalEmailInput.value.trim();
+            const newPhone = modalPhoneInput.value.trim();
+
+            // Проверка на заполненность обязательных полей
+            if (!newUsername || !newEmail) {
+                alert("Имя пользователя и Email обязательны для заполнения.");
+                return;
+            }
+
+            const userRef = db.collection("users").doc(currentUser.uid);
+
+            try {
+                // Обновляем DisplayName в Firebase Auth, если имя изменилось
+                if (currentUser.displayName !== newUsername) {
+                    await currentUser.updateProfile({
+                        displayName: newUsername
+                    });
+                }
+
+                // Обновляем email в Firebase Auth (если он изменился)
+                if (currentUser.email !== newEmail) {
+                    await currentUser.updateEmail(newEmail);
+                    alert("Email обновлен. Пожалуйста, проверьте свой новый Email для подтверждения.");
+                }
+
+                // Обновляем данные в Firestore
+                await userRef.set({
+                    username: newUsername,
+                    email: newEmail,
+                    phoneNumber: newPhone,
+                    avatarUrl: selectedAvatarUrl
+                }, { merge: true });
+
+                alert('Изменения профиля сохранены!');
+                closeEditModal();
+                await loadUserProfileData(currentUser); 	// Перезагружаем данные для отображения
+            } catch (error) {
+                console.error("Ошибка при сохранении изменений профиля:", error);
+                let errorMessage = "Произошла ошибка при сохранении изменений.";
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'Этот Email уже используется другим аккаунтом.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Некорректный формат Email.';
+                } else if (error.code === 'auth/requires-recent-login') {
+                    errorMessage = 'Пожалуйста, войдите в систему еще раз, чтобы изменить Email (требуется недавний вход).';
+                }
+                alert(errorMessage + " " + error.message);
+            }
+        };
+
+
+        async function loadUserProfileData(user) {
+            currentUser = user;
+            console.log("--- Загрузка данных профиля ---");
+            console.log("Current user UID:", user.uid);
+            console.log("Current user Email:", user.email);
+            userEmailSpan.textContent = user.email;
+
+            const userRef = db.collection("users").doc(user.uid);
+            console.log("Firestore User Ref Path:", userRef.path);
+            console.log("Attempting to get document from Firestore...");
+
+            try {
+                const docSnap = await userRef.get();
+
+                if (docSnap.exists) {
+                    console.log("User document exists! Data:", docSnap.data());
+                    const userData = docSnap.data();
+                    displayUsername.textContent = userData.username || 'Не указан';
+                    displayPhone.textContent = userData.phoneNumber || 'Не указан';
+                    if (userData.avatarUrl) {
+                        currentProfileAvatar.src = userData.avatarUrl;
+                    }
+                } else {
+                    console.warn("User document DOES NOT exist in Firestore for UID:", user.uid);
+                    displayUsername.textContent = 'Не указан';
+                    displayPhone.textContent = 'Не указан';
+                    currentProfileAvatar.src = defaultAvatarUrl;
+                }
+            } catch (error) {
+                console.error("⛔️ ОШИБКА FIREBASE ПРИ ЗАГРУЗКЕ ПРОФИЛЯ:", error);
+            }
+        }
+
+        // --- Обработчик состояния аутентификации ---
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                await loadUserProfileData(user);
+                // Загрузка данных профиля происходит, но оверлей скрывается независимо по таймеру
+            } else {
+                console.log("Пользователь не авторизован, перенаправляем на auth.html");
+                window.location.href = "auth.html";
+            }
+        });
+
+        // --- Функция выхода из аккаунта ---
+        window.logout = function () {
+            auth.signOut().then(() => {
+                alert("Вы вышли из аккаунта");
+                window.location.href = "home-page.html";
+            }).catch((error) => {
+                console.error("Ошибка при выходе:", error);
+                alert("Произошла ошибка при выходе.");
+            });
+        };
+
+        // --- Обработчик окончания видео загрузки, контролирующий ВРЕМЯ ПОКАЗА ВИДЕО ---
+        document.addEventListener("DOMContentLoaded", () => {
+            // Убедимся, что оверлей изначально показан
+            videoOverlay.style.display = "flex";
+
+            // Запускаем скрытие оверлея через 2 секунды (время показа видео)
             setTimeout(() => {
-                videoOverlay.style.display = "none";
-            }, 300); // <-- ВРЕМЯ ИСЧЕЗНОВЕНИЯ (совпадает со значением transition в CSS)
-        }, 2000); // <-- ВРЕМЯ ПОКАЗА ВИДЕО (2 секунды)
-    });
-</script>
+                videoOverlay.classList.add("hidden"); // Запускаем анимацию исчезновения (opacity: 0)
+
+                // Через 0.3 секунды после начала исчезновения (это время transition)
+                // полностью скрываем элемент, чтобы он не мешал взаимодействию
+                setTimeout(() => {
+                    videoOverlay.style.display = "none";
+                }, 300); // <-- ВРЕМЯ ИСЧЕЗНОВЕНИЯ (совпадает со значением transition в CSS)
+            }, 2000); // <-- ВРЕМЯ ПОКАЗА ВИДЕО (2 секунды)
+        });
+    </script>
 </body>
+
 </html>
