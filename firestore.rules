@@ -14,12 +14,22 @@ service cloud.firestore {
       allow delete: if request.auth != null && request.auth.uid == resource.data.uid;
     }
 
-    // 👤 Правила для коллекции 'users'
-    match /users/{userId} {
-      allow create: if request.auth != null && request.auth.uid == userId; // ✅ Разрешаем создание своего профиля
-      allow read: if request.auth != null && request.auth.uid == userId;   // ✅ Чтение своего профиля
-      allow update: if request.auth != null && request.auth.uid == userId; // ✅ Обновление своего профиля
-    }
+// 👤 Продвинутые правила для 'users' (необязательное улучшение)
+match /users/{userId} {
+  allow read: if request.auth != null && request.auth.uid == userId;
+  
+  // При создании проверяем, что все нужные поля есть
+  allow create: if request.auth != null 
+                && request.auth.uid == userId
+                && request.resource.data.username is string
+                && request.resource.data.email == request.auth.token.email;
+
+  // При обновлении проверяем типы данных и что пользователь не меняет чужой email
+  allow update: if request.auth != null 
+                && request.auth.uid == userId
+                && request.resource.data.username is string && request.resource.data.username.size() > 0
+                && request.resource.data.email == request.auth.token.email;
+}
 
     // 🗑️ Правила для коллекции 'delete-users'
     match /delete-users/{requestId} {
