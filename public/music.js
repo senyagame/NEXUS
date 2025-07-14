@@ -224,7 +224,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         const authLink = document.getElementById('auth-link');
         if (authLink) {
             const redirectUrl = encodeURIComponent(window.location.href);
-            authLink.href = `https://nexus-id-site.vercel.app/auth.html?redirectUrl=${redirectUrl}`;
+            // ИЗМЕНЕНИЕ: Ссылка теперь относительная, для работы на одном домене.
+            authLink.href = `/auth.html?redirectUrl=${redirectUrl}`;
         }
 
     } catch (error) {
