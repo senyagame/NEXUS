@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,7 +21,7 @@
             align-items: center;
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
         }
-    
+
         .profile-button {
             background: none;
             border: none;
@@ -34,9 +35,10 @@
             align-items: center;
             justify-content: center;
             border: 2px solid #fff;
-            gap: 15px; /* Увеличиваем отступ между элементами */
+            gap: 15px;
+            /* Увеличиваем отступ между элементами */
         }
-    
+
         .avatar-small {
             width: 40px;
             height: 40px;
@@ -46,7 +48,15 @@
         }
     </style>
 </head>
+
 <body>
+    <div class="video-container">
+        <video id="background-video" autoplay muted loop>
+            <source src="assets/background.mp4" type="video/mp4">
+            <source src="assets/background.webm" type="video/webm">
+            Ваш браузер не поддерживает HTML5 видео.
+        </video>
+    </div>
     <div id="app">
         <header>
             <div id="cat-facenonload">
@@ -57,8 +67,10 @@
             <img src="./assets/information-icon.png" alt="Information Icon" id="info-icon" onclick="openModal()">
         </header>
         <main>
-            <button onclick="navigateTo('new-update-info.html')" style="background-color: black;">Об обновлении 5.2</button>
-            <p id="coming-soon">Если у вас есть вопросы, посмотрите вкладку <img src="./assets/information-icon.png" alt=""> на этой странице</p>
+            <button onclick="navigateTo('new-update-info.html')" style="background-color: black; color: white;">Об обновлении
+                5.3</button>
+            <p id="coming-soon">Если у вас есть вопросы, посмотрите вкладку <img src="./assets/information-icon.png"
+                    alt=""> на этой странице</p>
             <button onclick="navigateTo('weather-app.html')">Погода</button>
             <button onclick="navigateTo('music-app.html')">Музыка</button>
             <button onclick="navigateTo('posts-app.html')">Заметки</button>
@@ -84,7 +96,8 @@
             </div>
             <h3>Информация о приложении</h3>
             <p style="color: red;">Уведомление: Сотрудничество с испольнителем "Wesper" прекращено.</p>
-            <p>Наше приложение использует API сервисов Яндекс, поэтому данное приложение доступно только для стран у которых есть Яндекс (Yandex)</p>
+            <p>Наше приложение использует API сервисов Яндекс, поэтому данное приложение доступно только для стран у
+                которых есть Яндекс (Yandex)</p>
             <p>С жалобами на работу приложения или ваших предложений, пишите на нашу почту:
                 <span class="email" onclick="copyEmail()">senyaentertainment@yandex.ru</span>📩
             </p>
@@ -178,15 +191,16 @@
             }
         });
 
-        window.navigateTo = function(page) {
+        window.navigateTo = function (page) {
             window.location.href = page;
         };
 
         // Изменена функция goToProfile() для прямого перехода
-        window.goToProfile = function() {
+        window.goToProfile = function () {
             window.location.href = "https://nexus-id-site.vercel.app/auth.html";
         };
     </script>
     <script src="https://cdn.pulse.is/livechat/loader.js" data-live-chat-id="6848325889c913f1ef03194d" async></script>
 </body>
+
 </html>

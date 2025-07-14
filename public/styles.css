@@ -1,56 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap');
+
 body {
     font-family: Arial, sans-serif;
     background-color: #04003f;
     color: #ffffff;
     margin: 0;
-    overflow-x: hidden; /* Важно: скрываем горизонтальную прокрутку для body */
+    overflow-x: hidden;
+    /* Важно: скрываем горизонтальную прокрутку для body */
+}
+
+.video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.video-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* * Настройка затемнения видео. 
+   * Меняй значение 0.5 (от 0.0 до 1.0), чтобы изменить прозрачность.
+  */
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#background-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: cover;
 }
 
 /* Стили для основного хедера */
 #main-header {
     background-color: #030030;
-    padding: 10px 15px; /* Уменьшаем padding для компактности */
+    padding: 10px 15px;
+    /* Уменьшаем padding для компактности */
     font-weight: bold;
     display: flex;
-    align-items: center; /* Выравниваем элементы по центру по вертикали */
-    justify-content: space-between; /* Распределяем элементы по краям */
-    position: fixed; /* Хедер всегда закреплен */
+    align-items: center;
+    /* Выравниваем элементы по центру по вертикали */
+    justify-content: space-between;
+    /* Распределяем элементы по краям */
+    position: fixed;
+    /* Хедер всегда закреплен */
     top: 0;
     width: 100%;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    transition: all 0.3s ease-in-out; /* Плавный переход для изменений при скролле */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+    /* Плавный переход для изменений при скролле */
     z-index: 1000;
-    height: 55px; /* Изначальная, более компактная высота хедера */
-    box-sizing: border-box; /* Учитываем padding и border в ширине/высоте */
+    height: 55px;
+    /* Изначальная, более компактная высота хедера */
+    box-sizing: border-box;
+    /* Учитываем padding и border в ширине/высоте */
 }
 
 /* Стили для хедера при прокрутке */
 #main-header.scrolled {
-    height: 45px; /* Еще меньше высота при прокрутке */
-    padding: 8px 15px; /* Немного уменьшаем padding */
+    height: 45px;
+    /* Еще меньше высота при прокрутке */
+    padding: 8px 15px;
+    /* Немного уменьшаем padding */
 }
 
 #header-text {
-    margin: 0 auto; /* Центрируем заголовок */
-    white-space: nowrap; /* Запрещаем перенос текста */
-    overflow: hidden; /* Скрываем, если текст не помещается */
-    text-overflow: ellipsis; /* Добавляем многоточие, если текст обрезан */
-    flex-grow: 1; /* Позволяем заголовку занимать доступное пространство */
-    text-align: center; /* Центрируем текст внутри flex-элемента */
+    margin: 0 auto;
+    /* Центрируем заголовок */
+    white-space: nowrap;
+    /* Запрещаем перенос текста */
+    overflow: hidden;
+    /* Скрываем, если текст не помещается */
+    text-overflow: ellipsis;
+    /* Добавляем многоточие, если текст обрезан */
+    flex-grow: 1;
+    /* Позволяем заголовку занимать доступное пространство */
+    text-align: center;
+    /* Центрируем текст внутри flex-элемента */
     transition: font-size 0.3s ease-in-out;
 }
 
 /* Стили для полного заголовка (по умолчанию) */
 #header-text .full-title {
-    display: inline-block; /* Показываем по умолчанию */
+    display: inline-block;
+    /* Показываем по умолчанию */
     opacity: 1;
-    font-size: 1.3em; /* Более компактный размер по умолчанию */
+    font-size: 1.3em;
+    /* Более компактный размер по умолчанию */
     transition: opacity 0.3s ease-in-out, font-size 0.3s ease-in-out;
 }
 
 /* Стили для минифицированного заголовка (скрыт по умолчанию) */
 #header-text .minified-title {
-    display: none; /* Скрыт по умолчанию */
+    display: none;
+    /* Скрыт по умолчанию */
     opacity: 0;
     font-size: 0;
     transition: opacity 0.3s ease-in-out, font-size 0.3s ease-in-out;
@@ -60,32 +116,41 @@ body {
 #main-header.scrolled #header-text .full-title {
     opacity: 0;
     font-size: 0;
-    display: none; /* Полностью скрываем полный заголовок */
+    display: none;
+    /* Полностью скрываем полный заголовок */
 }
 
 #main-header.scrolled #header-text .minified-title {
     opacity: 1;
-    display: inline-block; /* Показываем минифицированный заголовок */
-    font-size: 1.1em; /* Размер минифицированного заголовка при прокрутке */
+    display: inline-block;
+    /* Показываем минифицированный заголовок */
+    font-size: 1.1em;
+    /* Размер минифицированного заголовка при прокрутке */
 }
 
 /* Кнопка возврата */
 .return-link {
-    font-size: 24px; /* Размер стрелки */
+    font-size: 24px;
+    /* Размер стрелки */
     text-decoration: none;
     color: #ffffff;
-    margin-right: 10px; /* Отступ справа от стрелки */
-    flex-shrink: 0; /* Не сжимается */
+    margin-right: 10px;
+    /* Отступ справа от стрелки */
+    flex-shrink: 0;
+    /* Не сжимается */
 }
 
 /* Контейнер для иконки информации */
 .header-right-actions {
-    margin-left: 10px; /* Отступ слева от иконки */
-    flex-shrink: 0; /* Не сжимается */
+    margin-left: 10px;
+    /* Отступ слева от иконки */
+    flex-shrink: 0;
+    /* Не сжимается */
 }
 
 #info-icon {
-    width: 32px; /* Размер иконки */
+    width: 32px;
+    /* Размер иконки */
     height: 32px;
     cursor: pointer;
     color: #ffffff;
@@ -95,19 +160,26 @@ body {
 main {
     padding: 20px;
     text-align: center;
-    padding-top: 80px; /* Отступ, учитывающий высоту хедера */
-    box-sizing: border-box; /* Учитываем padding в расчете ширины */
-    width: 100%; /* Убедимся, что main занимает 100% ширины */
-    max-width: 1200px; /* Ограничим максимальную ширину для больших экранов */
-    margin: 0 auto; /* Центрируем main */
+    padding-top: 80px;
+    /* Отступ, учитывающий высоту хедера */
+    box-sizing: border-box;
+    /* Учитываем padding в расчете ширины */
+    width: 100%;
+    /* Убедимся, что main занимает 100% ширины */
+    max-width: 1200px;
+    /* Ограничим максимальную ширину для больших экранов */
+    margin: 0 auto;
+    /* Центрируем main */
 }
 
 /* Стили для поиска */
 #search-section {
     margin-bottom: 20px;
 }
+
 #search-bar {
-    width: 60%; /* Ширина на десктопе */
+    width: 60%;
+    /* Ширина на десктопе */
     padding: 12px 15px;
     border: 1px solid #5a5a5a;
     background-color: #2a2a4a;
@@ -116,8 +188,10 @@ main {
     font-size: 1em;
     outline: none;
     transition: all 0.3s ease;
-    box-sizing: border-box; /* Важно: учитываем padding в ширине */
+    box-sizing: border-box;
+    /* Важно: учитываем padding в ширине */
 }
+
 #search-bar:focus {
     border-color: #8888ff;
     box-shadow: 0 0 8px rgba(136, 136, 255, 0.5);
@@ -128,12 +202,16 @@ main {
     background-color: #1a1a3a;
     border-radius: 10px;
     padding: 20px;
-    margin: 20px auto; /* Центрируем и добавляем отступ */
-    max-width: 400px; /* Максимальная ширина для контейнера */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    margin: 20px auto;
+    /* Центрируем и добавляем отступ */
+    max-width: 400px;
+    /* Максимальная ширина для контейнера */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     text-align: left;
-    position: relative; /* Для позиционирования элементов внутри */
-    box-sizing: border-box; /* Учитываем padding */
+    position: relative;
+    /* Для позиционирования элементов внутри */
+    box-sizing: border-box;
+    /* Учитываем padding */
 }
 
 .song-title-container {
@@ -150,7 +228,8 @@ main {
     text-overflow: ellipsis;
 }
 
-.song-duration, .song-title-data {
+.song-duration,
+.song-title-data {
     font-size: 0.9em;
     color: #bbbbbb;
     margin-top: 5px;
@@ -162,7 +241,7 @@ main {
     border-radius: 8px;
     object-fit: cover;
     margin-top: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .nexus-player-title {
@@ -182,7 +261,8 @@ main {
 .player-controls {
     display: flex;
     align-items: center;
-    width: 100%; /* Занимает всю ширину плеера */
+    width: 100%;
+    /* Занимает всю ширину плеера */
     gap: 10px;
 }
 
@@ -198,18 +278,21 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-shrink: 0; /* Не сжимается */
+    flex-shrink: 0;
+    /* Не сжимается */
 }
 
 .progress-container {
-    flex-grow: 1; /* Растягивается, чтобы занять доступное пространство */
+    flex-grow: 1;
+    /* Растягивается, чтобы занять доступное пространство */
     display: flex;
     align-items: center;
     gap: 5px;
 }
 
 .custom-progress-bar {
-    width: 100%; /* Занимает всю доступную ширину */
+    width: 100%;
+    /* Занимает всю доступную ширину */
     -webkit-appearance: none;
     appearance: none;
     height: 6px;
@@ -218,6 +301,7 @@ main {
     border-radius: 3px;
     cursor: pointer;
 }
+
 .custom-progress-bar::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -226,18 +310,20 @@ main {
     border-radius: 50%;
     background: #8a2be2;
     cursor: grab;
-    box-shadow: 0 0 2px rgba(0,0,0,0.5);
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 }
+
 .custom-progress-bar::-moz-range-thumb {
     width: 16px;
     height: 16px;
     border-radius: 50%;
     background: #8a2be2;
     cursor: grab;
-    box-shadow: 0 0 2px rgba(0,0,0,0.5);
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 }
 
-.current-time, .total-duration {
+.current-time,
+.total-duration {
     font-size: 0.8em;
     white-space: nowrap;
 }
@@ -251,7 +337,8 @@ main {
     padding: 5px;
     margin-left: 10px;
     transition: transform 0.2s ease-in-out;
-    flex-shrink: 0; /* Не сжимается */
+    flex-shrink: 0;
+    /* Не сжимается */
 }
 
 .favorite-heart-btn:hover {
@@ -261,16 +348,19 @@ main {
 .favorite-heart-btn.is-favorite {
     color: red;
 }
+
 .favorite-heart-btn:not(.is-favorite) {
     color: #ccc;
 }
 
 .goto-yandex-btn {
     display: block;
-    width: fit-content; /* Ширина по содержимому */
+    width: fit-content;
+    /* Ширина по содержимому */
     margin-top: 15px;
     padding: 10px 15px;
-    background-color: #ee5522; /* Цвет Яндекса */
+    background-color: #ee5522;
+    /* Цвет Яндекса */
     color: white;
     text-decoration: none;
     border-radius: 5px;
@@ -290,11 +380,13 @@ main {
     margin-top: 40px;
     border-top: 1px solid #1a1a3a;
 }
+
 .footer-logo {
     width: 80px;
     margin: 0 10px;
     vertical-align: middle;
 }
+
 .logo-Yandex_music {
     width: 100px;
     margin: 0 10px;
@@ -305,112 +397,145 @@ main {
 /* Медиа-запросы для адаптивности */
 @media (max-width: 768px) {
     #main-header {
-        height: 50px; /* Чуть меньше на средних мобильных */
+        height: 50px;
+        /* Чуть меньше на средних мобильных */
         padding: 8px 10px;
     }
+
     #main-header.scrolled {
-        height: 40px; /* Еще меньше при скролле */
+        height: 40px;
+        /* Еще меньше при скролле */
         padding: 6px 10px;
     }
 
     #header-text .full-title {
-        font-size: 1.1em; /* Уменьшаем основной заголовок */
+        font-size: 1.1em;
+        /* Уменьшаем основной заголовок */
     }
+
     #main-header.scrolled #header-text .minified-title {
-        font-size: 0.9em; /* Уменьшаем минифицированный заголовок */
+        font-size: 0.9em;
+        /* Уменьшаем минифицированный заголовок */
     }
 
     .return-link {
         font-size: 20px;
         margin-right: 8px;
     }
+
     .header-right-actions {
         margin-left: 8px;
     }
+
     #info-icon {
         width: 28px;
         height: 28px;
     }
 
     main {
-        padding-top: 70px; /* Отступ для мобильных экранов */
-        padding-left: 10px; /* Уменьшаем горизонтальный padding */
+        padding-top: 70px;
+        /* Отступ для мобильных экранов */
+        padding-left: 10px;
+        /* Уменьшаем горизонтальный padding */
         padding-right: 10px;
     }
-    
+
     /* Адаптация основного контента */
     #search-bar {
-        width: 95%; /* Почти полная ширина */
+        width: 95%;
+        /* Почти полная ширина */
         padding: 10px;
         font-size: 0.9em;
     }
+
     .music-container {
-        width: 95%; /* Шире для плееров */
+        width: 95%;
+        /* Шире для плееров */
         padding: 15px;
     }
+
     .song-title-img {
         width: 100px;
         height: 100px;
     }
+
     .song-title {
         font-size: 1.3em;
     }
-    .song-duration, .song-title-data {
+
+    .song-duration,
+    .song-title-data {
         font-size: 0.8em;
     }
+
     .play-pause-btn {
         width: 35px;
         height: 35px;
         font-size: 1.1em;
     }
+
     .favorite-heart-btn {
         font-size: 20px;
     }
-    .current-time, .total-duration {
+
+    .current-time,
+    .total-duration {
         font-size: 0.75em;
     }
+
     .goto-yandex-btn {
         font-size: 0.85em;
         padding: 8px 12px;
-        width: 100%; /* Кнопка занимает всю ширину */
+        width: 100%;
+        /* Кнопка занимает всю ширину */
         box-sizing: border-box;
     }
+
     /* Стили для избранного */
     .favorites-header {
         flex-direction: column;
         padding: 10px;
         margin-bottom: 15px;
     }
+
     .favorites-header h1 {
         font-size: 1.4em;
         margin-bottom: 10px;
     }
+
     .return-to-music-btn {
         padding: 7px 14px;
         font-size: 13px;
     }
+
     #favorites-list {
         padding: 0;
         gap: 12px;
     }
+
     .favorite-track-card {
         width: 95%;
         padding: 12px;
     }
+
     .favorite-track-card img {
         width: 70px;
         height: 70px;
     }
+
     .favorite-track-card h3 {
         font-size: 1.1em;
     }
+
     .favorite-track-card p {
         font-size: 0.8em;
     }
+
     .remove-favorite-btn {
         padding: 5px 10px;
         font-size: 11px;
     }
+
     .no-favorites-message {
         font-size: 1em;
         padding: 12px;
@@ -421,35 +546,44 @@ main {
 
 @media (max-width: 480px) {
     #main-header {
-        height: 45px; /* Максимально компактный хедер */
+        height: 45px;
+        /* Максимально компактный хедер */
         padding: 6px 8px;
     }
+
     #main-header.scrolled {
-        height: 38px; /* Ещё меньше при скролле */
+        height: 38px;
+        /* Ещё меньше при скролле */
         padding: 5px 8px;
     }
 
     #header-text .full-title {
-        font-size: 0.9em; /* Еще меньше заголовок */
+        font-size: 0.9em;
+        /* Еще меньше заголовок */
     }
+
     #main-header.scrolled #header-text .minified-title {
-        font-size: 0.8em; /* Для самого маленького экрана при скролле */
+        font-size: 0.8em;
+        /* Для самого маленького экрана при скролле */
     }
 
     .return-link {
         font-size: 18px;
         margin-right: 5px;
     }
+
     .header-right-actions {
         margin-left: 5px;
     }
+
     #info-icon {
         width: 24px;
         height: 24px;
     }
 
     main {
-        padding-top: 60px; /* Минимальный отступ для основного контента */
+        padding-top: 60px;
+        /* Минимальный отступ для основного контента */
         padding-left: 5px;
         padding-right: 5px;
     }
@@ -460,34 +594,43 @@ main {
         font-size: 0.8em;
         padding: 8px 10px;
     }
+
     .music-container {
         width: 100%;
         padding: 10px;
         margin: 10px auto;
     }
+
     .song-title-img {
         width: 60px;
         height: 60px;
     }
+
     .song-title {
         font-size: 1.1em;
     }
+
     .song-duration {
         font-size: 0.7em;
     }
+
     .play-pause-btn {
         width: 30px;
         height: 30px;
         font-size: 1em;
     }
+
     .favorite-heart-btn {
         font-size: 16px;
         padding: 2px;
         margin-left: 5px;
     }
-    .current-time, .total-duration {
+
+    .current-time,
+    .total-duration {
         font-size: 0.7em;
     }
+
     .goto-yandex-btn {
         font-size: 0.8em;
         padding: 6px 8px;
@@ -497,27 +640,34 @@ main {
     .favorites-header h1 {
         font-size: 1.2em;
     }
+
     .return-to-music-btn {
         font-size: 12px;
         padding: 6px 10px;
     }
+
     .favorite-track-card {
         padding: 10px;
     }
+
     .favorite-track-card img {
         width: 50px;
         height: 50px;
     }
+
     .favorite-track-card h3 {
         font-size: 1em;
     }
+
     .favorite-track-card p {
         font-size: 0.7em;
     }
+
     .remove-favorite-btn {
         font-size: 10px;
         padding: 4px 8px;
     }
+
     .no-favorites-message {
         font-size: 0.9em;
         padding: 10px;
@@ -525,15 +675,17 @@ main {
         width: 100%;
     }
 
-    .footer-logo, .logo-Yandex_music {
+    .footer-logo,
+    .logo-Yandex_music {
         width: 60px;
     }
 }
+
 button {
     padding: 15px;
     font-size: 16px;
-    background-color: #17174d;
-    color: #ffffff;
+    background-color: #ffffff;
+    color: #000000;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -541,6 +693,8 @@ button {
     margin: 10px 0;
     width: 80%;
     max-width: 300px;
+    font-family: "Rubik Mono One", monospace;
+    font-weight: 200;
 }
 
 #loading-screen {
@@ -682,9 +836,12 @@ button {
 }
 
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.2);
     }
@@ -757,29 +914,40 @@ button {
 
 /* Стили для модального окна */
 .modal {
-    display: none; /* Скрыто по умолчанию */
-    position: fixed; /* Оставаться на месте */
-    z-index: 2000; /* Поверх всего */
+    display: none;
+    /* Скрыто по умолчанию */
+    position: fixed;
+    /* Оставаться на месте */
+    z-index: 2000;
+    /* Поверх всего */
     left: 0;
     top: 0;
-    width: 100%; /* Полная ширина */
-    height: 100%; /* Полная высота */
-    overflow: auto; /* Включить прокрутку, если содержимое слишком большое */
-    background-color: rgba(0,0,0,0.7); /* Черный фон с прозрачностью */
-    padding-top: 100px; /* Отступ сверху для центрирования */
+    width: 100%;
+    /* Полная ширина */
+    height: 100%;
+    /* Полная высота */
+    overflow: auto;
+    /* Включить прокрутку, если содержимое слишком большое */
+    background-color: rgba(0, 0, 0, 0.7);
+    /* Черный фон с прозрачностью */
+    padding-top: 100px;
+    /* Отступ сверху для центрирования */
     box-sizing: border-box;
 }
 
 .modal-content {
     background-color: #0e0a4f;
-    margin: 5% auto; /* 5% сверху/снизу, auto по бокам для центрирования */
+    margin: 5% auto;
+    /* 5% сверху/снизу, auto по бокам для центрирования */
     padding: 25px;
     border: 1px solid #888;
-    width: 85%; /* Ширина модального окна */
-    max-width: 500px; /* Максимальная ширина */
+    width: 85%;
+    /* Ширина модального окна */
+    max-width: 500px;
+    /* Максимальная ширина */
     border-radius: 10px;
     position: relative;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
     box-sizing: border-box;
 }
 
@@ -806,7 +974,8 @@ button {
     color: #8a2be2;
     text-decoration: none;
     font-weight: bold;
-    display: block; /* Ссылки как блоки для отдельных строк */
+    display: block;
+    /* Ссылки как блоки для отдельных строк */
     margin-top: 10px;
 }
 
@@ -874,26 +1043,30 @@ button {
     background-color: #3a3a5a;
 }
 
-/* Стили для постов */ 
-.post { 
-    margin-top: 60px; 
-    padding: 50px; 
-    background-color: #282845; 
-    border-radius: 5px; 
+/* Стили для постов */
+.post {
+    margin-top: 60px;
+    padding: 50px;
+    background-color: #282845;
+    border-radius: 5px;
     text-align: left;
-} 
-.post .nickname { 
-    margin-bottom: 20px; 
-    font-weight: bold;
-} 
-.post .title { 
-    margin-bottom: 20px; 
-    font-size: 20px; 
-} 
-.post .description { 
-    color: rgb(180, 180, 180);
-    margin-bottom: 10px; 
 }
+
+.post .nickname {
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.post .title {
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.post .description {
+    color: rgb(180, 180, 180);
+    margin-bottom: 10px;
+}
+
 .user-icon {
     width: 40px;
     height: 40px;
@@ -901,7 +1074,7 @@ button {
 }
 
 .developer {
-color: rgb(216, 97, 97);
+    color: rgb(216, 97, 97);
 }
 
 .devi a {
@@ -931,9 +1104,17 @@ color: rgb(216, 97, 97);
 }
 
 @keyframes fade-out {
-    0% { opacity: 1; }
-    80% { opacity: 1; }
-    100% { opacity: 0; }
+    0% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }
 
 .email {
@@ -998,26 +1179,26 @@ color: rgb(216, 97, 97);
     text-align: center;
     justify-content: center;
     text-align: center;
-        top: 5px;
-        right: 5px;
-        background-color: rgb(0, 144, 155);
-        color: black;
-        font-weight: bold;
-        font-size: 20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    top: 5px;
+    right: 5px;
+    background-color: rgb(0, 144, 155);
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .hit-label {
     text-align: center;
     justify-content: center;
     text-align: center;
-        top: 5px;
-        right: 5px;
-        background-color: rgb(253, 228, 0);
-        color: black;
-        font-weight: bold;
-        font-size: 20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    top: 5px;
+    right: 5px;
+    background-color: rgb(253, 228, 0);
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
 }
 
@@ -1163,7 +1344,7 @@ color: rgb(216, 97, 97);
     transform: scale(0.95);
 }
 
-#auth-button{
+#auth-button {
     background-color: #afafaf;
     color: #000000;
 }
@@ -1219,16 +1400,16 @@ audio {
     color: white;
     padding: 10px 0;
     text-align: center;
-  }
-  
-  .footer a {
+}
+
+.footer a {
     color: white;
     text-decoration: none;
-  }
-  
-  .footer a:hover {
+}
+
+.footer a:hover {
     text-decoration: underline;
-  }
+}
 
 .logo-Yandex_music {
     width: 150px;
@@ -1237,23 +1418,24 @@ audio {
     margin: 0 auto;
 }
 
-.footer-logo{
+.footer-logo {
     width: 50px;
     height: auto;
     display: block;
     margin: 0 auto;
-  }
-  
-  .footer a{
+}
+
+.footer a {
     display: inline-block;
     color: #ffffff;
     text-decoration: none;
-  }
-  
+}
+
 .audio-player {
     position: relative;
     display: inline-block;
-    padding-top: 20px; /* Чтобы текст не накладывался на элементы плеера */
+    padding-top: 20px;
+    /* Чтобы текст не накладывался на элементы плеера */
 }
 
 .s-music-label {
@@ -1263,10 +1445,11 @@ audio {
     font-size: 16px;
     font-weight: bold;
     color: rgb(15, 0, 153);
-    text-shadow: -1px -1px 0 rgb(255, 255, 255),  
-                 1px -1px 0 rgb(255, 255, 255),  
-                 -1px 1px 0 rgb(255, 255, 255),  
-                 1px 1px 0 rgb(255, 255, 255); /* Обводка */
+    text-shadow: -1px -1px 0 rgb(255, 255, 255),
+        1px -1px 0 rgb(255, 255, 255),
+        -1px 1px 0 rgb(255, 255, 255),
+        1px 1px 0 rgb(255, 255, 255);
+    /* Обводка */
     pointer-events: none;
 }
 
@@ -1277,11 +1460,11 @@ audio {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     display: inline-block;
-    padding: 0.3em 0.6em ;
+    padding: 0.3em 0.6em;
     border: 3px solid transparent;
     border-image: linear-gradient(135deg, #64c6ff 20%, #5e69ff 70%);
     border-image-slice: 1;
-  }
+}
 
 /* Стили для музыкальных контейнеров на music-app.html */
 #music-players {
@@ -1293,12 +1476,14 @@ audio {
 }
 
 .music-container {
-    background-color: #00116e; /* Основной фон для карточек */
+    background-color: #00116e;
+    /* Основной фон для карточек */
     padding: 25px;
     border-radius: 15px;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
     text-align: center;
-    width: 320px; /* Фиксированная ширина для карточек */
+    width: 320px;
+    /* Фиксированная ширина для карточек */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1323,11 +1508,13 @@ audio {
 .song-title {
     font-size: 1.5em;
     font-weight: bold;
-    color: #a0f0ed; /* Яркий акцентный цвет */
+    color: #a0f0ed;
+    /* Яркий акцентный цвет */
     margin: 10px 0 5px;
 }
 
-.song-title-data, .song-duration {
+.song-title-data,
+.song-duration {
     font-size: 0.9em;
     color: #c0c0c0;
     margin: 3px 0;
@@ -1356,15 +1543,19 @@ audio {
     color: #e0e0e0;
 }
 
-.footer-logo { /* Этот класс только для стандартных логотипов, если есть */
-    width: 60px; /* Можешь оставить 60px или изменить */
+.footer-logo {
+    /* Этот класс только для стандартных логотипов, если есть */
+    width: 60px;
+    /* Можешь оставить 60px или изменить */
     height: auto;
     margin: 0 10px;
     vertical-align: middle;
 }
 
-.logo-Yandex_music { /* Отдельный стиль для логотипа Yandex Music */
-    width: 100px; /* Увеличено до 100px */
+.logo-Yandex_music {
+    /* Отдельный стиль для логотипа Yandex Music */
+    width: 100px;
+    /* Увеличено до 100px */
     height: auto;
     margin: 0 10px;
     vertical-align: middle;
@@ -1374,17 +1565,21 @@ audio {
 body {
     margin: 0;
     font-family: 'Arial', sans-serif;
-    color: #e0e0e0; /* Светлый текст для темного фона */
-    background-color: #0b0049; /* Темно-синий фон по умолчанию */
+    color: #e0e0e0;
+    /* Светлый текст для темного фона */
+    background-color: #0b0049;
+    /* Темно-синий фон по умолчанию */
 }
 
 /* Стили для header на music-app.html */
 header {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Распределяет элементы по краям */
+    justify-content: space-between;
+    /* Распределяет элементы по краям */
     padding: 15px 30px;
-    background-color: #05002e; /* Очень темный фон для шапки */
+    background-color: #05002e;
+    /* Очень темный фон для шапки */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     position: sticky;
     top: 0;
@@ -1400,30 +1595,35 @@ header .return-link img.home-icon {
 header h1 {
     margin: 0;
     font-size: 2em;
-    color: #e6e6e6; /* Более светлый заголовок */
+    color: #e6e6e6;
+    /* Более светлый заголовок */
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
 }
 
 .header-right-actions {
     display: flex;
     align-items: center;
-    gap: 15px; /* Промежуток между кнопкой и иконкой */
+    gap: 15px;
+    /* Промежуток между кнопкой и иконкой */
 }
 
 #info-icon {
     width: 25px;
     height: 25px;
     cursor: pointer;
-    filter: invert(100%); /* Делаем иконку белой на темном фоне */
+    filter: invert(100%);
+    /* Делаем иконку белой на темном фоне */
 }
 
 /* Стили для кнопки "Понравившиеся" на music-app.html */
 .favorites-button {
-    background-color: #190170; /* Приятный синий */
+    background-color: #190170;
+    /* Приятный синий */
     color: white;
     padding: 10px 18px;
     border: none;
-    border-radius: 25px; /* Закругленные углы */
+    border-radius: 25px;
+    /* Закругленные углы */
     cursor: pointer;
     text-decoration: none;
     font-size: 15px;
@@ -1433,21 +1633,25 @@ header h1 {
 }
 
 .favorites-button:hover {
-    background-color: #0003ad; /* Более темный синий при наведении */
+    background-color: #0003ad;
+    /* Более темный синий при наведении */
     transform: translateY(-2px);
 }
 
 /* Стили для кнопки "Добавить в понравившиеся" на music-app.html */
 .add-to-favorites-btn {
-    background-color: #28a745; /* Зеленый */
+    background-color: #28a745;
+    /* Зеленый */
     color: white;
     padding: 10px 15px;
     border: none;
-    border-radius: 20px; /* Закругленные углы */
+    border-radius: 20px;
+    /* Закругленные углы */
     cursor: pointer;
     font-size: 14px;
     font-weight: bold;
-    margin-top: 15px; /* Отступ от плеера */
+    margin-top: 15px;
+    /* Отступ от плеера */
     transition: background-color 0.3s ease, transform 0.2s ease;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
 }
@@ -1459,7 +1663,8 @@ header h1 {
 
 .add-to-favorites-btn:disabled,
 .add-to-favorites-btn.added-to-favorites {
-    background-color: #6c757d; /* Серый цвет для неактивной/добавленной кнопки */
+    background-color: #6c757d;
+    /* Серый цвет для неактивной/добавленной кнопки */
     cursor: not-allowed;
     box-shadow: none;
     opacity: 0.8;
@@ -1468,7 +1673,8 @@ header h1 {
 /* Стили для секции поиска на music-app.html */
 #search-section {
     padding: 30px 20px;
-    background-color: #05004b; /* Чуть светлее, чем основной фон */
+    background-color: #05004b;
+    /* Чуть светлее, чем основной фон */
     border-radius: 10px;
     margin: 20px auto;
     max-width: 800px;
@@ -1507,12 +1713,14 @@ header h1 {
 }
 
 .music-container {
-    background-color: #00116e; /* Основной фон для карточек */
+    background-color: #00116e;
+    /* Основной фон для карточек */
     padding: 25px;
     border-radius: 15px;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
     text-align: center;
-    width: 320px; /* Фиксированная ширина для карточек */
+    width: 320px;
+    /* Фиксированная ширина для карточек */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1537,11 +1745,13 @@ header h1 {
 .song-title {
     font-size: 1.5em;
     font-weight: bold;
-    color: #a0f0ed; /* Яркий акцентный цвет */
+    color: #a0f0ed;
+    /* Яркий акцентный цвет */
     margin: 10px 0 5px;
 }
 
-.song-title-data, .song-duration {
+.song-title-data,
+.song-duration {
     font-size: 0.9em;
     color: #c0c0c0;
     margin: 3px 0;
@@ -1570,15 +1780,18 @@ header h1 {
     color: #e0e0e0;
 }
 
-.footer-logo { /* Этот класс только для стандартных логотипов, если есть */
+.footer-logo {
+    /* Этот класс только для стандартных логотипов, если есть */
     width: 60px;
     height: auto;
     margin: 0 10px;
     vertical-align: middle;
 }
 
-.logo-Yandex_music { /* Отдельный стиль для логотипа Yandex Music */
-    width: 100px; /* Увеличено до 100px */
+.logo-Yandex_music {
+    /* Отдельный стиль для логотипа Yandex Music */
+    width: 100px;
+    /* Увеличено до 100px */
     height: auto;
     margin: 0 10px;
     vertical-align: middle;
@@ -1590,7 +1803,8 @@ header h1 {
 
 .music-container .nexus-player-title {
     font-family: 'Poetsen One', sans-serif;
-    color: #a0f0ed; /* Твой акцентный цвет */
+    color: #a0f0ed;
+    /* Твой акцентный цвет */
     font-size: 1.2em;
     margin-bottom: 15px;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
@@ -1600,7 +1814,8 @@ header h1 {
 .custom-player {
     width: 100%;
     margin-top: 20px;
-    background-color: #000a3d; /* Темно-синий фон плеера */
+    background-color: #000a3d;
+    /* Темно-синий фон плеера */
     border-radius: 10px;
     padding: 15px;
     box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5), 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -1619,7 +1834,8 @@ header h1 {
 }
 
 .custom-player .play-pause-btn {
-    background-color: #007bff; /* Синяя кнопка Play */
+    background-color: #007bff;
+    /* Синяя кнопка Play */
     color: white;
     border: none;
     border-radius: 50%;
@@ -1640,7 +1856,8 @@ header h1 {
 }
 
 .custom-player .progress-container {
-    flex-grow: 1; /* Занимает все доступное пространство */
+    flex-grow: 1;
+    /* Занимает все доступное пространство */
     display: flex;
     align-items: center;
     gap: 10px;
@@ -1651,7 +1868,8 @@ header h1 {
 .custom-player .custom-progress-bar {
     width: 100%;
     height: 8px;
-    background: linear-gradient(to right, #a0f0ed, #007bff); /* Градиентный фон */
+    background: linear-gradient(to right, #a0f0ed, #007bff);
+    /* Градиентный фон */
     border-radius: 5px;
     outline: none;
     cursor: pointer;
@@ -1664,7 +1882,8 @@ header h1 {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: #a0f0ed; /* Цвет бегунка */
+    background: #a0f0ed;
+    /* Цвет бегунка */
     cursor: pointer;
     border: 3px solid #000a3d;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
@@ -1678,12 +1897,14 @@ header h1 {
 
 .custom-player .current-time,
 .custom-player .total-duration {
-    min-width: 35px; /* Чтобы время не прыгало */
+    min-width: 35px;
+    /* Чтобы время не прыгало */
     text-align: center;
 }
 
 .custom-player .goto-yandex-btn {
-    background-color: #ff007f; /* Яркий розовый цвет для Яндекса */
+    background-color: #ff007f;
+    /* Яркий розовый цвет для Яндекса */
     color: white;
     padding: 12px 20px;
     border: none;
@@ -1692,7 +1913,8 @@ header h1 {
     text-decoration: none;
     font-size: 15px;
     font-weight: bold;
-    margin-top: 15px; /* Отступ от плеера */
+    margin-top: 15px;
+    /* Отступ от плеера */
     transition: background-color 0.3s ease, transform 0.2s ease;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
@@ -1706,7 +1928,8 @@ header h1 {
 .yandex-iframe-hidden {
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    margin-top: 15px; /* Отступ сверху */
+    margin-top: 15px;
+    /* Отступ сверху */
     /* display: none; - это свойство задано в HTML, JS будет его менять */
 }
 
@@ -1715,22 +1938,27 @@ header h1 {
     .custom-player {
         padding: 10px;
     }
+
     .custom-player .play-pause-btn {
         width: 40px;
         height: 40px;
         font-size: 1.3em;
     }
+
     .custom-player .progress-container {
         gap: 5px;
         font-size: 0.8em;
     }
+
     .custom-player .custom-progress-bar {
         height: 6px;
     }
+
     .custom-player .custom-progress-bar::-webkit-slider-thumb {
         width: 18px;
         height: 18px;
     }
+
     .custom-player .goto-yandex-btn {
         padding: 10px 15px;
         font-size: 14px;
@@ -1744,8 +1972,10 @@ header h1 {
     /* Эти стили можно оставить, если они нужны для отступов, макетов и т.д.,
        но убери background-color, border, box-shadow, если они были там. */
     margin-top: 20px;
-    padding: 0; /* Установи в 0, если хочешь, чтобы фон был только у item, а не у родителя */
-    /* background-color: transparent; */ /* Убери фон у самого контейнера */
+    padding: 0;
+    /* Установи в 0, если хочешь, чтобы фон был только у item, а не у родителя */
+    /* background-color: transparent; */
+    /* Убери фон у самого контейнера */
     /* border: none; */
     /* box-shadow: none; */
 }
@@ -1753,20 +1983,32 @@ header h1 {
 /* Стили для каждого ОТДЕЛЬНОГО элемента результата поиска */
 /* Это тот класс, который ты присваиваешь каждому найденному треку в результатах */
 .search-result-item {
-    background-color: #333; /* Темный фон, как у кнопок */
-    color: white; /* Цвет текста */
-    border: none; /* Убираем рамку */
-    border-radius: 5px; /* Скругленные углы, как у кнопок */
-    padding: 10px 15px; /* Внутренние отступы */
-    margin-bottom: 8px; /* Отступ между отдельными результатами */
-    cursor: pointer; /* Курсор-указатель при наведении */
-    transition: background-color 0.2s ease; /* Плавное изменение фона при наведении */
+    background-color: #333;
+    /* Темный фон, как у кнопок */
+    color: white;
+    /* Цвет текста */
+    border: none;
+    /* Убираем рамку */
+    border-radius: 5px;
+    /* Скругленные углы, как у кнопок */
+    padding: 10px 15px;
+    /* Внутренние отступы */
+    margin-bottom: 8px;
+    /* Отступ между отдельными результатами */
+    cursor: pointer;
+    /* Курсор-указатель при наведении */
+    transition: background-color 0.2s ease;
+    /* Плавное изменение фона при наведении */
 
     /* Дополнительные стили для лучшего отображения содержимого */
-    display: flex; /* Используем flexbox для выравнивания */
-    align-items: center; /* Выравниваем по центру по вертикали */
-    gap: 10px; /* Пространство между элементами внутри результата (например, картинка и текст) */
-    text-decoration: none; /* Убрать подчеркивание, если элемент является ссылкой (<a>) */
+    display: flex;
+    /* Используем flexbox для выравнивания */
+    align-items: center;
+    /* Выравниваем по центру по вертикали */
+    gap: 10px;
+    /* Пространство между элементами внутри результата (например, картинка и текст) */
+    text-decoration: none;
+    /* Убрать подчеркивание, если элемент является ссылкой (<a>) */
 }
 
 /* Убираем нижний отступ у последнего элемента, чтобы не было лишнего пространства */
@@ -1776,23 +2018,31 @@ header h1 {
 
 /* Эффект при наведении на элемент результата поиска */
 .search-result-item:hover {
-    background-color: #555; /* Цвет фона при наведении, как у кнопок */
+    background-color: #555;
+    /* Цвет фона при наведении, как у кнопок */
 }
 
 /* Если у тебя есть картинки внутри .search-result-item */
 .search-result-item img {
-    width: 40px; /* Ширина изображения */
-    height: 40px; /* Высота изображения */
-    border-radius: 3px; /* Немного скруглить углы у картинки */
-    object-fit: cover; /* Обрезка изображения для заполнения */
+    width: 40px;
+    /* Ширина изображения */
+    height: 40px;
+    /* Высота изображения */
+    border-radius: 3px;
+    /* Немного скруглить углы у картинки */
+    object-fit: cover;
+    /* Обрезка изображения для заполнения */
 }
 
 /* Если у тебя есть отдельные span или div для названия и артиста внутри .search-result-item */
 .search-result-item .result-title {
-    font-weight: bold; /* Жирный шрифт для названия */
+    font-weight: bold;
+    /* Жирный шрифт для названия */
 }
 
 .search-result-item .result-artist {
-    font-size: 0.9em; /* Чуть меньший размер для артиста */
-    color: #bbb; /* Более светлый цвет для артиста */
+    font-size: 0.9em;
+    /* Чуть меньший размер для артиста */
+    color: #bbb;
+    /* Более светлый цвет для артиста */
 }
