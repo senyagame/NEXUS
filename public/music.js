@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { initializeAuth, onAuthStateChanged, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 /**
  * Форматирует секунды в строку вида "минуты:секунды" (например, 1:05).
@@ -42,7 +42,7 @@ export function initializeCustomPlayer(container) {
             if (progressBar) progressBar.max = audio.duration;
             if (totalDurationSpan) totalDurationSpan.textContent = formatTime(audio.duration);
         });
-        
+
         if (playPauseBtn) {
             playPauseBtn.addEventListener('click', () => {
                 if (isPlaying) {
@@ -101,19 +101,24 @@ export function initializeCustomPlayer(container) {
 // ОСНОВНОЙ БЛОК ЛОГИКИ FIREBASE
 // =======================================================
 document.addEventListener("DOMContentLoaded", async function () {
-    
+
     const firebaseConfig = {
-      apiKey: "AIzaSyAP04srkFeyQPsp1iuhn0RwzMav9fhqCRw",
-      authDomain: "nexus-90a19.firebaseapp.com",
-      projectId: "nexus-90a19",
-      storageBucket: "nexus-90a19.appspot.com",
-      messagingSenderId: "327211386840",
-      appId: "1:327211386840:web:69110e5b7fd7e7f3b69327"
+        apiKey: "AIzaSyAP04srkFeyQPsp1iuhn0RwzMav9fhqCRw",
+        authDomain: "nexus-90a19.firebaseapp.com",
+        projectId: "nexus-90a19",
+        storageBucket: "nexus-90a19.appspot.com",
+        messagingSenderId: "327211386840",
+        appId: "1:327211386840:web:69110e5b7fd7e7f3b69327"
     };
 
+    // --- НАЧАЛО ИСПРАВЛЕННОГО БЛОКА ---
+    // Здесь мы инициализируем Firebase один раз и с правильными настройками
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const auth = getAuth(app);
+    const auth = initializeAuth(app, {
+        persistence: browserLocalPersistence
+    });
+    // --- КОНЕЦ ИСПРАВЛЕННОГО БЛОКА ---
 
     let currentUserId = null;
 
@@ -125,7 +130,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             heartButton.classList.remove("is-favorite");
             return;
         }
-        
+
         heartButton.disabled = false;
         const userFavoritesRef = doc(db, "favorites", currentUserId);
 
@@ -134,7 +139,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             if (docSnap.exists()) {
                 const favorites = docSnap.data().tracks || [];
                 const isFavorite = favorites.some(fav => fav.yandexLink === songData.yandexLink);
-                
+
                 if (isFavorite) {
                     heartButton.textContent = '❤️';
                     heartButton.classList.add("is-favorite");
@@ -168,13 +173,19 @@ document.addEventListener("DOMContentLoaded", async function () {
             const isCurrentlyFavorite = heartButton.classList.contains("is-favorite");
 
             if (isCurrentlyFavorite) {
-                await updateDoc(userFavoritesRef, { tracks: arrayRemove(songData) });
+                await updateDoc(userFavoritesRef, {
+                    tracks: arrayRemove(songData)
+                });
                 alert(`"${songData.song}" удален из понравившихся.`);
             } else {
                 if (docSnap.exists()) {
-                    await updateDoc(userFavoritesRef, { tracks: arrayUnion(songData) });
+                    await updateDoc(userFavoritesRef, {
+                        tracks: arrayUnion(songData)
+                    });
                 } else {
-                    await setDoc(userFavoritesRef, { tracks: [songData] });
+                    await setDoc(userFavoritesRef, {
+                        tracks: [songData]
+                    });
                 }
                 alert(`"${songData.song}" добавлен в понравившиеся!`);
             }
@@ -187,7 +198,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     const musicContainers = document.querySelectorAll('.music-container');
-    
+
     musicContainers.forEach(container => {
         initializeCustomPlayer(container);
 
@@ -209,7 +220,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     onAuthStateChanged(auth, (user) => {
         currentUserId = user ? user.uid : null;
         console.log(user ? `Пользователь вошел: ${user.uid}` : "Пользователь не вошел.");
-        
+
         musicContainers.forEach(container => {
             const favoriteHeartBtn = container.querySelector('.favorite-heart-btn');
             if (favoriteHeartBtn) {
