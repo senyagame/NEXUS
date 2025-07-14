@@ -256,4 +256,12 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
         });
     }
+    
+        const authLink = document.getElementById('auth-link');
+    if (authLink) {
+        // Формируем URL для возврата (текущая страница)
+        const redirectUrl = encodeURIComponent(window.location.href);
+        // Устанавливаем итоговый адрес для ссылки
+        authLink.href = `https://nexus-id-site.vercel.app/auth.html?redirectUrl=${redirectUrl}`;
+    }А
 });
