@@ -27,7 +27,6 @@ export function initializeCustomPlayer(container) {
 
     let isPlaying = false;
 
-    // Установка начальной длительности из данных, если аудио еще не загружено
     const songDurationStr = container.dataset.duration;
     if (songDurationStr) {
         const [minutes, seconds] = songDurationStr.split(':').map(Number);
@@ -39,13 +38,11 @@ export function initializeCustomPlayer(container) {
     }
 
     if (audio) {
-        // Обновление метаданных, когда аудиофайл загружен
         audio.addEventListener('loadedmetadata', () => {
             if (progressBar) progressBar.max = audio.duration;
             if (totalDurationSpan) totalDurationSpan.textContent = formatTime(audio.duration);
         });
         
-        // Обработчик кнопки Play/Pause
         if (playPauseBtn) {
             playPauseBtn.addEventListener('click', () => {
                 if (isPlaying) {
@@ -53,7 +50,6 @@ export function initializeCustomPlayer(container) {
                     playPauseBtn.textContent = '▶';
                     if (nexusPlayerTitle) nexusPlayerTitle.style.display = 'block';
                 } else {
-                    // Ставим на паузу все остальные плееры на странице
                     document.querySelectorAll('audio').forEach(otherAudio => {
                         if (otherAudio !== audio && !otherAudio.paused) {
                             otherAudio.pause();
@@ -73,20 +69,17 @@ export function initializeCustomPlayer(container) {
             });
         }
 
-        // Обновление прогресс-бара и времени
         audio.addEventListener('timeupdate', () => {
             if (progressBar) progressBar.value = audio.currentTime;
             if (currentTimeSpan) currentTimeSpan.textContent = formatTime(audio.currentTime);
         });
 
-        // Перемотка трека
         if (progressBar) {
             progressBar.addEventListener('input', () => {
                 audio.currentTime = progressBar.value;
             });
         }
 
-        // Сброс по окончании воспроизведения
         audio.addEventListener('ended', () => {
             if (playPauseBtn) playPauseBtn.textContent = '▶';
             isPlaying = false;
@@ -109,7 +102,6 @@ export function initializeCustomPlayer(container) {
 // =======================================================
 document.addEventListener("DOMContentLoaded", async function () {
     
-    // --- ИСПРАВЛЕННАЯ КОНФИГУРАЦИЯ FIREBASE ДЛЯ ПРОЕКТА nexus-90a19 ---
     const firebaseConfig = {
       apiKey: "AIzaSyAP04srkFeyQPsp1iuhn0RwzMav9fhqCRw",
       authDomain: "nexus-90a19.firebaseapp.com",
@@ -125,11 +117,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     let currentUserId = null;
 
-    /**
-     * Обновляет внешний вид кнопки "избранное" в зависимости от статуса трека.
-     * @param {HTMLElement} heartButton - Кнопка-сердечко.
-     * @param {object} songData - Данные о треке.
-     */
     async function updateFavoriteHeartState(heartButton, songData) {
         if (!currentUserId) {
             heartButton.textContent = '🔒';
@@ -169,11 +156,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
-    /**
-     * Добавляет или удаляет трек из избранного пользователя.
-     * @param {HTMLElement} heartButton - Кнопка-сердечко.
-     * @param {object} songData - Данные о треке.
-     */
     async function toggleFavorite(heartButton, songData) {
         if (!currentUserId) {
             alert("Пожалуйста, войдите в систему, чтобы добавлять треки в избранное.");
@@ -186,11 +168,9 @@ document.addEventListener("DOMContentLoaded", async function () {
             const isCurrentlyFavorite = heartButton.classList.contains("is-favorite");
 
             if (isCurrentlyFavorite) {
-                // Удаляем из избранного
                 await updateDoc(userFavoritesRef, { tracks: arrayRemove(songData) });
                 alert(`"${songData.song}" удален из понравившихся.`);
             } else {
-                // Добавляем в избранное
                 if (docSnap.exists()) {
                     await updateDoc(userFavoritesRef, { tracks: arrayUnion(songData) });
                 } else {
@@ -208,7 +188,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const musicContainers = document.querySelectorAll('.music-container');
     
-    // Инициализация плееров и кнопок "избранное"
     musicContainers.forEach(container => {
         initializeCustomPlayer(container);
 
@@ -227,7 +206,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     });
 
-    // Слушатель состояния аутентификации для обновления UI
     onAuthStateChanged(auth, (user) => {
         currentUserId = user ? user.uid : null;
         console.log(user ? `Пользователь вошел: ${user.uid}` : "Пользователь не вошел.");
@@ -245,7 +223,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     });
 
-    // Дополнительная логика (например, для шапки при скролле)
     const mainHeader = document.getElementById('main-header');
     if (mainHeader) {
         window.addEventListener('scroll', () => {
@@ -256,12 +233,11 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
         });
     }
-    
-        const authLink = document.getElementById('auth-link');
+
+    // Этот блок формирует правильную ссылку для авторизации
+    const authLink = document.getElementById('auth-link');
     if (authLink) {
-        // Формируем URL для возврата (текущая страница)
         const redirectUrl = encodeURIComponent(window.location.href);
-        // Устанавливаем итоговый адрес для ссылки
         authLink.href = `https://nexus-id-site.vercel.app/auth.html?redirectUrl=${redirectUrl}`;
-    }А
+    }
 });
