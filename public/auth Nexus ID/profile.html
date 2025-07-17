@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus ID - Профиль</title>
+    <link rel="icon" href="./assets/nid-favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="styles/styles.css">
+    <style>
+        /* Ваши внутренние стили остаются без изменений */
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background-image: url(./assets/auth_mountains.jpg);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #000;
+            line-height: 1.6
+        }
+
+        .profile-container {
+            max-width: 500px;
+            width: 90%;
+            padding: 40px;
+            background-color: rgba(255, 255, 255, .9);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+            text-align: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, .1)
+        }
+
+        .profile-container h2 {
+            font-size: 2.2em;
+            color: #000;
+            margin-bottom: 25px;
+            font-weight: 600
+        }
+
+        .profile-avatar-display {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 20px auto;
+            border: 2px solid #686868;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .3)
+        }
+
+        .profile-info {
+            text-align: left;
+            width: 100%;
+            margin-bottom: 20px
+        }
+
+        .profile-info p {
+            margin: 12px 0;
+            font-size: 1.05em;
+            color: #000
+        }
+
+        .profile-info strong {
+            display: inline-block;
+            width: 180px;
+            text-align: right;
+            margin-right: 15px;
+            color: #000
+        }
+
+        .app-button {
+            padding: 14px 30px;
+            font-size: 1.15em;
+            font-weight: 500;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color .3s ease, transform .1s ease, box-shadow .2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .3);
+            width: 70%;
+            margin-top: 15px;
+            letter-spacing: .5px
+        }
+
+        .app-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, .4)
+        }
+
+        .app-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, .2)
+        }
+
+        .primary-action-button {
+            background-color: #007bff;
+            color: #fff
+        }
+
+        .primary-action-button:hover {
+            background-color: #0069d9
+        }
+
+        .danger-button {
+            background-color: #dc3545;
+            color: #fff
+        }
+
+        .danger-button:hover {
+            background-color: #c82333
+        }
+
+        .success-button {
+            background-color: #28a745;
+            color: #fff
+        }
+
+        .success-button:hover {
+            background-color: #218838
+        }
+
+        .back-button {
+            display: block;
+            margin-top: 40px;
+            padding: 14px 30px;
+            color: #fff;
+            text-decoration: none;
+            background-color: #4a4a5a;
+            border-radius: 6px;
+            font-size: 1.15em;
+            font-weight: 500;
+            transition: background-color .3s ease, transform .1s ease, box-shadow .2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .3);
+            text-align: center;
+            width: 70%;
+            letter-spacing: .5px
+        }
+
+        .back-button:hover {
+            background-color: #5a5a6a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, .4)
+        }
+
+        .back-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, .2)
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, .8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000
+        }
+
+        .modal-content {
+            background-color: rgba(255, 255, 255, .95);
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, .7);
+            width: 90%;
+            max-width: 550px;
+            color: #000;
+            position: relative;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, .15)
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 20px
+        }
+
+        .modal-header img {
+            width: 50px;
+            height: auto;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .2)
+        }
+
+        .modal-header h3 {
+            flex-grow: 1;
+            margin: 0;
+            text-align: center;
+            font-size: 1.7em;
+            color: #000;
+            font-weight: 600
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: #333;
+            font-size: 2.2em;
+            cursor: pointer;
+            padding: 0 10px;
+            transition: color .2s ease
+        }
+
+        .close-button:hover {
+            color: #000
+        }
+
+        .modal-body {
+            padding-top: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center
+        }
+
+        .modal-body .form-group {
+            width: 100%;
+            max-width: 80%;
+            margin-bottom: 15px;
+            text-align: left
+        }
+
+        .modal-body .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            text-align: left;
+            margin-left: 0;
+            color: #000
+        }
+
+        .modal-body .avatar-selection {
+            margin-bottom: 20px;
+            text-align: center
+        }
+
+        .modal-body .avatar-selection p {
+            margin-bottom: 10px;
+            color: #000
+        }
+
+        .modal-body .avatar-selection img {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            margin: 0 5px;
+            border: 2px solid transparent;
+            transition: border-color .2s ease, transform .1s ease
+        }
+
+        .modal-body .avatar-selection img.selected {
+            border-color: #007BFF;
+            transform: scale(1.1)
+        }
+
+        .modal-body .avatar-selection img:hover:not(.selected) {
+            border-color: #555;
+            transform: scale(1.05)
+        }
+
+        .upload-avatar-button {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 2px dashed #555;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 28px;
+            color: #555;
+            background-color: #f0f0f0;
+            transition: all 0.2s ease;
+        }
+
+        .upload-avatar-button:hover {
+            background-color: #e0e0e0;
+            color: #000;
+            border-color: #000;
+        }
+
+        #avatar-upload-input {
+            display: none;
+        }
+
+        .modal-footer {
+            margin-top: 35px;
+            text-align: center;
+            border-top: 1px solid #ccc;
+            padding-top: 25px
+        }
+
+        .form-group input[type=text],
+        .form-group input[type=email] {
+            width: 100%;
+            padding: 10px 12px;
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #f0f0f0;
+            color: #000;
+            font-size: 1em;
+            outline: none;
+            transition: border-color .2s ease, box-shadow .2s ease
+        }
+
+        .form-group input[type=text]:focus,
+        .form-group input[type=email]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, .3)
+        }
+
+        .header-logo {
+            max-height: 50px;
+            width: auto
+        }
+
+        .header-logo-mobile {
+            display: none
+        }
+
+        @media (max-width:768px) {
+            .header-logo {
+                display: none
+            }
+
+            .header-logo-mobile {
+                display: block;
+                max-height: 80px;
+                width: auto
+            }
+        }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+</head>
+
+<body>
+    <div class="profile-container">
+        <img src="./assets/NID-long-logo.png" alt="Nexus ID Logo" class="header-logo">
+        <h2>Личный кабинет</h2>
+        <p>N-ID привязан к почте: <span id="user-email"></span></p>
+        <img id="current-profile-avatar" class="profile-avatar-display" src="./assets/avatar9.png" alt="Ваш аватар">
+        <div class="profile-info">
+            <p><strong>Ваш логин:</strong> <span id="display-username">Загрузка...</span></p>
+            <p><strong>Ваш номер телефона:</strong> <span id="display-phone">Загрузка...</span></p>
+        </div>
+        <button class="app-button primary-action-button" onclick="openEditModal()">Изменить</button>
+        <button class="app-button primary-action-button" onclick="logout()">Выйти из аккаунта</button>
+        <button class="app-button danger-button" onclick="deleteAccount()">Отключить аккаунт</button>
+        <a href="https://nexus-delta-rust.vercel.app" class="back-button">Перейти в NEXUS APP</a>
+    </div>
+
+    <div id="edit-profile-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="./assets/nid-favicon.png" alt="N-ID Logo">
+                <h3>Редактирование</h3>
+                <button class="close-button" onclick="closeEditModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="avatar-selection">
+                    <p>Выберите аватар:</p>
+                    <div
+                        style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: center; align-items: center;">
+                        <img src="./assets/default-avatar.jpg" alt="Аватар по умолчанию"
+                            data-avatar-url="./assets/default-avatar.jpg">
+                        <img src="./assets/avatar1.jpg" alt="Аватар 1" data-avatar-url="./assets/avatar1.jpg">
+                        <img src="./assets/avatar2.jpg" alt="Аватар 2" data-avatar-url="./assets/avatar2.jpg">
+                        <img src="./assets/avatar3.jpg" alt="Аватар 3" data-avatar-url="./assets/avatar3.jpg">
+                        <img src="./assets/avatar4.jpg" alt="Аватар 4" data-avatar-url="./assets/avatar4.jpg">
+                        <img src="./assets/avatar5.jpg" alt="Аватар 5" data-avatar-url="./assets/avatar5.jpg">
+                        <img src="./assets/avatar6.jpg" alt="Аватар 6" data-avatar-url="./assets/avatar6.jpg">
+                        <img src="./assets/avatar7.jpg" alt="Аватар 7" data-avatar-url="./assets/avatar7.jpg">
+                        <img src="./assets/avatar8.png" alt="Аватар 8" data-avatar-url="./assets/avatar8.png">
+                        <img src="./assets/avatar9.png" alt="Аватар 9" data-avatar-url="./assets/avatar9.png">
+
+                        <input type="file" id="avatar-upload-input" accept="image/*">
+                        <label for="avatar-upload-input" class="upload-avatar-button" title="Загрузить свой аватар">
+                            +
+                        </label>
+                    </div>
+                </div>
+                <img id="modal-profile-avatar-preview" class="profile-avatar-display" src="./assets/avatar9.png"
+                    alt="Текущий аватар">
+                <div class="form-group">
+                    <label for="modal-username">Логин:</label>
+                    <input type="text" id="modal-username" placeholder="Введите логин">
+                </div>
+                <div class="form-group">
+                    <label for="modal-email">Email:</label>
+                    <input type="email" id="modal-email" placeholder="Введите email" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="modal-phone">Номер телефона:</label>
+                    <input type="text" id="modal-phone" placeholder="Введите номер телефона">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="app-button success-button" onclick="saveProfileChanges()">Сохранить изменения</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // *** ИСПРАВЛЕНИЕ ЗДЕСЬ ***
+        // Мы меняем значение storageBucket на правильное.
+        const firebaseConfig = {
+            apiKey: "AIzaSyAP04srkFeyQPsp1iuhn0RwzMav9fhqCRw",
+            authDomain: "nexus-90a19.firebaseapp.com",
+            projectId: "nexus-90a19",
+            storageBucket: "nexus-90a19.firebasestorage.app", // <--- ИЗМЕНЕНО
+            messagingSenderId: "327211386840",
+            appId: "1:327211386840:web:69110e5b7fd7e7f3b69327",
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        const userEmailSpan = document.getElementById("user-email");
+        const currentProfileAvatar = document.getElementById('current-profile-avatar');
+        const displayUsername = document.getElementById('display-username');
+        const displayPhone = document.getElementById('display-phone');
+
+        const defaultAvatarUrl = "./assets/avatar9.png";
+        let currentUser = null;
+        let selectedAvatarUrl = defaultAvatarUrl;
+
+        const editProfileModal = document.getElementById('edit-profile-modal');
+        const modalUsernameInput = document.getElementById('modal-username');
+        const modalEmailInput = document.getElementById('modal-email');
+        const modalPhoneInput = document.getElementById('modal-phone');
+        const modalProfileAvatarPreview = document.getElementById('modal-profile-avatar-preview');
+        const modalAvatarImages = document.querySelectorAll('#edit-profile-modal .avatar-selection img');
+
+        const avatarUploadInput = document.getElementById('avatar-upload-input');
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const customToken = urlParams.get('custom_token');
+            if (customToken) {
+                auth.signInWithCustomToken(customToken)
+                    .then(() => {
+                        console.log("Успешный вход через кастомный токен!");
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    })
+                    .catch((error) => {
+                        console.error("Ошибка входа с кастомным токеном:", error);
+                        window.location.href = "auth.html";
+                    });
+            }
+        });
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                const userRef = db.collection("users").doc(user.uid);
+                try {
+                    const docSnap = await userRef.get();
+                    let userData;
+                    if (docSnap.exists) { 
+                        userData = docSnap.data();
+                    } else {
+                        userData = {
+                            email: user.email,
+                            username: user.displayName || 'Не указан',
+                            phoneNumber: user.phoneNumber || 'Не указан',
+                            avatarUrl: user.photoURL || defaultAvatarUrl,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        };
+                        await userRef.set(userData);
+                    }
+                    updateProfileDisplay(userData);
+                } catch (error) {
+                    console.error("Ошибка при работе с Firestore:", error);
+                }
+            } else {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (!urlParams.has('custom_token')) {
+                    window.location.href = "auth.html";
+                }
+            }
+        });
+
+        function updateProfileDisplay(userData) {
+            userEmailSpan.textContent = userData.email || '';
+            displayUsername.textContent = userData.username || 'Не указан';
+            displayPhone.textContent = userData.phoneNumber || 'Не указан';
+            currentProfileAvatar.src = userData.avatarUrl || defaultAvatarUrl;
+        }
+
+        window.logout = function () {
+            auth.signOut().then(() => {
+                alert("Вы успешно вышли из аккаунта.");
+                window.location.href = "home-page.html";
+            });
+        };
+
+        window.deleteAccount = function () {
+            window.location.href = 'delete-account.html';
+        };
+
+        window.openEditModal = async function () {
+            if (!currentUser) return;
+            const userRef = db.collection("users").doc(currentUser.uid);
+            const docSnap = await userRef.get();
+            if (!docSnap.exists) {
+                console.error("Документ пользователя не найден для редактирования");
+                return;
+            }
+            const userData = docSnap.data();
+
+            modalUsernameInput.value = userData.username === 'Не указан' ? '' : userData.username.trim();
+            modalEmailInput.value = userData.email || '';
+            modalPhoneInput.value = userData.phoneNumber === 'Не указан' ? '' : userData.phoneNumber.trim();
+
+            const isYandexUser = currentUser.providerData.some(p => p.providerId === 'yandex.com');
+            modalEmailInput.readOnly = isYandexUser;
+            modalEmailInput.title = isYandexUser ? "Email нельзя изменить для аккаунтов, вошедших через Яндекс." : "";
+
+            modalProfileAvatarPreview.src = userData.avatarUrl || defaultAvatarUrl;
+            selectedAvatarUrl = userData.avatarUrl || defaultAvatarUrl;
+
+            modalAvatarImages.forEach(img => {
+                img.classList.remove('selected');
+                if (img.dataset.avatarUrl === selectedAvatarUrl) {
+                    img.classList.add('selected');
+                }
+            });
+
+            editProfileModal.style.display = 'flex';
+        };
+
+        window.closeEditModal = function () {
+            editProfileModal.style.display = 'none';
+        };
+
+        modalAvatarImages.forEach(img => {
+            img.addEventListener('click', function () {
+                selectedAvatarUrl = this.dataset.avatarUrl;
+                modalProfileAvatarPreview.src = selectedAvatarUrl;
+                modalAvatarImages.forEach(i => i.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        avatarUploadInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            if (!currentUser) {
+                alert('Ошибка: вы не авторизованы.');
+                return;
+            }
+
+            const storageRef = storage.ref(`avatars/${currentUser.uid}/${file.name}`);
+            const uploadTask = storageRef.put(file);
+
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                },
+                (error) => {
+                    console.error("Ошибка при загрузке аватара: ", error);
+                    alert("Не удалось загрузить аватар. Пожалуйста, попробуйте еще раз.");
+                },
+                () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                        console.log('Файл доступен по ссылке', downloadURL);
+                        selectedAvatarUrl = downloadURL;
+                        modalProfileAvatarPreview.src = downloadURL;
+                        modalAvatarImages.forEach(i => i.classList.remove('selected'));
+                        alert('Ваш аватар успешно загружен!');
+                    });
+                }
+            );
+        });
+
+        window.saveProfileChanges = async function () {
+            if (!currentUser) {
+                alert("Ошибка: пользователь не авторизован.");
+                return;
+            }
+
+            const newUsername = modalUsernameInput.value.trim();
+            const newPhone = modalPhoneInput.value.trim();
+
+            if (!newUsername) {
+                alert("Логин обязателен для заполнения.");
+                return;
+            }
+
+            const userRef = db.collection("users").doc(currentUser.uid);
+            const updatedData = {
+                username: newUsername,
+                phoneNumber: newPhone,
+                avatarUrl: selectedAvatarUrl
+            };
+
+            try {
+                if (currentUser.displayName !== newUsername || currentUser.photoURL !== selectedAvatarUrl) {
+                    await currentUser.updateProfile({
+                        displayName: newUsername,
+                        photoURL: selectedAvatarUrl
+                    });
+                }
+
+                await userRef.update(updatedData);
+
+                alert('Изменения успешно сохранены!');
+                updateProfileDisplay((await userRef.get()).data());
+                closeEditModal();
+
+            } catch (error) {
+                console.error("Ошибка при сохранении изменений:", error);
+                alert("Произошла ошибка при сохранении: " + error.message);
+            }
+        };
+    </script>
+</body>
+
+</html>

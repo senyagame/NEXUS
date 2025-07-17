@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Авторизация</title>
+    <link rel="stylesheet" href="styles/styles.css" />
+    <link rel="icon" href="./assets/nid-favicon.png" type="image/x-icon" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('./assets/auth_mountains.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            color: #000000;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            width: 300px;
+            text-align: center;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            background-color: #e4e4e4;
+            color: #000000;
+        }
+
+        .form-group button,
+        .yandex-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: none;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+
+        .yandex-button {
+            background-color: #000000;
+            color: #ffffff;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .yandex-button img {
+            width: 40px;
+            height: 40px;
+            vertical-align: middle;
+            margin-right: 15px;
+        }
+
+        .form-group button:hover,
+        .yandex-button:hover {
+            opacity: 0.9;
+        }
+
+        .toggle-link {
+            margin-top: 10px;
+        }
+
+        .toggle-link a {
+            color: #000000;
+            text-decoration: none;
+        }
+
+        .toggle-link a:hover {
+            text-decoration: underline;
+        }
+
+        .NID-logo {
+            width: 190px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .or-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #888;
+            margin: 15px 0;
+        }
+
+        .or-divider::before,
+        .or-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .or-divider:not(:empty)::before {
+            margin-right: .25em;
+        }
+
+        .or-divider:not(:empty)::after {
+            margin-left: .25em;
+        }
+
+        .message-area {
+            font-size: 14px;
+            font-weight: bold;
+            min-height: 20px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .error-message {
+            color: #D8000C;
+        }
+
+        .success-message {
+            color: #4F8A10;
+        }
+
+        .info-message {
+            color: #00529B;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="auth-section">
+            <img class="NID-logo" src="./assets/NID-long-logo.png" alt="N-ID Logo" />
+
+            <div id="login-form" style="display: none;">
+                <h2>Авторизация</h2>
+                <div id="login-message" class="message-area"></div>
+                <div class="form-group">
+                    <label for="login-email">Email / Логин:</label>
+                    <input type="text" id="login-email" placeholder="Ваш Email" required />
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Пароль:</label>
+                    <input type="password" id="login-password" placeholder="Пароль" required />
+                </div>
+                <button id="login-button">Авторизироваться с Nexus ID</button>
+                <div class="or-divider">или</div>
+                <a id="yandex-login-link" class="yandex-button" href="#"><img src="./assets/avatar9.png" alt=""
+                        class="yandex-button-img"> Войти через Яндекс ID</a>
+                <div class="toggle-link">
+                    <a href="#" id="show-register-form-link">Нет N-ID? Зарегистрируйтесь!</a>
+                </div>
+            </div>
+
+            <div id="register-form" style="display: none;">
+                <h2>Регистрация N-ID</h2>
+                <div class="form-group">
+                    <label for="register-email">Email:</label>
+                    <input type="email" id="register-email" placeholder="email@example.com" required />
+                </div>
+                <div class="form-group">
+                    <label for="register-login">Придумайте логин:</label>
+                    <input type="text" id="register-login" placeholder="Ваш логин" required />
+                </div>
+                <div class="form-group">
+                    <label for="register-phone">Номер телефона:</label>
+                    <input type="tel" id="register-phone" placeholder="+7 (XXX) XXX-XX-XX" />
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Придумайте пароль:</label>
+                    <input type="password" id="register-password" placeholder="Пароль (мин. 6 символов)" required />
+                </div>
+                <div class="form-group">
+                    <label for="register-password-confirm">Подтвердите пароль:</label>
+                    <input type="password" id="register-password-confirm" placeholder="Повторите пароль" required />
+                </div>
+                <p id="register-message" class="message-area"></p>
+                <button id="register-button">Зарегистрироваться</button>
+                <div class="or-divider">или</div>
+                <a id="yandex-register-link" class="yandex-button" href="#"><img src="./assets/avatar9.png" alt=""
+                        class="yandex-button-img">Регистрация с Яндекс ID</a>
+                <div class="toggle-link">
+                    <a href="#" id="show-login-form-link">Уже есть N-ID? Авторизируйтесь!</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { initializeAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        try {
+            const firebaseConfig = {
+                apiKey: "AIzaSyAP04srkFeyQPsp1iuhn0RwzMav9fhqCRw",
+                authDomain: "nexus-90a19.firebaseapp.com",
+                projectId: "nexus-90a19",
+                storageBucket: "nexus-90a19.appspot.com",
+                messagingSenderId: "327211386840",
+                appId: "1:327211386840:web:69110e5b7fd7e7f3b69327"
+            };
+
+            const app = initializeApp(firebaseConfig);
+            const auth = initializeAuth(app, { persistence: browserLocalPersistence });
+            const db = getFirestore(app);
+
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const loginMessageArea = document.getElementById('login-message');
+            const registerMessageArea = document.getElementById('register-message');
+
+            function showMessage(element, text, type) {
+                if (!element) return;
+                element.textContent = text;
+                element.className = 'message-area';
+                if (type) {
+                    element.classList.add(`${type}-message`);
+                }
+            }
+
+            function translateFirebaseError(errorCode) {
+                switch (errorCode) {
+                    case 'auth/user-disabled':
+                        return 'Пользователь с этим email отключён.';
+                    case 'auth/user-not-found':
+                    case 'auth/invalid-credential':
+                        return 'Неверный email или пароль. Попробуйте снова.';
+                    case 'auth/wrong-password':
+                        return 'Неверный пароль. Попробуйте снова.';
+                    case 'auth/invalid-email':
+                        return 'Некорректный формат email адреса.';
+                    case 'auth/email-already-in-use':
+                        return 'Этот email уже зарегистрирован.';
+                    case 'auth/weak-password':
+                        return 'Пароль слишком слабый. Используйте не менее 6 символов.';
+                    default:
+                        return 'Произошла неизвестная ошибка. Попробуйте позже.';
+                }
+            }
+
+            document.querySelectorAll('#login-form input').forEach(input => {
+                input.addEventListener('input', () => showMessage(loginMessageArea, ''));
+            });
+            document.querySelectorAll('#register-form input').forEach(input => {
+                input.addEventListener('input', () => showMessage(registerMessageArea, ''));
+            });
+
+            const yandexClientId = "f930c404d1ca4a0b8b2ccc82a98c23a6";
+            const redirectUrl = new URLSearchParams(window.location.search).get('redirectUrl');
+            
+            let yandexLoginRedirectUri = "https://us-central1-nexus-90a19.cloudfunctions.net/yandexAuth/yandex-callback";
+            if (redirectUrl) {
+                yandexLoginRedirectUri += `?redirectUrl=${encodeURIComponent(redirectUrl)}`;
+            }
+            document.getElementById('yandex-login-link').href = `https://oauth.yandex.ru/authorize?response_type=code&client_id=${yandexClientId}&redirect_uri=${encodeURIComponent(yandexLoginRedirectUri)}`;
+
+            let yandexRegisterRedirectUri = "https://us-central1-nexus-90a19.cloudfunctions.net/getYandexProfileData/yandex-preregister-callback";
+            if (redirectUrl) {
+                yandexRegisterRedirectUri += `?redirectUrl=${encodeURIComponent(redirectUrl)}`;
+            }
+            document.getElementById('yandex-register-link').href = `https://oauth.yandex.ru/authorize?response_type=code&client_id=${yandexClientId}&redirect_uri=${encodeURIComponent(yandexRegisterRedirectUri)}`;
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const localUrlParams = new URLSearchParams(window.location.search);
+                const yandexEmail = localUrlParams.get('yandex_email');
+
+                if (localUrlParams.get('error') === 'yandex_failed') {
+                    showMessage(loginMessageArea, 'Не удалось получить данные из Яндекс. Попробуйте еще раз.', 'error');
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+
+                if (yandexEmail) {
+                    loginForm.style.display = 'none';
+                    registerForm.style.display = 'block';
+
+                    const yandexLogin = localUrlParams.get('yandex_login');
+                    const yandexPhone = localUrlParams.get('yandex_phone');
+
+                    document.getElementById('register-email').value = decodeURIComponent(yandexEmail);
+                    document.getElementById('register-login').value = decodeURIComponent(yandexLogin);
+                    if (yandexPhone) {
+                        document.getElementById('register-phone').value = decodeURIComponent(yandexPhone);
+                    }
+
+                    document.getElementById('register-email').readOnly = true;
+
+                    showMessage(registerMessageArea, 'Данные из Яндекс ID подставлены. Придумайте пароль.', 'info');
+                    window.history.replaceState({}, document.title, window.location.pathname.split('?')[0]);
+                } else {
+                    onAuthStateChanged(auth, (user) => {
+                        if (user) {
+                            if (redirectUrl) {
+                                window.location.href = redirectUrl;
+                            } else {
+                                window.location.href = 'profile.html';
+                            }
+                        } else {
+                            loginForm.style.display = 'block';
+                            registerForm.style.display = 'none';
+                        }
+                    });
+                }
+            });
+
+            document.getElementById('login-button').addEventListener('click', () => {
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                showMessage(loginMessageArea, 'Вход...', 'info');
+
+                signInWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        return userCredential.user.getIdToken();
+                    })
+                    .then(idToken => {
+                        if (redirectUrl) {
+                            window.location.href = `${redirectUrl}?token=${idToken}`;
+                        } else {
+                            window.location.href = 'profile.html';
+                        }
+                    })
+                    .catch(error => {
+                        console.error("[Login Error]:", error);
+                        showMessage(loginMessageArea, translateFirebaseError(error.code), 'error');
+                    });
+            });
+
+            document.getElementById('register-button').addEventListener('click', () => {
+                const email = document.getElementById('register-email').value;
+                const login = document.getElementById('register-login').value;
+                const phone = document.getElementById('register-phone').value;
+                const password = document.getElementById('register-password').value;
+                const passwordConfirm = document.getElementById('register-password-confirm').value;
+
+                if (!email || !login || !password) {
+                     showMessage(registerMessageArea, 'Email, логин и пароль обязательны для заполнения.', 'error');
+                     return;
+                }
+                if (password !== passwordConfirm) {
+                    showMessage(registerMessageArea, 'Пароли не совпадают!', 'error');
+                    return;
+                }
+                
+                showMessage(registerMessageArea, 'Идет регистрация...', 'info');
+
+                let userCredentialForToken;
+                createUserWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        userCredentialForToken = userCredential;
+                        const user = userCredential.user;
+                        return setDoc(doc(db, "users", user.uid), {
+                            login: login,
+                            phone: phone,
+                            email: email
+                        });
+                    })
+                    .then(() => {
+                        return userCredentialForToken.user.getIdToken();
+                    })
+                    .then(idToken => {
+                        showMessage(registerMessageArea, 'Регистрация прошла успешно!', 'success');
+                        setTimeout(() => {
+                            if (redirectUrl) {
+                                window.location.href = `${redirectUrl}?token=${idToken}`;
+                            } else {
+                                window.location.href = 'profile.html';
+                            }
+                        }, 1500);
+                    })
+                    .catch(error => {
+                        console.error("[Registration Error]:", error);
+                        showMessage(registerMessageArea, translateFirebaseError(error.code), 'error');
+                    });
+            });
+
+            document.getElementById('show-register-form-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+            });
+
+            document.getElementById('show-login-form-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                registerForm.style.display = 'none';
+                loginForm.style.display = 'block';
+            });
+
+        } catch (error) {
+            console.error("[Auth Page Error]: Критическая ошибка на странице авторизации.", error);
+            alert("Произошла критическая ошибка. Пожалуйста, перезагрузите страницу.");
+        }
+    </script>
+</body>
+
+</html>
