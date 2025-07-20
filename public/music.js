@@ -2,12 +2,21 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { initializeAuth, onAuthStateChanged, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+/**
+ * Форматирует время из секунд в формат ММ:СС.
+ * @param {number} seconds - Общее количество секунд.
+ * @returns {string} Отформатированное время (например, "3:05").
+ */
 export function formatTime(seconds) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = Math.floor(seconds % 60);
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
 }
 
+/**
+ * Инициализирует кастомный аудиоплеер для заданного контейнера.
+ * @param {HTMLElement} container - DOM-элемент, содержащий элементы плеера.
+ */
 export function initializeCustomPlayer(container) {
     const playPauseBtn = container.querySelector('.play-pause-btn');
     const progressBar = container.querySelector('.custom-progress-bar');
@@ -18,6 +27,7 @@ export function initializeCustomPlayer(container) {
 
     let isPlaying = false;
 
+    // Инициализация общей длительности из data-атрибута, если доступно
     const songDurationStr = container.dataset.duration;
     if (songDurationStr) {
         const [minutes, seconds] = songDurationStr.split(':').map(Number);
@@ -29,11 +39,13 @@ export function initializeCustomPlayer(container) {
     }
 
     if (audio) {
+        // Обновление прогресс-бара и общей длительности после загрузки метаданных аудио
         audio.addEventListener('loadedmetadata', () => {
             if (progressBar) progressBar.max = audio.duration;
             if (totalDurationSpan) totalDurationSpan.textContent = formatTime(audio.duration);
         });
 
+        // Обработчик кнопки воспроизведения/паузы
         if (playPauseBtn) {
             playPauseBtn.addEventListener('click', () => {
                 if (isPlaying) {
@@ -41,6 +53,7 @@ export function initializeCustomPlayer(container) {
                     playPauseBtn.textContent = '▶';
                     if (nexusPlayerTitle) nexusPlayerTitle.style.display = 'block';
                 } else {
+                    // Пауза всех остальных аудио, если они играют
                     document.querySelectorAll('audio').forEach(otherAudio => {
                         if (otherAudio !== audio && !otherAudio.paused) {
                             otherAudio.pause();
@@ -60,17 +73,20 @@ export function initializeCustomPlayer(container) {
             });
         }
 
+        // Обновление текущего времени и прогресс-бара при воспроизведении
         audio.addEventListener('timeupdate', () => {
             if (progressBar) progressBar.value = audio.currentTime;
             if (currentTimeSpan) currentTimeSpan.textContent = formatTime(audio.currentTime);
         });
 
+        // Перемотка аудио при изменении прогресс-бара
         if (progressBar) {
             progressBar.addEventListener('input', () => {
                 audio.currentTime = progressBar.value;
             });
         }
 
+        // Сброс состояния плеера по окончании воспроизведения
         audio.addEventListener('ended', () => {
             if (playPauseBtn) playPauseBtn.textContent = '▶';
             isPlaying = false;
@@ -102,14 +118,21 @@ document.addEventListener("DOMContentLoaded", async function () {
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = initializeAuth(app, {
-            persistence: browserLocalPersistence
+            persistence: browserLocalPersistence // Сохранение сессии в локальном хранилище браузера
         });
 
-        let currentUserId = null;
+        let currentUserId = null; // ID текущего авторизованного пользователя
 
+        /**
+         * Обновляет состояние кнопки "Избранное" в зависимости от статуса авторизации пользователя
+         * и наличия трека в избранном.
+         * @param {HTMLElement} heartButton - Кнопка "сердечко".
+         * @param {Object} songData - Данные о песне.
+         */
         async function updateFavoriteHeartState(heartButton, songData) {
             try {
                 if (!currentUserId) {
+                    // Если пользователь не авторизован
                     heartButton.textContent = '🔒';
                     heartButton.disabled = true;
                     heartButton.title = 'Войдите для добавления в избранное';
@@ -117,6 +140,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                     return;
                 }
 
+                // Если пользователь авторизован
                 heartButton.disabled = false;
                 const userFavoritesRef = doc(db, "favorites", currentUserId);
                 const docSnap = await getDoc(userFavoritesRef);
@@ -135,17 +159,24 @@ document.addEventListener("DOMContentLoaded", async function () {
                         heartButton.title = 'Добавить в избранное';
                     }
                 } else {
+                    // Если у пользователя еще нет коллекции избранного
                     heartButton.textContent = '🤍';
                     heartButton.classList.remove("is-favorite");
                     heartButton.title = 'Добавить в избранное';
                 }
             } catch (error) {
                 console.error("[updateFavoriteHeartState Error]: Ошибка при обновлении статуса избранного.", error);
-                heartButton.textContent = '❓';
+                heartButton.textContent = '❓'; // Отображение ошибки
                 heartButton.disabled = true;
+                heartButton.title = 'Ошибка загрузки статуса';
             }
         }
 
+        /**
+         * Переключает статус трека (добавить/удалить) в избранном пользователя.
+         * @param {HTMLElement} heartButton - Кнопка "сердечко".
+         * @param {Object} songData - Данные о песне.
+         */
         async function toggleFavorite(heartButton, songData) {
             if (!currentUserId) {
                 alert("Пожалуйста, войдите в систему, чтобы добавлять треки в избранное.");
@@ -164,10 +195,12 @@ document.addEventListener("DOMContentLoaded", async function () {
                     if (docSnap.exists()) {
                         await updateDoc(userFavoritesRef, { tracks: arrayUnion(songData) });
                     } else {
+                        // Если коллекции избранного еще нет, создаем ее с первым треком
                         await setDoc(userFavoritesRef, { tracks: [songData] });
                     }
                     alert(`"${songData.song}" добавлен в понравившиеся!`);
                 }
+                // Обновляем состояние кнопки после операции
                 await updateFavoriteHeartState(heartButton, songData);
             } catch (error) {
                 console.error("[toggleFavorite Error]: Ошибка при добавлении/удалении трека.", error);
@@ -176,10 +209,16 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
         const musicContainers = document.querySelectorAll('.music-container');
+
+        // Инициализируем кастомные плееры и слушателей для кнопок избранного.
+        // Изначально скрываем или отключаем кнопки избранного, чтобы избежать "мигания".
         musicContainers.forEach(container => {
             initializeCustomPlayer(container);
             const favoriteHeartBtn = container.querySelector('.favorite-heart-btn');
             if (favoriteHeartBtn) {
+                // ВАЖНОЕ ИЗМЕНЕНИЕ: Скрываем кнопки избранного, пока не определится статус авторизации
+                favoriteHeartBtn.style.display = 'none'; // Или favoriteHeartBtn.disabled = true;
+
                 const songData = {
                     song: container.dataset.song || '',
                     artist: container.dataset.artist || '',
@@ -193,10 +232,14 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
         });
 
+        // Слушатель состояния авторизации Firebase.
+        // Этот слушатель гарантирует, что кнопки избранного обновятся, как только
+        // статус авторизации пользователя будет определен.
         onAuthStateChanged(auth, (user) => {
             currentUserId = user ? user.uid : null;
             console.log(user ? `Пользователь вошел: ${user.uid}` : "Пользователь не вошел.");
 
+            // После получения состояния авторизации, обновляем все кнопки избранного
             musicContainers.forEach(container => {
                 const favoriteHeartBtn = container.querySelector('.favorite-heart-btn');
                 if (favoriteHeartBtn) {
@@ -206,10 +249,13 @@ document.addEventListener("DOMContentLoaded", async function () {
                         yandexLink: container.dataset.yandexLink
                     };
                     updateFavoriteHeartState(favoriteHeartBtn, songData);
+                    // ВАЖНОЕ ИЗМЕНЕНИЕ: Показываем кнопку после того, как её состояние было обновлено
+                    favoriteHeartBtn.style.display = ''; 
                 }
             });
         });
 
+        // Логика для заголовка при прокрутке страницы
         const mainHeader = document.getElementById('main-header');
         if (mainHeader) {
             window.addEventListener('scroll', () => {
@@ -221,10 +267,10 @@ document.addEventListener("DOMContentLoaded", async function () {
             });
         }
 
+        // Обновление ссылки для авторизации с учетом редиректа
         const authLink = document.getElementById('auth-link');
         if (authLink) {
             const redirectUrl = encodeURIComponent(window.location.href);
-            // ИЗМЕНЕНИЕ: Ссылка теперь относительная, для работы на одном домене.
             authLink.href = `/auth.html?redirectUrl=${redirectUrl}`;
         }
 
