@@ -271,7 +271,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         const authLink = document.getElementById('auth-link');
         if (authLink) {
             const redirectUrl = encodeURIComponent(window.location.href);
-            authLink.href = `/auth.html?redirectUrl=${redirectUrl}`;
+            authLink.href = `./auth Nexus ID/auth.html`;
         }
 
     } catch (error) {
