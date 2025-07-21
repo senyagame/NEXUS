@@ -1,49 +1,248 @@
-<!--
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading...</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Обвноления</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-</head>
-
-<body>
-
-<script>
-    window.onload = function() {
-        // Проверяем платформу через Telegram WebApp API
-        if (window.Telegram?.WebApp?.platform === "tdesktop") {
-            window.location.href = "denied.html"; // Если Telegram открыт на ПК
-        } else {
-            window.location.href = "loading-page.html"; // Если на телефоне
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #05004e;
         }
-    };
-</script>
 
-</body>
-</html>
--->
-<!DOCTYPE html>
-<html lang="en">
+        .notification-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading...</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+        .notification-box {
+            background-color: #0066ff;
+            padding: 30px 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            animation: fadeIn 0.3s ease-out;
+            overflow: hidden; /* Скрываем слайды за пределами блока */
+        }
+
+        .notification-box h2 {
+            margin-top: 0;
+            color: #ff9100;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .notification-box h3 {
+            margin-top: 0;
+            color: #ffffff;
+            font-size: 19px;
+            margin-bottom: 15px;
+        }
+
+        .notification-box p {
+            color: #ffffff;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Стили для загрузчика */
+        #loadingIndicator {
+            font-size: 2em;
+            color: #c4c4c4;
+            display: none;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #c9c9c9;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Стили для слайдера */
+        #slides-container {
+            display: flex;
+            width: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100%;
+            box-sizing: border-box;
+            padding: 0 15px;
+        }
+
+        .next-btn {
+            background-color: #000000;
+            color: rgb(255, 255, 255);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .next-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+    </style>
 </head>
 
 <body>
 
-<script>
-    window.onload = function() {
-        window.location.href = "loading-page.html"; // Перенаправление на loading-page.html
-    };
-</script>
+    <div id="userNotification" class="notification-overlay">
+        <div class="notification-box">
+            <div id="slides-container">
+                <div class="slide">
+                    <h2>Приложение обновлено!</h2>
+                    <p>Мы подготовили несколько улучшений, чтобы сделать приложение еще удобнее для вас. Давайте посмотрим, что нового!</p>
+                    <button class="next-btn">Покажите мне!</button>
+                </div>
+
+                <div class="slide">
+                    <h3>❇️ Что нового?</h3>
+                    <p>❤️ Мы исправили базу данных! Теперь заметки и любимые треки в музыке снова сохраняются за вашим аккаунтом!</p>
+                    <button class="next-btn">Супер!</button>
+                </div>
+                
+                <div class="slide">
+                    <h3>❇️ Всё для вас!</h3>
+                    <p>❤️‍🩹 Мы услышали ваши просьбы, о добавлении своих аватарок в аккаунт, ииии... мы это сделали! Теперь в личном кабинете вы можете загрузить любую вашу картинку!</p>
+                    <button class="next-btn">Круть!</button>
+                </div>
+
+                <div class="slide">
+                    <h3>❇️ Что-то ещё?</h3>
+                    <p>🐱 Да! Теперь у нас обновлённый дизайн и новые шрифты для кнопок!</p>
+                    <button class="next-btn">Замечательно</button>
+                </div>
+
+                <div class="slide">
+                    <h2>Все готово!</h2>
+                    <p>Спасибо, что остаетесь с нами. Теперь вы можете продолжить работу с приложением. Приятного использования!</p>
+                    <button class="next-btn">Поехали!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loadingIndicator">
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        const NOTIFICATION_KEY = 'user_terms_accepted';
+        const NOTIFICATION_VERSION = 'v1.4'; // Меняйте эту версию для отображения уведомления
+
+        // Получаем элементы DOM
+        const notificationOverlay = document.getElementById('userNotification');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const slidesContainer = document.getElementById('slides-container');
+        const slides = document.querySelectorAll('.slide');
+        const nextButtons = document.querySelectorAll('.next-btn');
+        const totalSlides = slides.length;
+        
+        // Переменная для отслеживания текущего слайда
+        let currentSlide = 0;
+
+        function redirectToLoadingPage() {
+            // Замените "loading-page.html" на вашу целевую страницу
+            window.location.href = "loading-page.html";
+        }
+
+        // Функция для показа следующего слайда
+        function showNextSlide() {
+            currentSlide++;
+            const offset = -currentSlide * 100;
+            slidesContainer.style.transform = `translateX(${offset}%)`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedNotificationInfo = localStorage.getItem(NOTIFICATION_KEY);
+            let shouldShowNotification = false;
+
+            if (!storedNotificationInfo) {
+                shouldShowNotification = true;
+            } else {
+                try {
+                    const parsedInfo = JSON.parse(storedNotificationInfo);
+                    if (parsedInfo.version !== NOTIFICATION_VERSION) {
+                        shouldShowNotification = true;
+                    }
+                } catch (e) {
+                    shouldShowNotification = true; // Показать уведомление, если данные повреждены
+                }
+            }
+
+            if (shouldShowNotification) {
+                notificationOverlay.style.display = 'flex';
+                loadingIndicator.style.display = 'none';
+
+                nextButtons.forEach((button, index) => {
+                    button.addEventListener('click', () => {
+                        // Если это НЕ последняя кнопка
+                        if (index < totalSlides - 1) {
+                            showNextSlide();
+                        } else {
+                            // Если это ПОСЛЕДНЯЯ кнопка
+                            notificationOverlay.style.display = 'none';
+                            const notificationData = {
+                                accepted: true,
+                                version: NOTIFICATION_VERSION,
+                                timestamp: new Date().toISOString()
+                            };
+                            localStorage.setItem(NOTIFICATION_KEY, JSON.stringify(notificationData));
+                            redirectToLoadingPage();
+                        }
+                    });
+                });
+            } else {
+                // Если уведомление уже было показано
+                loadingIndicator.style.display = 'block';
+                setTimeout(redirectToLoadingPage, 1200);
+            }
+        });
+    </script>
 
 </body>
+
 </html>

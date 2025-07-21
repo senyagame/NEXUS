@@ -46,6 +46,7 @@
             margin-bottom: 0;
             object-fit: cover;
         }
+        
     </style>
 </head>
 
@@ -54,7 +55,6 @@
         <video id="background-video" autoplay muted loop>
             <source src="assets/background.mp4" type="video/mp4">
             <source src="assets/background.webm" type="video/webm">
-            Ваш браузер не поддерживает HTML5 видео.
         </video>
     </div>
     <div id="app">
@@ -67,14 +67,11 @@
             <img src="./assets/information-icon.png" alt="Information Icon" id="info-icon" onclick="openModal()">
         </header>
         <main>
-            <button onclick="navigateTo('new-update-info.html')" style="background-color: black; color: white;">Об обновлении
-                5.4</button>
             <p id="coming-soon">Если у вас есть вопросы, посмотрите вкладку <img src="./assets/information-icon.png"
                     alt=""> на этой странице</p>
             <button onclick="navigateTo('weather-app.html')">Погода</button>
             <button onclick="navigateTo('music-app.html')">Музыка</button>
             <button onclick="navigateTo('posts-app.html')">Заметки</button>
-
             <div class="devi">
                 <a href="https://github.com/senyagame">💫 ©️ by senyagame (кликабельно)💫</a>
             </div>
