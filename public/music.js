@@ -4,9 +4,7 @@
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// --- ИЗМЕНЕНИЕ ЗДЕСЬ: Обновляем путь и имя файла ---
-// Импортируем инициализированные объекты auth и db из файла сервиса
-import { auth, db } from '/public/auth-nexus-id/src/nexus-id.js'; // ИСПОЛЬЗУЕМ АБСОЛЮТНЫЙ ПУТЬ И ПРАВИЛЬНОЕ ИМЯ ФАЙЛА
+import { auth, db } from '/auth-nexus-id/src/nexus-id.js';
 
 /**
  * Форматирует время из секунд в формат ММ:СС.
