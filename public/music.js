@@ -1,6 +1,11 @@
 // music.js
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"; // Обновлена версия для единообразия
-import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"; // Обновлена версия
+
+// Импортируем только необходимые функции из Firebase SDK
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// Импортируем инициализированные объекты auth и db из файла сервиса
+// Убедитесь, что путь к этому файлу верный относительно music.js
 import { auth, db } from './auth-nexus-id/src/firebase-auth-service.js';
 
 /**
@@ -28,7 +33,6 @@ export function initializeCustomPlayer(container) {
 
     let isPlaying = false;
 
-    // ... (остальной код функции initializeCustomPlayer остается без изменений) ...
     if (audio) {
         audio.addEventListener('loadedmetadata', () => {
             if (progressBar) progressBar.max = audio.duration;
@@ -89,16 +93,16 @@ export function initializeCustomPlayer(container) {
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
-    if (!auth) {
-        console.error("Firebase Auth не инициализирован. Функции авторизации будут недоступны.");
-        alert("Произошла ошибка при инициализации авторизации. Пожалуйста, перезагрузите страницу.");
+    // Проверка, что auth и db инициализированы из импортированного файла
+    if (!auth || !db) {
+        console.error("Firebase Auth или Firestore не инициализированы. Функции авторизации/базы данных будут недоступны.");
+        alert("Произошла ошибка при инициализации Firebase. Пожалуйста, перезагрузите страницу.");
         return;
     }
 
     let currentUserId = null;
 
     async function updateFavoriteHeartState(heartButton, songData) {
-        // ... (код этой функции остается без изменений) ...
         try {
             if (!currentUserId) {
                 heartButton.textContent = '🔒';
@@ -136,10 +140,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     async function toggleFavorite(heartButton, songData) {
-        // ... (код этой функции остается без изменений) ...
         if (!currentUserId) {
-            // Вместо alert можно показать модальное окно с предложением войти
-            const authRedirectUrl = `/auth Nexus ID/auth.html?redirectUrl=${encodeURIComponent(window.location.href)}`;
+            const authRedirectUrl = `/auth-nexus-id/auth.html?redirectUrl=${encodeURIComponent(window.location.href)}`;
             if (confirm("Пожалуйста, войдите в систему, чтобы добавлять треки в избранное. Перейти на страницу авторизации?")) {
                 window.location.href = authRedirectUrl;
             }
@@ -151,7 +153,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             const isCurrentlyFavorite = heartButton.classList.contains("is-favorite");
             if (isCurrentlyFavorite) {
                 await updateDoc(userFavoritesRef, { tracks: arrayRemove(songData) });
-                // Можно использовать менее навязчивые уведомления (toast)
                 console.log(`"${songData.song}" удален из понравившихся.`);
             } else {
                 if (docSnap.exists()) {
@@ -187,36 +188,27 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     });
 
-    // --- ГЛАВНЫЕ ИЗМЕНЕНИЯ ЗДЕСЬ ---
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            // Пользователь вошел в систему
             currentUserId = user.uid;
             console.log(`Пользователь вошел: ${user.uid}`);
 
-            // ИЗМЕНЕНО: Проверяем, является ли пользователь новым
             const metadata = user.metadata;
             const creationTime = new Date(metadata.creationTime);
             const lastSignInTime = new Date(metadata.lastSignInTime);
             
-            // Сравниваем время создания и время последнего входа.
-            // Порог в 5 секунд нужен на случай небольшой задержки в системе.
             const isNewUser = (lastSignInTime.getTime() - creationTime.getTime()) < 5000;
 
             if (isNewUser) {
-                // НОВОЕ: Показываем приветствие для нового пользователя
                 console.log("Обнаружен новый пользователь!");
                 alert("Добро пожаловать в Nexus Music! Рады, что вы с нами.");
-                // Здесь можно показать красивое модальное окно или подсказки по интерфейсу
             }
 
         } else {
-            // Пользователь вышел из системы
             currentUserId = null;
             console.log("Пользователь не вошел.");
         }
 
-        // Обновляем состояние всех кнопок "избранное" независимо от того, новый пользователь или нет
         musicContainers.forEach(container => {
             const favoriteHeartBtn = container.querySelector('.favorite-heart-btn');
             if (favoriteHeartBtn) {
@@ -224,14 +216,12 @@ document.addEventListener("DOMContentLoaded", async function () {
                     song: container.dataset.song,
                     artist: container.dataset.artist,
                     yandexLink: container.dataset.yandexLink
-                    // Передаем все данные, необходимые для toggleFavorite
                 };
                 updateFavoriteHeartState(favoriteHeartBtn, songData);
-                favoriteHeartBtn.style.display = 'inline-block'; // Показываем кнопку
+                favoriteHeartBtn.style.display = 'inline-block';
             }
         });
     });
-    // --- КОНЕЦ ИЗМЕНЕНИЙ ---
 
     const mainHeader = document.getElementById('main-header');
     if (mainHeader) {
@@ -244,8 +234,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     }
 
-    // Обновление ссылки для авторизации с учетом редиректа
-    // Убедитесь, что путь к auth.html правильный, исходя из структуры папок
     const authLink = document.getElementById('auth-link');
     if (authLink) {
         const redirectUrl = encodeURIComponent(window.location.href);
