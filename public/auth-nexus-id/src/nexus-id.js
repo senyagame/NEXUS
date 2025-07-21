@@ -13,8 +13,8 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+export const auth = getAuth(app); // ДОБАВЛЕНО: export
+export const db = getFirestore(app); // ДОБАВЛЕНО: export
 
 const authSection = document.getElementById('auth-section');
 const loginForm = document.getElementById('login-form');
