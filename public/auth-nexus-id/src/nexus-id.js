@@ -1,119 +1,122 @@
-// nexus-id.js
+// public/auth-nexus-id/src/nexus-id.js
 
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-import { getFirestore, collection, doc, setDoc, getDocs, query, where, serverTimestamp, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+// ✅ Импортируем auth, db и ВСЕ НЕОБХОДИМЫЕ ФУНКЦИИ ИЗ firebase.js
+import {
+    auth,
+    db,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut,
+    collection,
+    doc,
+    setDoc,
+    getDocs,
+    query,
+    where,
+    serverTimestamp,
+    getDoc
+} from './firebase.js'; // <-- Ключевое изменение: путь импорта на firebase.js
 
-const firebaseConfig = {
-    apiKey: "AIzaSyAP04srkFeyQPsp1iuhn0RwzMav9fhqCRw",
-    authDomain: "nexus-90a19.firebaseapp.com",
-    projectId: "nexus-90a19",
-    storageBucket: "nexus-90a19.firebasestorage.app",
-    messagingSenderId: "78051357921",
-    appId: "1:78051357921:web:477ab2794b67e0c706b3a0",
-    measurementId: "G-X65550ENG3"
-};
+// Удалены:
+// import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+// import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+// import { getFirestore, collection, doc, setDoc, getDocs, query, where, serverTimestamp, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+// Удалена firebaseConfig
+// Удалены const app = initializeApp(firebaseConfig);
+// Удалены export const auth = getAuth(app);
+// Удалены export const db = getFirestore(app);
 
-// ОБЕРНИ ВЕСЬ КОД, КОТОРЫЙ РАБОТАЕТ С DOM-ЭЛЕМЕНТАМИ, В DOMContentLoaded
-document.addEventListener('DOMContentLoaded', () => {
-    // Перемести все эти объявления и присвоения внутрь DOMContentLoaded
-    const authSection = document.getElementById('auth-section');
-    const loginForm = document.getElementById('login-form');
-    const registerForm = document.getElementById('register-form');
-    const userDashboard = document.getElementById('user-dashboard');
+const authSection = document.getElementById('auth-section');
+const loginForm = document.getElementById('login-form');
+const registerForm = document.getElementById('register-form');
+const userDashboard = document.getElementById('user-dashboard');
 
-    const loginIdentifierInput = document.getElementById('login-email');
-    if (loginIdentifierInput) { // ДОБАВЛЕНА ПРОВЕРКА НА СУЩЕСТВОВАНИЕ ЭЛЕМЕНТА
-        loginIdentifierInput.placeholder = "Email / Логин / Номер телефона";
-    } else {
-        console.error("Элемент с ID 'login-email' не найден.");
+const loginIdentifierInput = document.getElementById('login-email');
+// Проверяем, существует ли элемент, прежде чем пытаться установить placeholder
+if (loginIdentifierInput) {
+    loginIdentifierInput.placeholder = "Email / Логин / Номер телефона";
+} else {
+    console.warn("Элемент с ID 'login-email' не найден.");
+}
+
+
+const loginPasswordInput = document.getElementById('login-password');
+const loginButton = document.getElementById('login-button');
+const loginMessage = document.getElementById('login-message');
+
+const registerUsernameInput = document.getElementById('register-username');
+const registerEmailInput = document.getElementById('register-email');
+const registerPhoneInput = document.getElementById('register-phone');
+const registerPasswordInput = document.getElementById('register-password');
+const registerConfirmPasswordInput = document.getElementById('register-confirm-password');
+const registerButton = document.getElementById('register-button');
+const registerMessage = document.getElementById('register-message');
+
+const showRegisterFormLink = document.getElementById('show-register-form-link');
+const showLoginFormLink = document.getElementById('show-login-form-link');
+
+const userDisplayNameSpan = document.getElementById('user-display-name');
+const userEmailSpan = document.getElementById('user-email');
+const logoutButton = document.getElementById('logout-button');
+const backToProfileLink = document.getElementById('back-to-profile-link');
+
+// Удалена переменная yandexLoginButton, так как кнопка удалена из HTML
+
+
+function showMessage(element, message, type) {
+    if (!element) {
+        console.error(`Элемент для сообщения не найден: ${message}`);
+        return;
+    }
+    element.textContent = message;
+    element.className = `message ${type}`;
+    element.style.display = 'block';
+    setTimeout(() => {
+        element.style.display = 'none';
+        element.textContent = '';
+    }, 5000);
+}
+
+function showAuthForm(formToShow) {
+    if (!loginForm || !registerForm) {
+        console.error("Один из элементов формы (loginForm или registerForm) не найден.");
+        return;
     }
 
-    const loginPasswordInput = document.getElementById('login-password');
-    const loginButton = document.getElementById('login-button');
-    const loginMessage = document.getElementById('login-message');
-
-    const registerUsernameInput = document.getElementById('register-username');
-    const registerEmailInput = document.getElementById('register-email');
-    const registerPhoneInput = document.getElementById('register-phone');
-    const registerPasswordInput = document.getElementById('register-password');
-    const registerConfirmPasswordInput = document.getElementById('register-confirm-password');
-    const registerButton = document.getElementById('register-button');
-    const registerMessage = document.getElementById('register-message');
-
-    const showRegisterFormLink = document.getElementById('show-register-form-link');
-    const showLoginFormLink = document.getElementById('show-login-form-link');
-
-    const userDisplayNameSpan = document.getElementById('user-display-name');
-    const userEmailSpan = document.getElementById('user-email');
-    const logoutButton = document.getElementById('logout-button');
-    const backToProfileLink = document.getElementById('back-to-profile-link');
-
-    // Удалена переменная yandexLoginButton, так как кнопка удалена из HTML
-
-    // Перемещаем ВСЕ ФУНКЦИИ И ОБРАБОТЧИКИ СОБЫТИЙ, КОТОРЫЕ РАБОТАЮТ С DOM
-    // ВНИМАНИЕ: Если функция 'showMessage' и 'showAuthForm' используются вне DOMContentLoaded,
-    // их нужно оставить вне, но их вызовы, работающие с DOM, должны быть внутри.
-    // В данном случае, так как они работают с элементами, которые объявляются внутри,
-    // их тоже логично поместить внутрь или убедиться, что они вызываются после DOMContentLoaded.
-
-    function showMessage(element, message, type) {
-        if (!element) {
-            console.error(`Элемент для сообщения не найден: ${message}`);
-            return;
-        }
-        element.textContent = message;
-        element.className = `message ${type}`;
-        element.style.display = 'block';
-        setTimeout(() => {
-            element.style.display = 'none';
-            element.textContent = '';
-        }, 5000);
+    if (formToShow === 'login') {
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+    } else if (formToShow === 'register') {
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
     }
+    loginMessage.style.display = 'none';
+    registerMessage.style.display = 'none';
+}
 
-    function showAuthForm(formToShow) {
-        if (!loginForm || !registerForm) {
-            console.error("Один из элементов формы (loginForm или registerForm) не найден.");
-            return;
-        }
+if (showRegisterFormLink) {
+    showRegisterFormLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log("Нажата ссылка 'Зарегистрироваться'.");
+        showAuthForm('register');
+    });
+} else {
+    console.error("Элемент с ID 'show-register-form-link' не найден в DOM.");
+}
 
-        if (formToShow === 'login') {
-            loginForm.style.display = 'block';
-            registerForm.style.display = 'none';
-        } else if (formToShow === 'register') {
-            loginForm.style.display = 'none';
-            registerForm.style.display = 'block';
-        }
-        loginMessage.style.display = 'none';
-        registerMessage.style.display = 'none';
-    }
+if (showLoginFormLink) {
+    showLoginFormLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log("Нажата ссылка 'Авторизоваться'.");
+        showAuthForm('login');
+    });
+} else {
+    console.error("Элемент с ID 'show-login-form-link' не найден в DOM.");
+}
 
-    // Все обработчики событий и вызовы функций, которые зависят от DOM-элементов
-    // должны быть здесь или вызваны после этого блока.
-    if (showRegisterFormLink) {
-        showRegisterFormLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            console.log("Нажата ссылка 'Зарегистрироваться'.");
-            showAuthForm('register');
-        });
-    } else {
-        console.error("Элемент с ID 'show-register-form-link' не найден в DOM.");
-    }
-
-    if (showLoginFormLink) {
-        showLoginFormLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            console.log("Нажата ссылка 'Авторизоваться'.");
-            showAuthForm('login');
-        });
-    } else {
-        console.error("Элемент с ID 'show-login-form-link' не найден в DOM.");
-    }
-
+if (registerButton) { // Добавлена проверка на существование элемента
     registerButton.addEventListener('click', async (event) => {
         event.preventDefault();
 
@@ -174,7 +177,12 @@ document.addEventListener('DOMContentLoaded', () => {
             showMessage(registerMessage, errorMessage, "error");
         }
     });
+} else {
+    console.warn("Элемент с ID 'register-button' не найден.");
+}
 
+
+if (loginButton) { // Добавлена проверка на существование элемента
     loginButton.addEventListener('click', async (event) => {
         event.preventDefault();
 
@@ -239,7 +247,12 @@ document.addEventListener('DOMContentLoaded', () => {
             showMessage(loginMessage, errorMessage, "error");
         }
     });
+} else {
+    console.warn("Элемент с ID 'login-button' не найден.");
+}
 
+
+if (logoutButton) { // Добавлена проверка на существование элемента
     logoutButton.addEventListener('click', async () => {
         try {
             await signOut(auth);
@@ -249,26 +262,32 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Ошибка выхода:", error.message);
         }
     });
+} else {
+    console.warn("Элемент с ID 'logout-button' не найден.");
+}
 
-    onAuthStateChanged(auth, async (user) => {
-        if (!authSection || !userDashboard || !backToProfileLink) {
-            console.error("Один из основных элементов UI (authSection, userDashboard, backToProfileLink) не найден.");
-            return;
-        }
 
+// Убедимся, что все элементы, используемые в onAuthStateChanged, существуют
+// Этот блок кода должен быть устойчив к отсутствию элементов, если скрипт используется на разных страницах
+onAuthStateChanged(auth, async (user) => {
+    if (authSection && userDashboard && backToProfileLink) {
         if (user) {
             authSection.style.display = 'none';
             userDashboard.style.display = 'block';
             backToProfileLink.style.display = 'block';
 
-            userDisplayNameSpan.textContent = user.displayName || user.email || 'Неизвестный пользователь';
-            userEmailSpan.textContent = user.email;
+            if (userDisplayNameSpan) {
+                userDisplayNameSpan.textContent = user.displayName || user.email || 'Неизвестный пользователь';
+            }
+            if (userEmailSpan) {
+                userEmailSpan.textContent = user.email;
+            }
 
             const userDocRef = doc(db, "users", user.uid);
             const userDoc = await getDoc(userDocRef);
             if (userDoc.exists()) {
                 const userData = userDoc.data();
-                if (userData.username) {
+                if (userData.username && userDisplayNameSpan) {
                     userDisplayNameSpan.textContent = userData.username;
                 }
             }
@@ -283,22 +302,19 @@ document.addEventListener('DOMContentLoaded', () => {
             showAuthForm('login');
             console.log("Пользователь вышел из системы.");
         }
-    });
-
-    // Этот слушатель уже был, он будет работать после перемещения остального кода
-    // if (!auth.currentUser) {
-    //     showAuthForm('login');
-    // }
-    // Примечание: `auth.currentUser` может быть `null` в момент `DOMContentLoaded`,
-    // поэтому этот блок, возможно, не идеален для начального отображения формы.
-    // Лучше полагаться на `onAuthStateChanged` для определения начального состояния,
-    // но для быстрого решения можно оставить или адаптировать.
-    // Твой текущий код уже показывает форму логина в `onAuthStateChanged` при выходе,
-    // что логичнее.
-    // Поэтому, если ты хочешь, чтобы форма логина всегда отображалась по умолчанию,
-    // когда пользователь не вошел, этот if можно оставить.
-    if (!auth.currentUser) {
-        showAuthForm('login');
+    } else {
+        // Если элементы UI отсутствуют, это не является ошибкой для этого скрипта,
+        // если он предназначен для работы на разных страницах (например, на auth.html и profile.html)
+        // console.warn("Один из основных элементов UI (authSection, userDashboard, backToProfileLink) не найден. Это нормально, если этот скрипт работает на странице, где эти элементы не требуются.");
     }
+});
 
-}); // Конец DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Эта проверка должна быть после onAuthStateChanged, чтобы избежать мерцания
+    // Если скрипт загружается на странице с формами авторизации, он должен показать нужную форму
+    if (authSection && loginForm) { // Проверяем, что элементы существуют на текущей странице
+        if (!auth.currentUser) {
+            showAuthForm('login');
+        }
+    }
+});

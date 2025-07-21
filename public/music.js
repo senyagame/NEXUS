@@ -1,10 +1,22 @@
 // music.js
 
-// Импортируем только необходимые функции из Firebase SDK
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+// ✅ Импортируем все необходимые функции и сервисы ИЗ firebase.js
+import {
+    auth,
+    db,
+    onAuthStateChanged, // Теперь из firebase.js
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    arrayUnion,
+    arrayRemove
+} from './auth-nexus-id/src/firebase.js'; // <-- Ключевое изменение: путь к firebase.js
 
-import { auth, db } from '/auth-nexus-id/src/nexus-id.js';
+// Удалены:
+// import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+// import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+// import { auth, db } from './auth-nexus-id/src/firebase-auth-service.js'; // Этот путь был ошибочным
 
 /**
  * Форматирует время из секунд в формат ММ:СС.
@@ -31,6 +43,7 @@ export function initializeCustomPlayer(container) {
 
     let isPlaying = false;
 
+    // ... (остальной код функции initializeCustomPlayer остается без изменений) ...
     if (audio) {
         audio.addEventListener('loadedmetadata', () => {
             if (progressBar) progressBar.max = audio.duration;
@@ -91,9 +104,11 @@ export function initializeCustomPlayer(container) {
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
-    // Проверка, что auth и db инициализированы из импортированного файла
+    // Убедимся, что auth и db инициализированы, прежде чем использовать их.
+    // Если firebase.js загружается позже или есть другие проблемы,
+    // эта проверка может помочь.
     if (!auth || !db) {
-        console.error("Firebase Auth или Firestore не инициализированы. Функции авторизации/базы данных будут недоступны.");
+        console.error("Firebase Auth или Firestore не инициализирован. Функции авторизации и избранного будут недоступны.");
         alert("Произошла ошибка при инициализации Firebase. Пожалуйста, перезагрузите страницу.");
         return;
     }
@@ -101,6 +116,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     let currentUserId = null;
 
     async function updateFavoriteHeartState(heartButton, songData) {
+        // ... (код этой функции остается без изменений) ...
         try {
             if (!currentUserId) {
                 heartButton.textContent = '🔒';
@@ -114,6 +130,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             const docSnap = await getDoc(userFavoritesRef);
             if (docSnap.exists()) {
                 const favorites = docSnap.data().tracks || [];
+                // Убедимся, что сравнение происходит по уникальному идентификатору трека
+                // yandexLink является хорошим кандидатом на такой уникальный ID
                 const isFavorite = favorites.some(fav => fav.yandexLink === songData.yandexLink);
                 if (isFavorite) {
                     heartButton.textContent = '❤️';
@@ -138,6 +156,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     async function toggleFavorite(heartButton, songData) {
+        // ... (код этой функции остается без изменений) ...
         if (!currentUserId) {
             const authRedirectUrl = `/auth-nexus-id/auth.html?redirectUrl=${encodeURIComponent(window.location.href)}`;
             if (confirm("Пожалуйста, войдите в систему, чтобы добавлять треки в избранное. Перейти на страницу авторизации?")) {
@@ -150,6 +169,10 @@ document.addEventListener("DOMContentLoaded", async function () {
             const docSnap = await getDoc(userFavoritesRef);
             const isCurrentlyFavorite = heartButton.classList.contains("is-favorite");
             if (isCurrentlyFavorite) {
+                // Используем arrayRemove, чтобы удалить только тот элемент, который точно совпадает
+                // со всеми полями. Это может быть проблемой, если yandexLink не уникален
+                // или если есть другие поля, которые могут отличаться.
+                // Лучше было бы использовать уникальный ID для каждого трека в базе.
                 await updateDoc(userFavoritesRef, { tracks: arrayRemove(songData) });
                 console.log(`"${songData.song}" удален из понравившихся.`);
             } else {
@@ -186,15 +209,17 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     });
 
+    // --- ГЛАВНЫЕ ИЗМЕНЕНИЯ ЗДЕСЬ ---
     onAuthStateChanged(auth, (user) => {
         if (user) {
+            // Пользователь вошел в систему
             currentUserId = user.uid;
             console.log(`Пользователь вошел: ${user.uid}`);
 
             const metadata = user.metadata;
             const creationTime = new Date(metadata.creationTime);
             const lastSignInTime = new Date(metadata.lastSignInTime);
-            
+
             const isNewUser = (lastSignInTime.getTime() - creationTime.getTime()) < 5000;
 
             if (isNewUser) {
@@ -203,10 +228,12 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
 
         } else {
+            // Пользователь вышел из системы
             currentUserId = null;
             console.log("Пользователь не вошел.");
         }
 
+        // Обновляем состояние всех кнопок "избранное" независимо от того, новый пользователь или нет
         musicContainers.forEach(container => {
             const favoriteHeartBtn = container.querySelector('.favorite-heart-btn');
             if (favoriteHeartBtn) {
@@ -214,12 +241,15 @@ document.addEventListener("DOMContentLoaded", async function () {
                     song: container.dataset.song,
                     artist: container.dataset.artist,
                     yandexLink: container.dataset.yandexLink
+                    // Передаем все данные, необходимые для toggleFavorite.
+                    // Убедитесь, что все необходимые data-атрибуты есть в HTML
                 };
                 updateFavoriteHeartState(favoriteHeartBtn, songData);
-                favoriteHeartBtn.style.display = 'inline-block';
+                favoriteHeartBtn.style.display = 'inline-block'; // Показываем кнопку
             }
         });
     });
+    // --- КОНЕЦ ИЗМЕНЕНИЙ ---
 
     const mainHeader = document.getElementById('main-header');
     if (mainHeader) {
@@ -232,9 +262,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     }
 
+    // Обновление ссылки для авторизации с учетом редиректа
     const authLink = document.getElementById('auth-link');
     if (authLink) {
         const redirectUrl = encodeURIComponent(window.location.href);
+        // Убедитесь, что этот путь к auth.html правильный, исходя из структуры папок
         authLink.href = `/auth-nexus-id/auth.html?redirectUrl=${redirectUrl}`;
     }
 });
