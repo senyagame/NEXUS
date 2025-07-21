@@ -1,9 +1,7 @@
 // music.js
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"; // Обновлена версия для единообразия
 import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"; // Обновлена версия
-// Предполагается, что у вас есть этот файл для инициализации Firebase
-// Если его нет, инициализацию нужно добавить сюда же.
-import { auth, db } from './auth Nexus ID/src/firebase-auth-service.js'; // ВАЖНО: Укажите правильный путь к вашему файлу инициализации
+import { auth, db } from './auth-nexus-id/src/firebase-auth-service.js';
 
 /**
  * Форматирует время из секунд в формат ММ:СС.
@@ -251,6 +249,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     const authLink = document.getElementById('auth-link');
     if (authLink) {
         const redirectUrl = encodeURIComponent(window.location.href);
-        authLink.href = `/auth Nexus ID/auth.html?redirectUrl=${redirectUrl}`;
+        authLink.href = `/auth-nexus-id/auth.html?redirectUrl=${redirectUrl}`;
     }
 });
