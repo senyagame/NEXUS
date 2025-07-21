@@ -1,6 +1,8 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { initializeAuth, onAuthStateChanged, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+// music.js
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+// Импортируем auth и db из нашего нового сервисного файла
+import { auth, db } from './firebase-auth-service.js'; // Убедитесь, что путь правильный
 
 /**
  * Форматирует время из секунд в формат ММ:СС.
@@ -105,177 +107,163 @@ export function initializeCustomPlayer(container) {
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
-    try {
-        const firebaseConfig = {
-            apiKey: "AIzaSyAP04srkFeyQPsp1iuhn0RwzMav9fhqCRw",
-            authDomain: "nexus-90a19.firebaseapp.com",
-            projectId: "nexus-90a19",
-            storageBucket: "nexus-90a19.appspot.com",
-            messagingSenderId: "327211386840",
-            appId: "1:327211386840:web:69110e5b7fd7e7f3b69327"
-        };
+    // Проверяем, что auth был успешно инициализирован
+    if (!auth) {
+        console.error("Firebase Auth не инициализирован. Функции авторизации будут недоступны.");
+        alert("Произошла ошибка при инициализации авторизации. Пожалуйста, перезагрузите страницу.");
+        return; // Прерываем выполнение, если Auth не готов
+    }
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = initializeAuth(app, {
-            persistence: browserLocalPersistence // Сохранение сессии в локальном хранилище браузера
-        });
+    let currentUserId = null; // ID текущего авторизованного пользователя
 
-        let currentUserId = null; // ID текущего авторизованного пользователя
+    /**
+     * Обновляет состояние кнопки "Избранное" в зависимости от статуса авторизации пользователя
+     * и наличия трека в избранном.
+     * @param {HTMLElement} heartButton - Кнопка "сердечко".
+     * @param {Object} songData - Данные о песне.
+     */
+    async function updateFavoriteHeartState(heartButton, songData) {
+        try {
+            if (!currentUserId) {
+                // Если пользователь не авторизован
+                heartButton.textContent = '🔒';
+                heartButton.disabled = true;
+                heartButton.title = 'Войдите для добавления в избранное';
+                heartButton.classList.remove("is-favorite");
+                return;
+            }
 
-        /**
-         * Обновляет состояние кнопки "Избранное" в зависимости от статуса авторизации пользователя
-         * и наличия трека в избранном.
-         * @param {HTMLElement} heartButton - Кнопка "сердечко".
-         * @param {Object} songData - Данные о песне.
-         */
-        async function updateFavoriteHeartState(heartButton, songData) {
-            try {
-                if (!currentUserId) {
-                    // Если пользователь не авторизован
-                    heartButton.textContent = '🔒';
-                    heartButton.disabled = true;
-                    heartButton.title = 'Войдите для добавления в избранное';
-                    heartButton.classList.remove("is-favorite");
-                    return;
-                }
+            // Если пользователь авторизован
+            heartButton.disabled = false;
+            const userFavoritesRef = doc(db, "favorites", currentUserId);
+            const docSnap = await getDoc(userFavoritesRef);
 
-                // Если пользователь авторизован
-                heartButton.disabled = false;
-                const userFavoritesRef = doc(db, "favorites", currentUserId);
-                const docSnap = await getDoc(userFavoritesRef);
+            if (docSnap.exists()) {
+                const favorites = docSnap.data().tracks || [];
+                const isFavorite = favorites.some(fav => fav.yandexLink === songData.yandexLink);
 
-                if (docSnap.exists()) {
-                    const favorites = docSnap.data().tracks || [];
-                    const isFavorite = favorites.some(fav => fav.yandexLink === songData.yandexLink);
-
-                    if (isFavorite) {
-                        heartButton.textContent = '❤️';
-                        heartButton.classList.add("is-favorite");
-                        heartButton.title = 'Удалить из избранного';
-                    } else {
-                        heartButton.textContent = '🤍';
-                        heartButton.classList.remove("is-favorite");
-                        heartButton.title = 'Добавить в избранное';
-                    }
+                if (isFavorite) {
+                    heartButton.textContent = '❤️';
+                    heartButton.classList.add("is-favorite");
+                    heartButton.title = 'Удалить из избранного';
                 } else {
-                    // Если у пользователя еще нет коллекции избранного
                     heartButton.textContent = '🤍';
                     heartButton.classList.remove("is-favorite");
                     heartButton.title = 'Добавить в избранное';
                 }
-            } catch (error) {
-                console.error("[updateFavoriteHeartState Error]: Ошибка при обновлении статуса избранного.", error);
-                heartButton.textContent = '❓'; // Отображение ошибки
-                heartButton.disabled = true;
-                heartButton.title = 'Ошибка загрузки статуса';
+            } else {
+                // Если у пользователя еще нет коллекции избранного
+                heartButton.textContent = '🤍';
+                heartButton.classList.remove("is-favorite");
+                heartButton.title = 'Добавить в избранное';
             }
+        } catch (error) {
+            console.error("[updateFavoriteHeartState Error]: Ошибка при обновлении статуса избранного.", error);
+            heartButton.textContent = '❓'; // Отображение ошибки
+            heartButton.disabled = true;
+            heartButton.title = 'Ошибка загрузки статуса';
+        }
+    }
+
+    /**
+     * Переключает статус трека (добавить/удалить) в избранном пользователя.
+     * @param {HTMLElement} heartButton - Кнопка "сердечко".
+     * @param {Object} songData - Данные о песне.
+     */
+    async function toggleFavorite(heartButton, songData) {
+        if (!currentUserId) {
+            alert("Пожалуйста, войдите в систему, чтобы добавлять треки в избранное.");
+            return;
         }
 
-        /**
-         * Переключает статус трека (добавить/удалить) в избранном пользователя.
-         * @param {HTMLElement} heartButton - Кнопка "сердечко".
-         * @param {Object} songData - Данные о песне.
-         */
-        async function toggleFavorite(heartButton, songData) {
-            if (!currentUserId) {
-                alert("Пожалуйста, войдите в систему, чтобы добавлять треки в избранное.");
-                return;
-            }
+        try {
+            const userFavoritesRef = doc(db, "favorites", currentUserId);
+            const docSnap = await getDoc(userFavoritesRef);
+            const isCurrentlyFavorite = heartButton.classList.contains("is-favorite");
 
-            try {
-                const userFavoritesRef = doc(db, "favorites", currentUserId);
-                const docSnap = await getDoc(userFavoritesRef);
-                const isCurrentlyFavorite = heartButton.classList.contains("is-favorite");
-
-                if (isCurrentlyFavorite) {
-                    await updateDoc(userFavoritesRef, { tracks: arrayRemove(songData) });
-                    alert(`"${songData.song}" удален из понравившихся.`);
+            if (isCurrentlyFavorite) {
+                await updateDoc(userFavoritesRef, { tracks: arrayRemove(songData) });
+                alert(`"${songData.song}" удален из понравившихся.`);
+            } else {
+                if (docSnap.exists()) {
+                    await updateDoc(userFavoritesRef, { tracks: arrayUnion(songData) });
                 } else {
-                    if (docSnap.exists()) {
-                        await updateDoc(userFavoritesRef, { tracks: arrayUnion(songData) });
-                    } else {
-                        // Если коллекции избранного еще нет, создаем ее с первым треком
-                        await setDoc(userFavoritesRef, { tracks: [songData] });
-                    }
-                    alert(`"${songData.song}" добавлен в понравившиеся!`);
+                    // Если коллекции избранного еще нет, создаем ее с первым треком
+                    await setDoc(userFavoritesRef, { tracks: [songData] });
                 }
-                // Обновляем состояние кнопки после операции
-                await updateFavoriteHeartState(heartButton, songData);
-            } catch (error) {
-                console.error("[toggleFavorite Error]: Ошибка при добавлении/удалении трека.", error);
-                alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
+                alert(`"${songData.song}" добавлен в понравившиеся!`);
             }
+            // Обновляем состояние кнопки после операции
+            await updateFavoriteHeartState(heartButton, songData);
+        } catch (error) {
+            console.error("[toggleFavorite Error]: Ошибка при добавлении/удалении трека.", error);
+            alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
         }
+    }
 
-        const musicContainers = document.querySelectorAll('.music-container');
+    const musicContainers = document.querySelectorAll('.music-container');
 
-        // Инициализируем кастомные плееры и слушателей для кнопок избранного.
-        // Изначально скрываем или отключаем кнопки избранного, чтобы избежать "мигания".
+    // Инициализируем кастомные плееры и слушателей для кнопок избранного.
+    // Изначально скрываем или отключаем кнопки избранного, чтобы избежать "мигания".
+    musicContainers.forEach(container => {
+        initializeCustomPlayer(container);
+        const favoriteHeartBtn = container.querySelector('.favorite-heart-btn');
+        if (favoriteHeartBtn) {
+            // Скрываем кнопки избранного, пока не определится статус авторизации
+            favoriteHeartBtn.style.display = 'none'; // Или favoriteHeartBtn.disabled = true;
+
+            const songData = {
+                song: container.dataset.song || '',
+                artist: container.dataset.artist || '',
+                date: container.dataset.date || '',
+                duration: container.dataset.duration || '',
+                img: container.dataset.img || '',
+                yandexLink: container.dataset.yandexLink || '',
+                audioSrc: container.dataset.audioSrc || ''
+            };
+            favoriteHeartBtn.addEventListener('click', () => toggleFavorite(favoriteHeartBtn, songData));
+        }
+    });
+
+    // Слушатель состояния авторизации Firebase.
+    // Этот слушатель гарантирует, что кнопки избранного обновятся, как только
+    // статус авторизации пользователя будет определен.
+    onAuthStateChanged(auth, (user) => {
+        currentUserId = user ? user.uid : null;
+        console.log(user ? `Пользователь вошел: ${user.uid}` : "Пользователь не вошел.");
+
+        // После получения состояния авторизации, обновляем все кнопки избранного
         musicContainers.forEach(container => {
-            initializeCustomPlayer(container);
             const favoriteHeartBtn = container.querySelector('.favorite-heart-btn');
             if (favoriteHeartBtn) {
-                // ВАЖНОЕ ИЗМЕНЕНИЕ: Скрываем кнопки избранного, пока не определится статус авторизации
-                favoriteHeartBtn.style.display = 'none'; // Или favoriteHeartBtn.disabled = true;
-
                 const songData = {
-                    song: container.dataset.song || '',
-                    artist: container.dataset.artist || '',
-                    date: container.dataset.date || '',
-                    duration: container.dataset.duration || '',
-                    img: container.dataset.img || '',
-                    yandexLink: container.dataset.yandexLink || '',
-                    audioSrc: container.dataset.audioSrc || ''
+                    song: container.dataset.song,
+                    artist: container.dataset.artist,
+                    yandexLink: container.dataset.yandexLink
                 };
-                favoriteHeartBtn.addEventListener('click', () => toggleFavorite(favoriteHeartBtn, songData));
+                updateFavoriteHeartState(favoriteHeartBtn, songData);
+                // Показываем кнопку после того, как её состояние было обновлено
+                favoriteHeartBtn.style.display = '';
             }
         });
+    });
 
-        // Слушатель состояния авторизации Firebase.
-        // Этот слушатель гарантирует, что кнопки избранного обновятся, как только
-        // статус авторизации пользователя будет определен.
-        onAuthStateChanged(auth, (user) => {
-            currentUserId = user ? user.uid : null;
-            console.log(user ? `Пользователь вошел: ${user.uid}` : "Пользователь не вошел.");
-
-            // После получения состояния авторизации, обновляем все кнопки избранного
-            musicContainers.forEach(container => {
-                const favoriteHeartBtn = container.querySelector('.favorite-heart-btn');
-                if (favoriteHeartBtn) {
-                    const songData = {
-                        song: container.dataset.song,
-                        artist: container.dataset.artist,
-                        yandexLink: container.dataset.yandexLink
-                    };
-                    updateFavoriteHeartState(favoriteHeartBtn, songData);
-                    // ВАЖНОЕ ИЗМЕНЕНИЕ: Показываем кнопку после того, как её состояние было обновлено
-                    favoriteHeartBtn.style.display = ''; 
-                }
-            });
+    // Логика для заголовка при прокрутке страницы
+    const mainHeader = document.getElementById('main-header');
+    if (mainHeader) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                mainHeader.classList.add('scrolled');
+            } else {
+                mainHeader.classList.remove('scrolled');
+            }
         });
+    }
 
-        // Логика для заголовка при прокрутке страницы
-        const mainHeader = document.getElementById('main-header');
-        if (mainHeader) {
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 100) {
-                    mainHeader.classList.add('scrolled');
-                } else {
-                    mainHeader.classList.remove('scrolled');
-                }
-            });
-        }
-
-        // Обновление ссылки для авторизации с учетом редиректа
-        const authLink = document.getElementById('auth-link');
-        if (authLink) {
-            const redirectUrl = encodeURIComponent(window.location.href);
-            authLink.href = `./auth Nexus ID/auth.html`;
-        }
-
-    } catch (error) {
-        console.error("[DOMContentLoaded Error]: Произошла критическая ошибка при загрузке страницы.", error);
-        alert("Не удалось загрузить приложение. Проверьте консоль для получения дополнительной информации.");
+    // Обновление ссылки для авторизации с учетом редиректа
+    const authLink = document.getElementById('auth-link');
+    if (authLink) {
+        const redirectUrl = encodeURIComponent(window.location.href);
+        authLink.href = `/auth.html?redirectUrl=${redirectUrl}`;
     }
 });

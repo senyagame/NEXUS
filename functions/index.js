@@ -105,7 +105,7 @@ app.get("/yandex-callback", async (req, res) => {
         return res.redirect(`${FRONTEND_AUTH_URL}?custom_token=${customToken}`);
     } catch (error) {
         console.error("Yandex Auth Error:", error.response ? error.response.data : error.message);
-        return res.status(500).send("Произошла ошибка аутентификации.Перейдите на страницу авторизации и повторите попытку.");
+        return res.status(500).send("Произошла ошибка аутентификации. Перейдите на страницу авторизации и повторите попытку. ");
     }
 });
 

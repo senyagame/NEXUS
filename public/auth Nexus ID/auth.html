@@ -212,24 +212,18 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { initializeAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        // Импортируем auth и db из нашего нового сервисного файла
+        import { auth, db } from './firebase-auth-service.js'; // Убедитесь, что путь правильный
 
-        try {
-            const firebaseConfig = {
-                apiKey: "AIzaSyAP04srkFeyQPsp1iuhn0RwzMav9fhqCRw",
-                authDomain: "nexus-90a19.firebaseapp.com",
-                projectId: "nexus-90a19",
-                storageBucket: "nexus-90a19.appspot.com",
-                messagingSenderId: "327211386840",
-                appId: "1:327211386840:web:69110e5b7fd7e7f3b69327"
-            };
-
-            const app = initializeApp(firebaseConfig);
-            const auth = initializeAuth(app, { persistence: browserLocalPersistence });
-            const db = getFirestore(app);
-
+        // Проверяем, что auth был успешно инициализирован
+        if (!auth) {
+            console.error("Firebase Auth не инициализирован. Функции авторизации будут недоступны.");
+            alert("Произошла ошибка при инициализации авторизации. Пожалуйста, перезагрузите страницу.");
+            // Дополнительно можно скрыть формы или показать сообщение об ошибке пользователю
+            document.getElementById('auth-section').innerHTML = '<p class="error-message">Не удалось загрузить систему авторизации. Пожалуйста, попробуйте позже.</p>';
+        } else {
             const loginForm = document.getElementById('login-form');
             const registerForm = document.getElementById('register-form');
             const loginMessageArea = document.getElementById('login-message');
@@ -249,7 +243,7 @@
                     case 'auth/user-disabled':
                         return 'Пользователь с этим email отключён.';
                     case 'auth/user-not-found':
-                    case 'auth/invalid-credential': // Объединили для улучшения UX при неверных логине/пароле
+                    case 'auth/invalid-credential':
                         return 'Неверный email или пароль. Попробуйте снова.';
                     case 'auth/wrong-password':
                         return 'Неверный пароль. Попробуйте снова.';
@@ -297,7 +291,6 @@
                 }
 
                 if (yandexEmail) {
-                    // Если есть параметры Яндекс, значит, это пре-регистрация через Яндекс
                     loginForm.style.display = 'none';
                     registerForm.style.display = 'block';
 
@@ -313,13 +306,10 @@
                     document.getElementById('register-email').readOnly = true;
 
                     showMessage(registerMessageArea, 'Данные из Яндекс ID подставлены. Придумайте пароль.', 'info');
-                    // Очищаем параметры из URL, чтобы при обновлении страницы не повторять логику Яндекс
                     window.history.replaceState({}, document.title, window.location.pathname.split('?')[0]);
                 } else {
-                    // Если нет параметров Яндекс, проверяем состояние авторизации Firebase
                     onAuthStateChanged(auth, (user) => {
                         if (user) {
-                            // Пользователь авторизован, перенаправляем
                             console.log("Пользователь авторизован, перенаправление...");
                             if (redirectUrl) {
                                 window.location.href = redirectUrl;
@@ -327,7 +317,6 @@
                                 window.location.href = 'profile.html';
                             }
                         } else {
-                            // Пользователь не авторизован, показываем форму входа
                             console.log("Пользователь не авторизован, показываем формы входа/регистрации.");
                             loginForm.style.display = 'block';
                             registerForm.style.display = 'none';
@@ -342,9 +331,7 @@
                 showMessage(loginMessageArea, 'Вход...', 'info');
 
                 signInWithEmailAndPassword(auth, email, password)
-                    .then(() => { // Убрали idToken из параметров
-                        // Firebase сам сохраняет состояние авторизации.
-                        // Просто перенаправляем, onAuthStateChanged на целевой странице подхватит пользователя.
+                    .then(() => {
                         if (redirectUrl) {
                             window.location.href = redirectUrl;
                         } else {
@@ -378,24 +365,21 @@
                 createUserWithEmailAndPassword(auth, email, password)
                     .then((userCredential) => {
                         const user = userCredential.user;
-                        // Сохраняем дополнительные данные пользователя в Firestore
                         return setDoc(doc(db, "users", user.uid), {
                             login: login,
                             phone: phone,
                             email: email
                         });
                     })
-                    .then(() => { // Убрали idToken из параметров
+                    .then(() => {
                         showMessage(registerMessageArea, 'Регистрация прошла успешно!', 'success');
                         setTimeout(() => {
-                            // Firebase сам сохраняет состояние авторизации.
-                            // Просто перенаправляем, onAuthStateChanged на целевой странице подхватит пользователя.
                             if (redirectUrl) {
                                 window.location.href = redirectUrl;
                             } else {
                                 window.location.href = 'profile.html';
                             }
-                        }, 1500); // Даем пользователю время прочитать сообщение об успехе
+                        }, 1500);
                     })
                     .catch(error => {
                         console.error("[Registration Error]:", error);
@@ -407,7 +391,7 @@
                 e.preventDefault();
                 loginForm.style.display = 'none';
                 registerForm.style.display = 'block';
-                showMessage(loginMessageArea, ''); // Очищаем сообщения при переключении
+                showMessage(loginMessageArea, '');
                 showMessage(registerMessageArea, '');
             });
 
@@ -415,13 +399,9 @@
                 e.preventDefault();
                 registerForm.style.display = 'none';
                 loginForm.style.display = 'block';
-                showMessage(loginMessageArea, ''); // Очищаем сообщения при переключении
+                showMessage(loginMessageArea, '');
                 showMessage(registerMessageArea, '');
             });
-
-        } catch (error) {
-            console.error("[Auth Page Error]: Критическая ошибка на странице авторизации.", error);
-            alert("Произошла критическая ошибка. Пожалуйста, перезагрузите страницу.");
         }
     </script>
 </body>
