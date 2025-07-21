@@ -40,14 +40,19 @@
             max-width: 450px;
             width: 90%;
             animation: fadeIn 0.3s ease-out;
-            overflow: hidden; /* Скрываем слайды за пределами блока */
+            overflow: hidden;
+            /* Скрываем слайды за пределами блока */
         }
 
         .notification-box h2 {
             margin-top: 0;
-            color: #ff9100;
+            color: #000000;
+            background-color: #f0f0f0;
             font-size: 24px;
             margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: inline-block;
         }
 
         .notification-box h3 {
@@ -68,6 +73,7 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -91,8 +97,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Стили для слайдера */
@@ -120,10 +131,10 @@
         }
 
         .next-btn:hover {
-            background-color: #0056b3;
+            background-color: #ffffff;
+            color: #000000;
             transform: translateY(-2px);
         }
-
     </style>
 </head>
 
@@ -134,19 +145,22 @@
             <div id="slides-container">
                 <div class="slide">
                     <h2>Приложение обновлено!</h2>
-                    <p>Мы подготовили несколько улучшений, чтобы сделать приложение еще удобнее для вас. Давайте посмотрим, что нового!</p>
+                    <p>Мы подготовили несколько улучшений, чтобы сделать приложение еще удобнее для вас. Давайте
+                        посмотрим, что нового!</p>
                     <button class="next-btn">Покажите мне!</button>
                 </div>
 
                 <div class="slide">
                     <h3>❇️ Что нового?</h3>
-                    <p>❤️ Мы исправили базу данных! Теперь заметки и любимые треки в музыке снова сохраняются за вашим аккаунтом!</p>
+                    <p>❤️ Мы исправили базу данных! Теперь заметки и любимые треки в музыке снова сохраняются за вашим
+                        аккаунтом!</p>
                     <button class="next-btn">Супер!</button>
                 </div>
-                
+
                 <div class="slide">
                     <h3>❇️ Всё для вас!</h3>
-                    <p>❤️‍🩹 Мы услышали ваши просьбы, о добавлении своих аватарок в аккаунт, ииии... мы это сделали! Теперь в личном кабинете вы можете загрузить любую вашу картинку!</p>
+                    <p>❤️‍🩹 Мы услышали ваши просьбы, о добавлении своих аватарок в аккаунт, ииии... мы это сделали!
+                        Теперь в личном кабинете вы можете загрузить любую вашу картинку!</p>
                     <button class="next-btn">Круть!</button>
                 </div>
 
@@ -158,7 +172,8 @@
 
                 <div class="slide">
                     <h2>Все готово!</h2>
-                    <p>Спасибо, что остаетесь с нами. Теперь вы можете продолжить работу с приложением. Приятного использования!</p>
+                    <p>Спасибо, что остаетесь с нами. Теперь вы можете продолжить работу с приложением. Приятного
+                        использования!</p>
                     <button class="next-btn">Поехали!</button>
                 </div>
             </div>
@@ -171,25 +186,21 @@
 
     <script>
         const NOTIFICATION_KEY = 'user_terms_accepted';
-        const NOTIFICATION_VERSION = 'v1.4'; // Меняйте эту версию для отображения уведомления
 
-        // Получаем элементы DOM
+        const NOTIFICATION_VERSION = 'v1.5'; // МЕНЯТЬ ВЕРСИЮ ДЛЯ ПОКАЗА СНОВА!
+
         const notificationOverlay = document.getElementById('userNotification');
         const loadingIndicator = document.getElementById('loadingIndicator');
         const slidesContainer = document.getElementById('slides-container');
         const slides = document.querySelectorAll('.slide');
         const nextButtons = document.querySelectorAll('.next-btn');
         const totalSlides = slides.length;
-        
-        // Переменная для отслеживания текущего слайда
         let currentSlide = 0;
 
         function redirectToLoadingPage() {
-            // Замените "loading-page.html" на вашу целевую страницу
             window.location.href = "loading-page.html";
         }
 
-        // Функция для показа следующего слайда
         function showNextSlide() {
             currentSlide++;
             const offset = -currentSlide * 100;
@@ -209,7 +220,7 @@
                         shouldShowNotification = true;
                     }
                 } catch (e) {
-                    shouldShowNotification = true; // Показать уведомление, если данные повреждены
+                    shouldShowNotification = true;
                 }
             }
 
