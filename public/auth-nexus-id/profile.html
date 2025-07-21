@@ -522,7 +522,9 @@
         };
 
         window.deleteAccount = function () {
-            alert("Данная функция доступна только на официальном сайте Nexus ID.");
+            if (confirm("Данная функция доступна только на официальном сайте Nexus ID.\nПерейти на сайт?")) {
+                window.open('https://nexus-id-site.vercel.app/', '_blank');
+            }
         };
 
         window.openEditModal = async function () {
