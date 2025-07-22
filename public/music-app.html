@@ -475,6 +475,7 @@
                 <button class="mood-btn" data-mood="спокойное">Спокойное</button>
                 <button class="mood-btn" data-mood="грустное">Грустное</button>
                 <button class="mood-btn" data-mood="новое">Время чего-то нового!</button>
+                <button class="mood-btn" data-mood="любимое">Любимое ❤️</button>
             </div>
             <p id="mood-feedback" style="display: none;">Таких треков ещё нет, но вы можете это исправить, предложив
                 трек разработчику!</p>
@@ -489,9 +490,6 @@
                 <p id="search-feedback" style="display: none;">Треки не найдены 😞 Таких треков ещё нет, но вы можете
                     это исправить, предложив трек разработчику!</p>
                 <div id="search-results"></div>
-                <div class="or-divider"></div>
-                <button class="mood-btn" data-mood="любимое">Любимое ❤️</button>
-                <p id="favorites-feedback" style="display: none;">Вы ещё ничего не лайкнули 🤍 Нажмите на сердечко на треки, чтобы добавить в избранное, затем вернитесь в этот раздел.</p>
             </section>
         </div>
         <div id="music-players">
@@ -952,157 +950,213 @@
     <script type="module" src="music.js"></script>
     <script src="./modal-window.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- ЭЛЕМЕНЕНТЫ ---
-            const allTracks = document.querySelectorAll('#music-players .music-container');
-            const searchBar = document.getElementById('search-bar');
-            const favoritesBtn = document.querySelector('.mood-btn[data-mood="любимое"]');
-            const searchFeedback = document.getElementById('search-feedback');
-            const favoritesFeedback = document.getElementById('favorites-feedback');
-            const miniPlayer = document.getElementById('mini-player');
-            const miniPlayerTrackName = document.getElementById('mini-player-track-name');
-            const miniPlayerPlayPauseBtn = document.getElementById('mini-player-play-pause-btn');
-            const miniPlayerProgressBar = document.getElementById('mini-player-progress-bar');
-            const collapseBtn = document.getElementById('mini-player-collapse-btn');
-            const collapsedView = document.getElementById('mini-player-collapsed-view');
-            const collapsedTrackName = document.getElementById('collapsed-track-name');
-            let currentActiveAudio = null;
-            let currentActiveMainPlayBtn = null;
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- ЭЛЕМЕНТЫ ---
+        const allTracks = document.querySelectorAll('#music-players .music-container');
+        const searchBar = document.getElementById('search-bar');
+        const searchFeedback = document.getElementById('search-feedback');
+        const showSearchBtn = document.getElementById('show-search-btn');
+        const searchContainer = document.getElementById('search-container');
+        const searchBtnContainer = document.querySelector('.search-toggle-container');
+        const closeSearchBtn = document.getElementById('close-search-btn');
+        const moodButtons = document.querySelectorAll('.mood-btn');
+        const moodFeedback = document.getElementById('mood-feedback');
+        const resetButton = document.querySelector('.mood-btn[data-mood="все"]');
+        const miniPlayer = document.getElementById('mini-player');
+        const miniPlayerTrackName = document.getElementById('mini-player-track-name');
+        const miniPlayerPlayPauseBtn = document.getElementById('mini-player-play-pause-btn');
+        const miniPlayerProgressBar = document.getElementById('mini-player-progress-bar');
+        const collapseBtn = document.getElementById('mini-player-collapse-btn');
+        const collapsedView = document.getElementById('mini-player-collapsed-view');
+        const collapsedTrackName = document.getElementById('collapsed-track-name');
+        let currentActiveAudio = null;
+        let currentActiveMainPlayBtn = null;
 
-            // --- ЛОГИКА МИНИ-ПЛЕЕРА ---
-            document.querySelectorAll('audio').forEach(audioEl => {
-                audioEl.addEventListener('play', () => {
-                    if (currentActiveAudio && currentActiveAudio !== audioEl) {
-                        currentActiveAudio.pause();
-                    }
-                    currentActiveAudio = audioEl;
-                    const musicContainer = audioEl.closest('.music-container');
-                    if (musicContainer) {
-                        currentActiveMainPlayBtn = musicContainer.querySelector('.play-pause-btn');
-                        const songName = musicContainer.dataset.song;
-                        const artistName = musicContainer.dataset.artist;
-                        const fullTrackTitle = `${songName} – ${artistName}`;
-                        if (miniPlayerTrackName) miniPlayerTrackName.textContent = fullTrackTitle;
-                        if (collapsedTrackName) collapsedTrackName.textContent = fullTrackTitle;
-                    }
-                    if (miniPlayer) {
-                        miniPlayer.classList.add('visible');
-                        miniPlayer.classList.remove('collapsed');
-                    }
-                    if (miniPlayerPlayPauseBtn) miniPlayerPlayPauseBtn.innerHTML = '❚❚';
-                });
+        // --- ЛОГИКА ПОКАЗА/СКРЫТИЯ БЛОКА ПОИСКА ---
+        if (showSearchBtn) {
+            showSearchBtn.addEventListener('click', () => {
+                if (searchContainer) searchContainer.classList.add('visible');
+                if (searchBtnContainer) searchBtnContainer.style.display = 'none';
+            });
+        }
+        if (closeSearchBtn) {
+            closeSearchBtn.addEventListener('click', () => {
+                if (searchContainer) searchContainer.classList.remove('visible');
+                if (searchBtnContainer) searchBtnContainer.style.display = 'block';
+                if (searchBar) {
+                    searchBar.value = '';
+                    searchBar.dispatchEvent(new Event('input', {
+                        bubbles: true
+                    }));
+                }
+            });
+        }
 
-                audioEl.addEventListener('pause', () => {
-                    if (currentActiveAudio === audioEl && miniPlayerPlayPauseBtn) {
-                        miniPlayerPlayPauseBtn.innerHTML = '▶';
-                    }
-                });
-
-                audioEl.addEventListener('ended', () => {
-                    if (currentActiveAudio === audioEl && miniPlayer) {
-                        miniPlayer.classList.remove('visible');
-                        currentActiveAudio = null;
-                    }
-                });
-
-                audioEl.addEventListener('timeupdate', () => {
-                    if (currentActiveAudio === audioEl && !isNaN(audioEl.duration) && miniPlayerProgressBar) {
-                        const progressPercent = (audioEl.currentTime / audioEl.duration) * 100;
-                        miniPlayerProgressBar.value = progressPercent;
-                    }
-                });
+        // --- ЛОГИКА МИНИ-ПЛЕЕРА ---
+        document.querySelectorAll('audio').forEach(audioEl => {
+            audioEl.addEventListener('play', () => {
+                if (currentActiveAudio && currentActiveAudio !== audioEl) {
+                    currentActiveAudio.pause();
+                }
+                currentActiveAudio = audioEl;
+                const musicContainer = audioEl.closest('.music-container');
+                if (musicContainer) {
+                    currentActiveMainPlayBtn = musicContainer.querySelector('.play-pause-btn');
+                    const songName = musicContainer.dataset.song;
+                    const artistName = musicContainer.dataset.artist;
+                    const fullTrackTitle = `${songName} – ${artistName}`;
+                    if (miniPlayerTrackName) miniPlayerTrackName.textContent = fullTrackTitle;
+                    if (collapsedTrackName) collapsedTrackName.textContent = fullTrackTitle;
+                }
+                if (miniPlayer) {
+                    miniPlayer.classList.add('visible');
+                    miniPlayer.classList.remove('collapsed');
+                }
+                if (miniPlayerPlayPauseBtn) miniPlayerPlayPauseBtn.innerHTML = '❚❚';
             });
 
-            if (miniPlayerPlayPauseBtn) {
-                miniPlayerPlayPauseBtn.addEventListener('click', () => {
-                    if (currentActiveAudio) {
-                        if (currentActiveAudio.paused) currentActiveAudio.play();
-                        else currentActiveAudio.pause();
-                        if (currentActiveMainPlayBtn) {
-                            currentActiveMainPlayBtn.innerHTML = currentActiveAudio.paused ? '▶' : '❚❚';
-                        }
-                    }
-                });
-            }
+            audioEl.addEventListener('pause', () => {
+                if (currentActiveAudio === audioEl && miniPlayerPlayPauseBtn) {
+                    miniPlayerPlayPauseBtn.innerHTML = '▶';
+                }
+            });
 
-            if (miniPlayerProgressBar) {
-                miniPlayerProgressBar.addEventListener('input', () => {
-                    if (currentActiveAudio && !isNaN(currentActiveAudio.duration)) {
-                        currentActiveAudio.currentTime = (miniPlayerProgressBar.value / 100) * currentActiveAudio.duration;
-                    }
-                });
-            }
+            audioEl.addEventListener('ended', () => {
+                if (currentActiveAudio === audioEl && miniPlayer) {
+                    miniPlayer.classList.remove('visible');
+                    currentActiveAudio = null;
+                }
+            });
 
-            if (collapseBtn) {
-                collapseBtn.addEventListener('click', () => miniPlayer.classList.add('collapsed'));
-            }
-
-            if (collapsedView) {
-                collapsedView.addEventListener('click', () => miniPlayer.classList.remove('collapsed'));
-            }
-
-            // --- ЛОГИКА ПОИСКА И ИЗБРАННОГО ---
-            if (searchBar) {
-                searchBar.addEventListener('input', () => {
-                    const query = searchBar.value.toLowerCase().trim();
-                    let tracksFound = 0;
-                    if (favoritesBtn) favoritesBtn.classList.remove('active');
-                    if (favoritesFeedback) favoritesFeedback.style.display = 'none';
-
-                    allTracks.forEach(track => {
-                        const songTitle = track.dataset.song.toLowerCase();
-                        const artistName = track.dataset.artist.toLowerCase();
-                        const isMatch = songTitle.includes(query) || artistName.includes(query);
-                        track.style.display = isMatch ? 'block' : 'none';
-                        if (isMatch) tracksFound++;
-                    });
-
-                    if (searchFeedback) {
-                        searchFeedback.style.display = (tracksFound === 0 && query.length > 0) ? 'block' : 'none';
-                    }
-                });
-            }
-
-            if (favoritesBtn) {
-                favoritesBtn.addEventListener('click', () => {
-                    if (searchBar) searchBar.value = '';
-                    if (searchFeedback) searchFeedback.style.display = 'none';
-                    favoritesBtn.classList.toggle('active');
-                    let tracksFound = 0;
-
-                    if (favoritesBtn.classList.contains('active')) {
-                        allTracks.forEach(track => {
-                            const heartBtn = track.querySelector('.favorite-heart-btn');
-                            const isFavorite = heartBtn && heartBtn.classList.contains('is-favorite');
-                            if (isFavorite) {
-                                track.style.display = 'block';
-                                tracksFound++;
-                            } else {
-                                track.style.display = 'none';
-                            }
-                        });
-                        if (favoritesFeedback) {
-                            favoritesFeedback.style.display = (tracksFound === 0) ? 'block' : 'none';
-                        }
-                    } else {
-                        allTracks.forEach(track => track.style.display = 'block');
-                        if (favoritesFeedback) favoritesFeedback.style.display = 'none';
-                    }
-                });
-            }
-
-            // --- ЛОГИКА КНОПКИ "ТЕКСТ ПЕСНИ" ---
-            document.querySelectorAll('.lyrics-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    const lyricsContent = button.nextElementSibling;
-                    if (lyricsContent && lyricsContent.classList.contains('lyrics-content')) {
-                        lyricsContent.classList.toggle('show');
-                        button.innerHTML = lyricsContent.classList.contains('show') ? '🔼 Скрыть текст' : '📄 Текст песни';
-                    }
-                });
+            audioEl.addEventListener('timeupdate', () => {
+                if (currentActiveAudio === audioEl && !isNaN(audioEl.duration) && miniPlayerProgressBar) {
+                    const progressPercent = (audioEl.currentTime / audioEl.duration) * 100;
+                    miniPlayerProgressBar.value = progressPercent;
+                }
             });
         });
-    </script>
+
+        if (miniPlayerPlayPauseBtn) {
+            miniPlayerPlayPauseBtn.addEventListener('click', () => {
+                if (currentActiveAudio) {
+                    if (currentActiveAudio.paused) currentActiveAudio.play();
+                    else currentActiveAudio.pause();
+                    if (currentActiveMainPlayBtn) {
+                        currentActiveMainPlayBtn.innerHTML = currentActiveAudio.paused ? '▶' : '❚❚';
+                    }
+                }
+            });
+        }
+
+        if (miniPlayerProgressBar) {
+            miniPlayerProgressBar.addEventListener('input', () => {
+                if (currentActiveAudio && !isNaN(currentActiveAudio.duration)) {
+                    currentActiveAudio.currentTime = (miniPlayerProgressBar.value / 100) * currentActiveAudio.duration;
+                }
+            });
+        }
+
+        if (collapseBtn) {
+            collapseBtn.addEventListener('click', () => miniPlayer.classList.add('collapsed'));
+        }
+
+        if (collapsedView) {
+            collapsedView.addEventListener('click', () => miniPlayer.classList.remove('collapsed'));
+        }
+
+        // --- ЛОГИКА ФИЛЬТРА ПО НАСТРОЕНИЮ (с кнопкой "Любимое") ---
+        moodButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const selectedMood = button.dataset.mood;
+                if (searchBar) searchBar.value = '';
+                if (searchFeedback) searchFeedback.style.display = 'none';
+
+                moodButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                if (selectedMood === 'все') {
+                    if (resetButton) resetButton.classList.remove('visible');
+                } else {
+                    if (resetButton) resetButton.classList.add('visible');
+                }
+
+                let tracksFound = 0;
+
+                if (selectedMood === 'любимое') {
+                    // ОСОБАЯ ЛОГИКА ДЛЯ ИЗБРАННЫХ ТРЕКОВ
+                    allTracks.forEach(track => {
+                        const heartBtn = track.querySelector('.favorite-heart-btn');
+                        const isFavorite = heartBtn && heartBtn.classList.contains('is-favorite');
+                        if (isFavorite) {
+                            track.style.display = 'block';
+                            tracksFound++;
+                        } else {
+                            track.style.display = 'none';
+                        }
+                    });
+
+                    // Показываем специальное сообщение, если ничего не найдено в избранном
+                    if (moodFeedback) {
+                        if (tracksFound === 0) {
+                            moodFeedback.textContent = "Вы ещё ничего не лайкнули 🤍";
+                            moodFeedback.style.display = 'block';
+                        } else {
+                            moodFeedback.style.display = 'none';
+                        }
+                    }
+
+                } else {
+                    // СТАНДАРТНАЯ ЛОГИКА ДЛЯ ОСТАЛЬНЫХ НАСТРОЕНИЙ
+                    allTracks.forEach(track => {
+                        const isVisible = (selectedMood === 'все' || track.dataset.mood === selectedMood);
+                        track.style.display = isVisible ? 'block' : 'none';
+                        if (isVisible) tracksFound++;
+                    });
+
+                    // Возвращаем стандартное сообщение
+                    if (moodFeedback) {
+                        moodFeedback.textContent = "Таких треков ещё нет, но вы можете это исправить, предложив трек разработчику!";
+                        moodFeedback.style.display = (tracksFound === 0 && selectedMood !== 'все') ? 'block' : 'none';
+                    }
+                }
+            });
+        });
+
+
+        // --- ЛОГИКА ПОИСКА ПО ТЕКСТУ ---
+        if (searchBar) {
+            searchBar.addEventListener('input', () => {
+                const query = searchBar.value.toLowerCase().trim();
+                let tracksFound = 0;
+
+                moodButtons.forEach(btn => btn.classList.remove('active'));
+                if (resetButton) resetButton.classList.remove('visible');
+                if (moodFeedback) moodFeedback.style.display = 'none';
+
+                allTracks.forEach(track => {
+                    const songTitle = track.dataset.song.toLowerCase();
+                    const artistName = track.dataset.artist.toLowerCase();
+                    const isMatch = songTitle.includes(query) || artistName.includes(query);
+                    track.style.display = isMatch ? 'block' : 'none';
+                    if (isMatch) tracksFound++;
+                });
+
+                if (searchFeedback) searchFeedback.style.display = (tracksFound === 0 && query.length > 0) ? 'block' : 'none';
+            });
+        }
+
+        // --- ЛОГИКА КНОПКИ "ТЕКСТ ПЕСНИ" ---
+        document.querySelectorAll('.lyrics-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const lyricsContent = button.nextElementSibling;
+                if (lyricsContent && lyricsContent.classList.contains('lyrics-content')) {
+                    lyricsContent.classList.toggle('show');
+                    button.innerHTML = lyricsContent.classList.contains('show') ? '🔼 Скрыть текст' : '📄 Текст песни';
+                }
+            });
+        });
+    });
+</script>
 </body>
 
 </html>
