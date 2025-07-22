@@ -403,11 +403,13 @@
 
         /* Градиент */
 
+        /* --- Градиент Фона --- */
         .gradient {
             background: linear-gradient(149deg, rgb(253, 241, 74) 0%, rgb(83, 23, 167) 42%, rgb(5, 184, 207) 72%, rgba(115, 53, 134, 1) 100%);
             animation: gradient 15s infinite linear;
             background-size: 400%;
-            color: #fff;
+            transition: background 1.5s ease;
+            /* Плавный переход между градиентами */
         }
 
         @keyframes gradient {
@@ -422,6 +424,22 @@
             100% {
                 background-position: 80% 0%;
             }
+        }
+
+        .gradient-bodroe {
+            background: linear-gradient(149deg, #ffe81d, #ff9419, #fd4128);
+        }
+
+        .gradient-vesyoloe {
+            background: linear-gradient(149deg, #fff176, #0eeb19, #4fc3f7);
+        }
+
+        .gradient-spokoinoe {
+            background: linear-gradient(149deg, #64b5f6, #00ca98, #30e0cf);
+        }
+
+        .gradient-grustnoe {
+            background: linear-gradient(149deg, #37474f, #00649e, #607d8b);
         }
     </style>
 </head>
@@ -493,6 +511,81 @@
             </section>
         </div>
         <div id="music-players">
+
+            <div class="music-container" data-mood="грустное" data-song="Ты неси меня река"
+                data-artist="Любэ" data-date="29.12.24" data-duration="3:36"
+                data-img="./assets/Любэ ты неси меня река.jpg"
+                data-yandex-link="https://music.yandex.ru/album/5060852/track/39257484"
+                data-audio-src="./assets/">
+                <div class="song-title-container">
+                    <hr>
+                    <p class="song-title">Ты неси меня река</p>
+                    <p class="song-duration">Длительность: 3:36</p>
+                    <p class="song-duration">Исполнитель: ЛЮБЭ</p>
+                    <img class="song-title-img" src="./assets/Любэ ты неси меня река.jpg" alt="">
+                </div>
+                <p class="nexus-player-title">Nexus музыка</p>
+                <div class="custom-player" data-player-id="player-тнмр">
+                    <div class="player-controls">
+                        <button class="play-pause-btn" data-track-id="track-тнмр">▶</button>
+                        <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                    </div>
+                    <audio id="audio-player-тнмр"
+                        src="./assets/ЛЮБЭ-Ты_неси_меня_река.mp3"></audio>
+                    <a href="https://music.yandex.ru/album/5060852/track/39257484" target="_blank"
+                        class="goto-yandex-btn">
+                        Альбом на Яндекс Музыке
+                    </a>
+                    <button class="lyrics-btn"
+                        style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
+                        Текст песни</button>
+                    <div class="lyrics-content">
+                        <p>Ты неси меня, река</p>
+                        <p>За крутые берега</p>
+                        <p>Где поля, мои поля</p>
+                        <p>Где леса, мои леса</p>
+                        <p>Ты неси меня, река</p>
+                        <p>Да в родные мне места</p>
+                        <p>Где живет моя краса</p>
+                        <p>Голубые у нее глаза</p>
+                        <br>
+                        <p><strong>Припев:</strong></p>
+                        <p>Как ночка темная</p>
+                        <p>Как речка быстрая</p>
+                        <p>Как одинокая луна</p>
+                        <p>На небе ждет меня она</p>
+                        <br>
+                        <p>За туманом огонек</p>
+                        <p>Как же он еще далек</p>
+                        <p>Ты мне ветер помоги</p>
+                        <p>Милой весточку шепни</p>
+                        <p>(знаю ждет)</p>
+                        <p>Знаю ждет меня краса</p>
+                        <p>Проглядела в ночь глаза</p>
+                        <br>
+                        <p><strong>Припев:</strong></p>
+                        <p>Как ночка темная</p>
+                        <p>Как речка быстрая</p>
+                        <p>Как одинокая луна</p>
+                        <p>На небе ждет меня она</p>
+                        <br>
+                        <p>Ты неси меня река</p>
+                        <p>За крутые берега</p>
+                        <p>Ты неси меня река</p>
+                        <p>За крутые берега</p>
+                        <p>Голубые у нее глаза</p>
+                        <br>
+                        <p><strong>Припев:</strong></p>
+                        <p>Как ночка темная</p>
+                        <p>Как речка быстрая</p>
+                        <p>Как одинокая луна</p>
+                        <p>На небе ждет меня она</p>
+                        <br>
+                        <p style="color: #9e9e9e;">ℹ️ Текст составлен Nexus Музыкой</p>
+                        <p style="color: #9e9e9e;">Автор текста — Игорь Матвиенко и Александр Шаганов</p>
+                    </div>
+                </div>
+            </div>
 
             <div class="music-container" data-mood="весёлое" data-song="Домой" data-artist="ДИЕЗ" data-date="28.06.22"
                 data-duration="3:44" data-img="./assets/Домой-ДИЕЗ.jpg"
@@ -566,6 +659,83 @@
                         <br>
                         <p style="color: #9e9e9e;">ℹ️ Текст составлен Nexus Музыкой</p>
                         <p style="color: #9e9e9e;">Авторы текста — Евгений Вольтов, Мария Кольцова</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="music-container" data-mood="грустное" data-song="Forever Young (Alphaville Cover)"
+                data-artist="Andrea von Kampen" data-date="29.12.24" data-duration="3:05"
+                data-img="./assets/Forever Young (cover).jpg"
+                data-yandex-link="https://music.yandex.ru/album/14782261/track/80601674"
+                data-audio-src="./assets/Andrea_von_Kampen_-_Forever_Young_Alphaville_cover_67716165.mp3">
+                <div class="song-title-container">
+                    <hr>
+                    <p class="song-title">Forever Young (Alphaville Cover)</p>
+                    <p class="song-duration">Длительность: 3:05</p>
+                    <p class="song-duration">Исполнитель: Andrea von Kampen</p>
+                    <img class="song-title-img" src="./assets/Forever Young (cover).jpg" alt="">
+                </div>
+                <p class="nexus-player-title">Nexus музыка</p>
+                <div class="custom-player" data-player-id="player-fyc">
+                    <div class="player-controls">
+                        <button class="play-pause-btn" data-track-id="track-fyc">▶</button>
+                        <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                    </div>
+                    <audio id="audio-player-fyc"
+                        src="./assets/Andrea_von_Kampen_-_Forever_Young_Alphaville_cover_67716165.mp3"></audio>
+                    <a href="https://music.yandex.ru/album/14782261/track/80601674" target="_blank"
+                        class="goto-yandex-btn">
+                        Альбом на Яндекс Музыке
+                    </a>
+                    <button class="lyrics-btn"
+                        style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
+                        Текст песни</button>
+                    <div class="lyrics-content">
+                        <p>Let's dance in style, let's dance for a while</p>
+                        <p>Heaven can wait we're only watching the skies</p>
+                        <p>Hoping for the best, but expecting the worst</p>
+                        <p>Are you gonna drop the bomb or not?</p>
+                        <p>Let us die young or let us live forever</p>
+                        <p>We don't have the power, but we never say never</p>
+                        <p>Sitting in a sandpit, life is a short trip</p>
+                        <p>The music's for the sad man</p>
+                        <p>Can you imagine when this race is won?</p>
+                        <p>Turn our golden the faces into the sun</p>
+                        <p>Praising our leaders, we're getting in tune</p>
+                        <p>The music's played by the, the madman</p>
+                        <br>
+                        <p><strong>Припев:</strong></p>
+                        <p>Forever young</p>
+                        <p>I want to be forever young</p>
+                        <p>Do you really want to live forever?</p>
+                        <p>Forever, and ever</p>
+                        <p>Forever young</p>
+                        <p>I want to be forever young</p>
+                        <p>Do you really want to live forever?</p>
+                        <p>Forever, forever young</p>
+                        <br>
+                        <p>Some are like water, some are like the heat</p>
+                        <p>Some are a melody and some are the beat</p>
+                        <p>Sooner or later they all will be gone</p>
+                        <p>Why don't they stay young?</p>
+                        <p>It's so hard to get old without a cause</p>
+                        <p>I don't want to perish like a fading horse</p>
+                        <p>Youth's like diamonds in the sun</p>
+                        <p>And diamonds are forever</p>
+                        <br>
+                        <p><strong>Припев:</strong></p>
+                        <p>Forever young</p>
+                        <p>I want to be forever young</p>
+                        <p>Do you really want to live forever</p>
+                        <p>Forever, and ever?</p>
+                        <p>Forever young</p>
+                        <p>I want to be forever young</p>
+                        <p>Do you really want to live forever</p>
+                        <p>Forever</p>
+                        <p>Forever young</p>
+                        <br>
+                        <p style="color: #9e9e9e;">ℹ️ Текст составлен Nexus Музыкой</p>
+                        <p style="color: #9e9e9e;">Автор текста — Bernhard Lloyd, Marian Gold, Ricky Echolette</p>
                     </div>
                 </div>
             </div>
@@ -950,213 +1120,217 @@
     <script type="module" src="music.js"></script>
     <script src="./modal-window.js"></script>
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- ЭЛЕМЕНТЫ ---
-        const allTracks = document.querySelectorAll('#music-players .music-container');
-        const searchBar = document.getElementById('search-bar');
-        const searchFeedback = document.getElementById('search-feedback');
-        const showSearchBtn = document.getElementById('show-search-btn');
-        const searchContainer = document.getElementById('search-container');
-        const searchBtnContainer = document.querySelector('.search-toggle-container');
-        const closeSearchBtn = document.getElementById('close-search-btn');
-        const moodButtons = document.querySelectorAll('.mood-btn');
-        const moodFeedback = document.getElementById('mood-feedback');
-        const resetButton = document.querySelector('.mood-btn[data-mood="все"]');
-        const miniPlayer = document.getElementById('mini-player');
-        const miniPlayerTrackName = document.getElementById('mini-player-track-name');
-        const miniPlayerPlayPauseBtn = document.getElementById('mini-player-play-pause-btn');
-        const miniPlayerProgressBar = document.getElementById('mini-player-progress-bar');
-        const collapseBtn = document.getElementById('mini-player-collapse-btn');
-        const collapsedView = document.getElementById('mini-player-collapsed-view');
-        const collapsedTrackName = document.getElementById('collapsed-track-name');
-        let currentActiveAudio = null;
-        let currentActiveMainPlayBtn = null;
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- ЭЛЕМЕНТЫ ---
+            const allTracks = document.querySelectorAll('#music-players .music-container');
+            const searchBar = document.getElementById('search-bar');
+            const searchFeedback = document.getElementById('search-feedback');
+            const showSearchBtn = document.getElementById('show-search-btn');
+            const searchContainer = document.getElementById('search-container');
+            const searchBtnContainer = document.querySelector('.search-toggle-container');
+            const closeSearchBtn = document.getElementById('close-search-btn');
+            const moodButtons = document.querySelectorAll('.mood-btn');
+            const moodFeedback = document.getElementById('mood-feedback');
+            const resetButton = document.querySelector('.mood-btn[data-mood="все"]');
+            const miniPlayer = document.getElementById('mini-player');
+            const gradientSection = document.querySelector('.gradient');
+            const miniPlayerTrackName = document.getElementById('mini-player-track-name');
+            const miniPlayerPlayPauseBtn = document.getElementById('mini-player-play-pause-btn');
+            const miniPlayerProgressBar = document.getElementById('mini-player-progress-bar');
+            const collapseBtn = document.getElementById('mini-player-collapse-btn');
+            const collapsedView = document.getElementById('mini-player-collapsed-view');
+            const collapsedTrackName = document.getElementById('collapsed-track-name');
+            let currentActiveAudio = null;
+            let currentActiveMainPlayBtn = null;
 
-        // --- ЛОГИКА ПОКАЗА/СКРЫТИЯ БЛОКА ПОИСКА ---
-        if (showSearchBtn) {
-            showSearchBtn.addEventListener('click', () => {
-                if (searchContainer) searchContainer.classList.add('visible');
-                if (searchBtnContainer) searchBtnContainer.style.display = 'none';
-            });
-        }
-        if (closeSearchBtn) {
-            closeSearchBtn.addEventListener('click', () => {
-                if (searchContainer) searchContainer.classList.remove('visible');
-                if (searchBtnContainer) searchBtnContainer.style.display = 'block';
-                if (searchBar) {
-                    searchBar.value = '';
-                    searchBar.dispatchEvent(new Event('input', {
-                        bubbles: true
-                    }));
-                }
-            });
-        }
-
-        // --- ЛОГИКА МИНИ-ПЛЕЕРА ---
-        document.querySelectorAll('audio').forEach(audioEl => {
-            audioEl.addEventListener('play', () => {
-                if (currentActiveAudio && currentActiveAudio !== audioEl) {
-                    currentActiveAudio.pause();
-                }
-                currentActiveAudio = audioEl;
-                const musicContainer = audioEl.closest('.music-container');
-                if (musicContainer) {
-                    currentActiveMainPlayBtn = musicContainer.querySelector('.play-pause-btn');
-                    const songName = musicContainer.dataset.song;
-                    const artistName = musicContainer.dataset.artist;
-                    const fullTrackTitle = `${songName} – ${artistName}`;
-                    if (miniPlayerTrackName) miniPlayerTrackName.textContent = fullTrackTitle;
-                    if (collapsedTrackName) collapsedTrackName.textContent = fullTrackTitle;
-                }
-                if (miniPlayer) {
-                    miniPlayer.classList.add('visible');
-                    miniPlayer.classList.remove('collapsed');
-                }
-                if (miniPlayerPlayPauseBtn) miniPlayerPlayPauseBtn.innerHTML = '❚❚';
-            });
-
-            audioEl.addEventListener('pause', () => {
-                if (currentActiveAudio === audioEl && miniPlayerPlayPauseBtn) {
-                    miniPlayerPlayPauseBtn.innerHTML = '▶';
-                }
-            });
-
-            audioEl.addEventListener('ended', () => {
-                if (currentActiveAudio === audioEl && miniPlayer) {
-                    miniPlayer.classList.remove('visible');
-                    currentActiveAudio = null;
-                }
-            });
-
-            audioEl.addEventListener('timeupdate', () => {
-                if (currentActiveAudio === audioEl && !isNaN(audioEl.duration) && miniPlayerProgressBar) {
-                    const progressPercent = (audioEl.currentTime / audioEl.duration) * 100;
-                    miniPlayerProgressBar.value = progressPercent;
-                }
-            });
-        });
-
-        if (miniPlayerPlayPauseBtn) {
-            miniPlayerPlayPauseBtn.addEventListener('click', () => {
-                if (currentActiveAudio) {
-                    if (currentActiveAudio.paused) currentActiveAudio.play();
-                    else currentActiveAudio.pause();
-                    if (currentActiveMainPlayBtn) {
-                        currentActiveMainPlayBtn.innerHTML = currentActiveAudio.paused ? '▶' : '❚❚';
+            // --- ЛОГИКА ПОКАЗА/СКРЫТИЯ БЛОКА ПОИСКА ---
+            if (showSearchBtn) {
+                showSearchBtn.addEventListener('click', () => {
+                    if (searchContainer) searchContainer.classList.add('visible');
+                    if (searchBtnContainer) searchBtnContainer.style.display = 'none';
+                });
+            }
+            if (closeSearchBtn) {
+                closeSearchBtn.addEventListener('click', () => {
+                    if (searchContainer) searchContainer.classList.remove('visible');
+                    if (searchBtnContainer) searchBtnContainer.style.display = 'block';
+                    if (searchBar) {
+                        searchBar.value = '';
+                        searchBar.dispatchEvent(new Event('input', {
+                            bubbles: true
+                        }));
                     }
-                }
-            });
-        }
+                });
+            }
 
-        if (miniPlayerProgressBar) {
-            miniPlayerProgressBar.addEventListener('input', () => {
-                if (currentActiveAudio && !isNaN(currentActiveAudio.duration)) {
-                    currentActiveAudio.currentTime = (miniPlayerProgressBar.value / 100) * currentActiveAudio.duration;
-                }
-            });
-        }
-
-        if (collapseBtn) {
-            collapseBtn.addEventListener('click', () => miniPlayer.classList.add('collapsed'));
-        }
-
-        if (collapsedView) {
-            collapsedView.addEventListener('click', () => miniPlayer.classList.remove('collapsed'));
-        }
-
-        // --- ЛОГИКА ФИЛЬТРА ПО НАСТРОЕНИЮ (с кнопкой "Любимое") ---
-        moodButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const selectedMood = button.dataset.mood;
-                if (searchBar) searchBar.value = '';
-                if (searchFeedback) searchFeedback.style.display = 'none';
-
-                moodButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-
-                if (selectedMood === 'все') {
-                    if (resetButton) resetButton.classList.remove('visible');
-                } else {
-                    if (resetButton) resetButton.classList.add('visible');
-                }
-
-                let tracksFound = 0;
-
-                if (selectedMood === 'любимое') {
-                    // ОСОБАЯ ЛОГИКА ДЛЯ ИЗБРАННЫХ ТРЕКОВ
-                    allTracks.forEach(track => {
-                        const heartBtn = track.querySelector('.favorite-heart-btn');
-                        const isFavorite = heartBtn && heartBtn.classList.contains('is-favorite');
-                        if (isFavorite) {
-                            track.style.display = 'block';
-                            tracksFound++;
-                        } else {
-                            track.style.display = 'none';
-                        }
-                    });
-
-                    // Показываем специальное сообщение, если ничего не найдено в избранном
-                    if (moodFeedback) {
-                        if (tracksFound === 0) {
-                            moodFeedback.textContent = "Вы ещё ничего не лайкнули 🤍";
-                            moodFeedback.style.display = 'block';
-                        } else {
-                            moodFeedback.style.display = 'none';
-                        }
+            // --- ЛОГИКА МИНИ-ПЛЕЕРА ---
+            document.querySelectorAll('audio').forEach(audioEl => {
+                audioEl.addEventListener('play', () => {
+                    if (currentActiveAudio && currentActiveAudio !== audioEl) {
+                        currentActiveAudio.pause();
                     }
-
-                } else {
-                    // СТАНДАРТНАЯ ЛОГИКА ДЛЯ ОСТАЛЬНЫХ НАСТРОЕНИЙ
-                    allTracks.forEach(track => {
-                        const isVisible = (selectedMood === 'все' || track.dataset.mood === selectedMood);
-                        track.style.display = isVisible ? 'block' : 'none';
-                        if (isVisible) tracksFound++;
-                    });
-
-                    // Возвращаем стандартное сообщение
-                    if (moodFeedback) {
-                        moodFeedback.textContent = "Таких треков ещё нет, но вы можете это исправить, предложив трек разработчику!";
-                        moodFeedback.style.display = (tracksFound === 0 && selectedMood !== 'все') ? 'block' : 'none';
+                    currentActiveAudio = audioEl;
+                    const musicContainer = audioEl.closest('.music-container');
+                    if (musicContainer) {
+                        currentActiveMainPlayBtn = musicContainer.querySelector('.play-pause-btn');
+                        const songName = musicContainer.dataset.song;
+                        const artistName = musicContainer.dataset.artist;
+                        const fullTrackTitle = `${songName} – ${artistName}`;
+                        if (miniPlayerTrackName) miniPlayerTrackName.textContent = fullTrackTitle;
+                        if (collapsedTrackName) collapsedTrackName.textContent = fullTrackTitle;
                     }
-                }
-            });
-        });
-
-
-        // --- ЛОГИКА ПОИСКА ПО ТЕКСТУ ---
-        if (searchBar) {
-            searchBar.addEventListener('input', () => {
-                const query = searchBar.value.toLowerCase().trim();
-                let tracksFound = 0;
-
-                moodButtons.forEach(btn => btn.classList.remove('active'));
-                if (resetButton) resetButton.classList.remove('visible');
-                if (moodFeedback) moodFeedback.style.display = 'none';
-
-                allTracks.forEach(track => {
-                    const songTitle = track.dataset.song.toLowerCase();
-                    const artistName = track.dataset.artist.toLowerCase();
-                    const isMatch = songTitle.includes(query) || artistName.includes(query);
-                    track.style.display = isMatch ? 'block' : 'none';
-                    if (isMatch) tracksFound++;
+                    if (miniPlayer) {
+                        miniPlayer.classList.add('visible');
+                        miniPlayer.classList.remove('collapsed');
+                    }
+                    if (miniPlayerPlayPauseBtn) miniPlayerPlayPauseBtn.innerHTML = '❚❚';
                 });
 
-                if (searchFeedback) searchFeedback.style.display = (tracksFound === 0 && query.length > 0) ? 'block' : 'none';
-            });
-        }
+                audioEl.addEventListener('pause', () => {
+                    if (currentActiveAudio === audioEl && miniPlayerPlayPauseBtn) {
+                        miniPlayerPlayPauseBtn.innerHTML = '▶';
+                    }
+                });
 
-        // --- ЛОГИКА КНОПКИ "ТЕКСТ ПЕСНИ" ---
-        document.querySelectorAll('.lyrics-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                const lyricsContent = button.nextElementSibling;
-                if (lyricsContent && lyricsContent.classList.contains('lyrics-content')) {
-                    lyricsContent.classList.toggle('show');
-                    button.innerHTML = lyricsContent.classList.contains('show') ? '🔼 Скрыть текст' : '📄 Текст песни';
-                }
+                audioEl.addEventListener('ended', () => {
+                    if (currentActiveAudio === audioEl && miniPlayer) {
+                        miniPlayer.classList.remove('visible');
+                        currentActiveAudio = null;
+                    }
+                });
+
+                audioEl.addEventListener('timeupdate', () => {
+                    if (currentActiveAudio === audioEl && !isNaN(audioEl.duration) && miniPlayerProgressBar) {
+                        const progressPercent = (audioEl.currentTime / audioEl.duration) * 100;
+                        miniPlayerProgressBar.value = progressPercent;
+                    }
+                });
+            });
+
+            if (miniPlayerPlayPauseBtn) {
+                miniPlayerPlayPauseBtn.addEventListener('click', () => {
+                    if (currentActiveAudio) {
+                        if (currentActiveAudio.paused) currentActiveAudio.play();
+                        else currentActiveAudio.pause();
+                        if (currentActiveMainPlayBtn) {
+                            currentActiveMainPlayBtn.innerHTML = currentActiveAudio.paused ? '▶' : '❚❚';
+                        }
+                    }
+                });
+            }
+
+            if (miniPlayerProgressBar) {
+                miniPlayerProgressBar.addEventListener('input', () => {
+                    if (currentActiveAudio && !isNaN(currentActiveAudio.duration)) {
+                        currentActiveAudio.currentTime = (miniPlayerProgressBar.value / 100) * currentActiveAudio.duration;
+                    }
+                });
+            }
+
+            if (collapseBtn) {
+                collapseBtn.addEventListener('click', () => miniPlayer.classList.add('collapsed'));
+            }
+
+            if (collapsedView) {
+                collapsedView.addEventListener('click', () => miniPlayer.classList.remove('collapsed'));
+            }
+
+            // --- ЛОГИКА ФИЛЬТРА ПО НАСТРОЕНИЮ ---
+            moodButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const selectedMood = button.dataset.mood;
+                    if (searchBar) searchBar.value = '';
+                    if (searchFeedback) searchFeedback.style.display = 'none';
+
+                    moodButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    if (selectedMood === 'все') {
+                        if (resetButton) resetButton.classList.remove('visible');
+                    } else {
+                        if (resetButton) resetButton.classList.add('visible');
+                    }
+
+                    if (gradientSection) {
+                        gradientSection.classList.remove('gradient-bodroe', 'gradient-vesyoloe', 'gradient-spokoinoe', 'gradient-grustnoe');
+                        if (selectedMood === 'бодрое') gradientSection.classList.add('gradient-bodroe');
+                        else if (selectedMood === 'весёлое') gradientSection.classList.add('gradient-vesyoloe');
+                        else if (selectedMood === 'спокойное') gradientSection.classList.add('gradient-spokoinoe');
+                        else if (selectedMood === 'грустное') gradientSection.classList.add('gradient-grustnoe');
+                    }
+
+                    let tracksFound = 0;
+                    if (selectedMood === 'любимое') {
+                        allTracks.forEach(track => {
+                            const heartBtn = track.querySelector('.favorite-heart-btn');
+                            const isFavorite = heartBtn && heartBtn.classList.contains('is-favorite');
+                            if (isFavorite) {
+                                track.style.display = 'block';
+                                tracksFound++;
+                            } else {
+                                track.style.display = 'none';
+                            }
+                        });
+                        if (moodFeedback) {
+                            if (tracksFound === 0) {
+                                moodFeedback.textContent = "Вы ещё ничего не лайкнули 🤍";
+                                moodFeedback.style.display = 'block';
+                            } else {
+                                moodFeedback.style.display = 'none';
+                            }
+                        }
+                    } else {
+                        allTracks.forEach(track => {
+                            const isVisible = (selectedMood === 'все' || track.dataset.mood === selectedMood);
+                            track.style.display = isVisible ? 'block' : 'none';
+                            if (isVisible) tracksFound++;
+                        });
+                        if (moodFeedback) {
+                            moodFeedback.textContent = "Таких треков ещё нет, но вы можете это исправить, предложив трек разработчику!";
+                            moodFeedback.style.display = (tracksFound === 0 && selectedMood !== 'все') ? 'block' : 'none';
+                        }
+                    }
+                });
+            });
+
+            // --- ЛОГИКА ПОИСКА ПО ТЕКСТУ ---
+            if (searchBar) {
+                searchBar.addEventListener('input', () => {
+                    const query = searchBar.value.toLowerCase().trim();
+                    let tracksFound = 0;
+
+                    if (gradientSection) {
+                        gradientSection.classList.remove('gradient-bodroe', 'gradient-vesyoloe', 'gradient-spokoinoe', 'gradient-grustnoe');
+                    }
+
+                    moodButtons.forEach(btn => btn.classList.remove('active'));
+                    if (resetButton) resetButton.classList.remove('visible');
+                    if (moodFeedback) moodFeedback.style.display = 'none';
+
+                    allTracks.forEach(track => {
+                        const songTitle = track.dataset.song.toLowerCase();
+                        const artistName = track.dataset.artist.toLowerCase();
+                        const isMatch = songTitle.includes(query) || artistName.includes(query);
+                        track.style.display = isMatch ? 'block' : 'none';
+                        if (isMatch) tracksFound++;
+                    });
+
+                    if (searchFeedback) searchFeedback.style.display = (tracksFound === 0 && query.length > 0) ? 'block' : 'none';
+                });
+            }
+
+            // --- ЛОГИКА КНОПКИ "ТЕКСТ ПЕСНИ" ---
+            document.querySelectorAll('.lyrics-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const lyricsContent = button.nextElementSibling;
+                    if (lyricsContent && lyricsContent.classList.contains('lyrics-content')) {
+                        lyricsContent.classList.toggle('show');
+                        button.innerHTML = lyricsContent.classList.contains('show') ? '🔼 Скрыть текст' : '📄 Текст песни';
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 </body>
 
 </html>
