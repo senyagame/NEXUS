@@ -303,7 +303,6 @@
 
         .mood-btn {
             border: none;
-            /* Убираем рамку */
             border-radius: 18px;
             padding: 10px 20px;
             margin: 5px;
@@ -313,8 +312,8 @@
             font-weight: 200;
             transition: all 0.2s ease-in-out;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            /* Легкая тень */
         }
+        .mood-btn
 
         /* Эффект при наведении на любую неактивную кнопку */
         .mood-btn:not(.active):hover {
@@ -326,62 +325,71 @@
         .mood-btn.active {
             transform: translateY(1px);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset;
-            /* Внутренняя тень */
         }
 
-        /* Бодрое 💪 */
+        /* Новоое */
+        .mood-btn[data-mood="новое"] {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .mood-btn[data-mood="новое"].active {
+            background-color: #000000;
+            color: white;
+        }
+
+        /* Любимое */
+        .mood-btn[data-mood="любимое"] {
+            background-color: #ffffff;
+            color: #c92626;
+        }
+
+        .mood-btn[data-mood="любимое"].active {
+            background-color: #5a0000;
+            color: white;
+        }
+
+        /* Бодрое */
         .mood-btn[data-mood="бодрое"] {
             background-color: #FFF3E0;
-            /* Нежный оранжевый */
             color: #E65100;
-            /* Глубокий оранжевый текст */
         }
 
         .mood-btn[data-mood="бодрое"].active {
             background-color: #FB8C00;
-            /* Яркий оранжевый */
             color: white;
         }
 
-        /* Весёлое 😄 */
+        /* Весёлое */
         .mood-btn[data-mood="весёлое"] {
             background-color: #FFFDE7;
-            /* Нежный желтый */
             color: #FBC02D;
-            /* Золотой текст */
         }
 
         .mood-btn[data-mood="весёлое"].active {
             background-color: #FDD835;
-            /* Яркий желтый */
             color: #424242;
         }
 
-        /* Спокойное 😌 */
+        /* Спокойное */
         .mood-btn[data-mood="спокойное"] {
             background-color: #E3F2FD;
-            /* Нежный голубой */
             color: #1565C0;
-            /* Глубокий синий текст */
         }
 
         .mood-btn[data-mood="спокойное"].active {
             background-color: #1E88E5;
-            /* Яркий голубой */
             color: white;
         }
 
-        /* Грустное 😢 */
+        /* Грустное */
         .mood-btn[data-mood="грустное"] {
             background-color: #ECEFF1;
-            /* Нежный серый */
             color: #455A64;
-            /* Темный серо-синий текст */
         }
 
         .mood-btn[data-mood="грустное"].active {
             background-color: #546E7A;
-            /* Темный серо-синий */
             color: white;
         }
 
@@ -403,13 +411,11 @@
 
         /* Градиент */
 
-        /* --- Градиент Фона --- */
         .gradient {
             background: linear-gradient(149deg, rgb(253, 241, 74) 0%, rgb(83, 23, 167) 42%, rgb(5, 184, 207) 72%, rgba(115, 53, 134, 1) 100%);
             animation: gradient 15s infinite linear;
             background-size: 400%;
             transition: background 1.5s ease;
-            /* Плавный переход между градиентами */
         }
 
         @keyframes gradient {
