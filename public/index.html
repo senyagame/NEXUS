@@ -173,7 +173,7 @@
     <script>
         const NOTIFICATION_KEY = 'user_terms_accepted';
 
-        const NOTIFICATION_VERSION = 'v5.4.6'; // МЕНЯТЬ ВЕРСИЮ ДЛЯ ПОКАЗА СНОВА!
+        const NOTIFICATION_VERSION = 'v5.4.7'; // МЕНЯТЬ ВЕРСИЮ ДЛЯ ПОКАЗА СНОВА!
 
         const notificationOverlay = document.getElementById('userNotification');
         const loadingIndicator = document.getElementById('loadingIndicator');
@@ -235,7 +235,7 @@
             } else {
                 // Если уведомление уже было показано
                 loadingIndicator.style.display = 'block';
-                setTimeout(redirectToLoadingPage, 1200);
+                setTimeout(redirectToLoadingPage, 1000);
             }
         });
     </script>
