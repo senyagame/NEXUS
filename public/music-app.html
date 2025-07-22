@@ -212,7 +212,8 @@
         }
 
         .player-controls .play-pause-btn,
-        .player-controls .favorite-heart-btn {
+        .player-controls .favorite-heart-btn,
+        .player-controls .yandex-music-logo-btn {
             width: 48px;
             height: 48px;
             font-size: 22px;
@@ -223,6 +224,12 @@
             padding: 0;
             cursor: pointer;
             transition: all 0.2s ease;
+            background: #010024;
+            border: none;
+        }
+
+        .player-controls .yandex-music-logo-btn {
+            margin: 0 10px;
         }
 
         .player-controls .play-pause-btn {
@@ -241,13 +248,15 @@
             color: rgb(255, 255, 255);
         }
 
-        .player-controls .favorite-heart-btn {
+        .player-controls .favorite-heart-btn,
+        .player-controls .yandex-music-logo-btn {
             background-color: transparent;
-            color: #555;
+            color: #000000;
         }
 
-        .player-controls .favorite-heart-btn:hover {
-            background-color: #fdeaea;
+        .player-controls .favorite-heart-btn:hover,
+        .player-controls .yandex-music-logo-btn:hover {
+            background-color: #010024;
             transform: scale(1.05);
         }
 
@@ -535,13 +544,10 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track-тнмр">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.ru/album/5060852/track/39257484';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
                     <audio id="audio-player-тнмр"
                         src="./assets/ЛЮБЭ-Ты_неси_меня_река.mp3"></audio>
-                    <a href="https://music.yandex.ru/album/5060852/track/39257484" target="_blank"
-                        class="goto-yandex-btn">
-                        Альбом на Яндекс Музыке
-                    </a>
                     <button class="lyrics-btn"
                         style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
                         Текст песни</button>
@@ -609,12 +615,9 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track-domoi">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.ru/iframe/album/22813620/track/105390182';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
                     <audio id="audio-player-domoi" src="./assets/DIEZ_-_Domojj_74527229.mp3"></audio>
-                    <a href="https://music.yandex.ru/iframe/album/22813620/track/105390182" target="_blank"
-                        class="goto-yandex-btn">
-                        Альбом на Яндекс Музыке
-                    </a>
                     <button class="lyrics-btn"
                         style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
                         Текст песни</button>
@@ -686,13 +689,10 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track-fyc">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.ru/iframe/album/14782261/track/80601674';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
                     <audio id="audio-player-fyc"
                         src="./assets/Andrea_von_Kampen_-_Forever_Young_Alphaville_cover_67716165.mp3"></audio>
-                    <a href="https://music.yandex.ru/album/14782261/track/80601674" target="_blank"
-                        class="goto-yandex-btn">
-                        Альбом на Яндекс Музыке
-                    </a>
                     <button class="lyrics-btn"
                         style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
                         Текст песни</button>
@@ -762,12 +762,9 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track-sv">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.ru/album/16014532/track/84466802';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
                     <audio id="audio-player-sv" src="./assets/Green_Apelsin_-_Северный_ветер.mp3"></audio>
-                    <a href="https://music.yandex.ru/iframe/album/16014532/track/84466802" target="_blank"
-                        class="goto-yandex-btn">
-                        Альбом на Яндекс Музыке
-                    </a>
                     <button class="lyrics-btn"
                         style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
                         Текст песни</button>
@@ -844,12 +841,9 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track-ok">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.ru/album/1901385/track/17261210';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
                     <audio id="audio-player-ok" src="./assets/Oleg Mishin - Огненый конь.mp3"></audio>
-                    <a href="https://music.yandex.ru/album/1901385/track/17261210" target="_blank"
-                        class="goto-yandex-btn">
-                        Альбом на Яндекс Музыке
-                    </a>
                     <button class="lyrics-btn"
                         style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
                         Текст песни</button>
@@ -963,12 +957,9 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track3">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.kz/album/8039282/track/55212174';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
                     <audio id="audio-player-3" src="./assets/Horns_2.0.mp3"></audio>
-                    <a href="https://music.yandex.kz/album/8039282/track/55212174" target="_blank"
-                        class="goto-yandex-btn">
-                        Альбом на Яндекс Музыке
-                    </a>
                     <button class="lyrics-btn"
                         style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
                         Текст песни</button>
@@ -995,12 +986,9 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track2">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.ru/album/35659381/track/136733632';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
                     <audio id="audio-player-2" src="./assets/final_boss.wav"></audio>
-                    <a href="https://music.yandex.ru/album/35659381/track/136733632" target="_blank"
-                        class="goto-yandex-btn">
-                        Альбом на Яндекс Музыке
-                    </a>
                     <button class="lyrics-btn"
                         style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
                         Текст песни</button>
@@ -1039,12 +1027,9 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track2">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.ru/iframe/album/32207638/track/128397158';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
                     <audio id="audio-player-2" src="./assets/Adrenaline_night_funk.wav"></audio>
-                    <a href="https://music.yandex.ru/album/32207638/track/128397158" target="_blank"
-                        class="goto-yandex-btn">
-                        Альбом на Яндекс Музыке
-                    </a>
                     <button class="lyrics-btn"
                         style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
                         Текст песни</button>
@@ -1076,12 +1061,9 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track1">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.ru/album/31931296/track/127729662';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
                     <audio id="audio-player-1" src="./assets/Legendary_Dombra.mp3"></audio>
-                    <a href="https://music.yandex.ru/album/31931296/track/127729662" target="_blank"
-                        class="goto-yandex-btn">
-                        Альбом на Яндекс Музыке
-                    </a>
                     <button class="lyrics-btn"
                         style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
                         Текст песни</button>
