@@ -489,6 +489,9 @@
                 <p id="search-feedback" style="display: none;">Треки не найдены 😞 Таких треков ещё нет, но вы можете
                     это исправить, предложив трек разработчику!</p>
                 <div id="search-results"></div>
+                <div class="or-divider"></div>
+                <button class="mood-btn" data-mood="любимое">Любимое ❤️</button>
+                <p id="favorites-feedback" style="display: none;">Вы ещё ничего не лайкнули 🤍 Нажмите на сердечко на треки, чтобы добавить в избранное, затем вернитесь в этот раздел.</p>
             </section>
         </div>
         <div id="music-players">
@@ -950,19 +953,12 @@
     <script src="./modal-window.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- ЭЛЕМЕНТЫ ПОИСКА И ФИЛЬТРОВ ---
+            // --- ЭЛЕМЕНЕНТЫ ---
             const allTracks = document.querySelectorAll('#music-players .music-container');
             const searchBar = document.getElementById('search-bar');
+            const favoritesBtn = document.querySelector('.mood-btn[data-mood="любимое"]');
             const searchFeedback = document.getElementById('search-feedback');
-            const showSearchBtn = document.getElementById('show-search-btn');
-            const searchContainer = document.getElementById('search-container');
-            const searchBtnContainer = document.querySelector('.search-toggle-container');
-            const closeSearchBtn = document.getElementById('close-search-btn');
-            const moodButtons = document.querySelectorAll('.mood-btn');
-            const moodFeedback = document.getElementById('mood-feedback');
-            const resetButton = document.querySelector('.mood-btn[data-mood="все"]');
-
-            // --- ЭЛЕМЕНТЫ МИНИ-ПЛЕЕРА ---
+            const favoritesFeedback = document.getElementById('favorites-feedback');
             const miniPlayer = document.getElementById('mini-player');
             const miniPlayerTrackName = document.getElementById('mini-player-track-name');
             const miniPlayerPlayPauseBtn = document.getElementById('mini-player-play-pause-btn');
@@ -972,24 +968,6 @@
             const collapsedTrackName = document.getElementById('collapsed-track-name');
             let currentActiveAudio = null;
             let currentActiveMainPlayBtn = null;
-
-            // --- ЛОГИКА ПОКАЗА/СКРЫТИЯ БЛОКА ПОИСКА ---
-            if (showSearchBtn) {
-                showSearchBtn.addEventListener('click', () => {
-                    if (searchContainer) searchContainer.classList.add('visible');
-                    if (searchBtnContainer) searchBtnContainer.style.display = 'none';
-                });
-            }
-            if (closeSearchBtn) {
-                closeSearchBtn.addEventListener('click', () => {
-                    if (searchContainer) searchContainer.classList.remove('visible');
-                    if (searchBtnContainer) searchBtnContainer.style.display = 'block';
-                    if (searchBar) {
-                        searchBar.value = '';
-                        searchBar.dispatchEvent(new Event('input', { bubbles: true }));
-                    }
-                });
-            }
 
             // --- ЛОГИКА МИНИ-ПЛЕЕРА ---
             document.querySelectorAll('audio').forEach(audioEl => {
@@ -1040,7 +1018,6 @@
                     if (currentActiveAudio) {
                         if (currentActiveAudio.paused) currentActiveAudio.play();
                         else currentActiveAudio.pause();
-
                         if (currentActiveMainPlayBtn) {
                             currentActiveMainPlayBtn.innerHTML = currentActiveAudio.paused ? '▶' : '❚❚';
                         }
@@ -1064,42 +1041,13 @@
                 collapsedView.addEventListener('click', () => miniPlayer.classList.remove('collapsed'));
             }
 
-            // --- ЛОГИКА ФИЛЬТРА ПО НАСТРОЕНИЮ ---
-            moodButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const selectedMood = button.dataset.mood;
-                    if (searchBar) searchBar.value = '';
-                    if (searchFeedback) searchFeedback.style.display = 'none';
-
-                    moodButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-
-                    if (selectedMood === 'все') {
-                        if (resetButton) resetButton.classList.remove('visible');
-                    } else {
-                        if (resetButton) resetButton.classList.add('visible');
-                    }
-
-                    let tracksFound = 0;
-                    allTracks.forEach(track => {
-                        const isVisible = (selectedMood === 'все' || track.dataset.mood === selectedMood);
-                        track.style.display = isVisible ? 'block' : 'none';
-                        if (isVisible) tracksFound++;
-                    });
-
-                    if (moodFeedback) moodFeedback.style.display = (tracksFound === 0 && selectedMood !== 'все') ? 'block' : 'none';
-                });
-            });
-
-            // --- ЛОГИКА ПОИСКА ПО ТЕКСТУ ---
+            // --- ЛОГИКА ПОИСКА И ИЗБРАННОГО ---
             if (searchBar) {
                 searchBar.addEventListener('input', () => {
                     const query = searchBar.value.toLowerCase().trim();
                     let tracksFound = 0;
-
-                    moodButtons.forEach(btn => btn.classList.remove('active'));
-                    if (resetButton) resetButton.classList.remove('visible');
-                    if (moodFeedback) moodFeedback.style.display = 'none';
+                    if (favoritesBtn) favoritesBtn.classList.remove('active');
+                    if (favoritesFeedback) favoritesFeedback.style.display = 'none';
 
                     allTracks.forEach(track => {
                         const songTitle = track.dataset.song.toLowerCase();
@@ -1109,7 +1057,37 @@
                         if (isMatch) tracksFound++;
                     });
 
-                    if (searchFeedback) searchFeedback.style.display = (tracksFound === 0 && query.length > 0) ? 'block' : 'none';
+                    if (searchFeedback) {
+                        searchFeedback.style.display = (tracksFound === 0 && query.length > 0) ? 'block' : 'none';
+                    }
+                });
+            }
+
+            if (favoritesBtn) {
+                favoritesBtn.addEventListener('click', () => {
+                    if (searchBar) searchBar.value = '';
+                    if (searchFeedback) searchFeedback.style.display = 'none';
+                    favoritesBtn.classList.toggle('active');
+                    let tracksFound = 0;
+
+                    if (favoritesBtn.classList.contains('active')) {
+                        allTracks.forEach(track => {
+                            const heartBtn = track.querySelector('.favorite-heart-btn');
+                            const isFavorite = heartBtn && heartBtn.classList.contains('is-favorite');
+                            if (isFavorite) {
+                                track.style.display = 'block';
+                                tracksFound++;
+                            } else {
+                                track.style.display = 'none';
+                            }
+                        });
+                        if (favoritesFeedback) {
+                            favoritesFeedback.style.display = (tracksFound === 0) ? 'block' : 'none';
+                        }
+                    } else {
+                        allTracks.forEach(track => track.style.display = 'block');
+                        if (favoritesFeedback) favoritesFeedback.style.display = 'none';
+                    }
                 });
             }
 
