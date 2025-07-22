@@ -46,6 +46,28 @@
             margin-bottom: 0;
             object-fit: cover;
         }
+
+        .gradient {
+            background: linear-gradient(149deg, rgb(6, 148, 173) 0%, rgb(83, 23, 167) 42%, rgb(39, 5, 187) 72%, rgba(115, 53, 134, 1) 100%);
+            animation: gradient 8s infinite linear;
+            background-size: 400%;
+            color: #fff;
+            border: 0.5px solid #ffffff;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 80% 0%;
+            }
+
+            50% {
+                background-position: 20% 100%;
+            }
+
+            100% {
+                background-position: 80% 0%;
+            }
+        }
     </style>
 </head>
 
@@ -68,8 +90,8 @@
         <main>
             <p id="coming-soon">Если у вас есть вопросы, посмотрите вкладку <img src="./assets/information-icon.png"
                     alt=""> на этой странице</p>
+            <button class="gradient" onclick="navigateTo('music-app.html')">Музыка</button>
             <button onclick="navigateTo('weather-app.html')">Погода</button>
-            <button onclick="navigateTo('music-app.html')">Музыка</button>
             <button onclick="navigateTo('posts-app.html')">Заметки</button>
             <div class="devi">
                 <a href="https://github.com/senyagame">💫 ©️ by senyagame (кликабельно)💫</a>

@@ -7,6 +7,27 @@
     <title>Music App</title>
     <link rel="stylesheet" href="styles/music-styles.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap');
+
+        .search-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .search-header h2 {
+            margin: 0;
+        }
+
+        #search-bar {
+            max-width: 500px;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+
         .lyrics-content {
             max-height: 0;
             overflow: hidden;
@@ -266,6 +287,142 @@
             border-radius: 10px;
             margin-bottom: 10px;
         }
+
+        #mood-filter {
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        #mood-filter h3 {
+            margin-bottom: 15px;
+            color: #ffffff;
+            font-family: "Rubik Mono One", monospace;
+            font-weight: 200;
+            font-size: 17px;
+        }
+
+        .mood-btn {
+            border: none;
+            /* Убираем рамку */
+            border-radius: 18px;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 15px;
+            font-family: "Rubik Mono One", monospace;
+            font-weight: 200;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* Легкая тень */
+        }
+
+        /* Эффект при наведении на любую неактивную кнопку */
+        .mood-btn:not(.active):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Активная кнопка выглядит "нажатой" */
+        .mood-btn.active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+            /* Внутренняя тень */
+        }
+
+        /* Бодрое 💪 */
+        .mood-btn[data-mood="бодрое"] {
+            background-color: #FFF3E0;
+            /* Нежный оранжевый */
+            color: #E65100;
+            /* Глубокий оранжевый текст */
+        }
+
+        .mood-btn[data-mood="бодрое"].active {
+            background-color: #FB8C00;
+            /* Яркий оранжевый */
+            color: white;
+        }
+
+        /* Весёлое 😄 */
+        .mood-btn[data-mood="весёлое"] {
+            background-color: #FFFDE7;
+            /* Нежный желтый */
+            color: #FBC02D;
+            /* Золотой текст */
+        }
+
+        .mood-btn[data-mood="весёлое"].active {
+            background-color: #FDD835;
+            /* Яркий желтый */
+            color: #424242;
+        }
+
+        /* Спокойное 😌 */
+        .mood-btn[data-mood="спокойное"] {
+            background-color: #E3F2FD;
+            /* Нежный голубой */
+            color: #1565C0;
+            /* Глубокий синий текст */
+        }
+
+        .mood-btn[data-mood="спокойное"].active {
+            background-color: #1E88E5;
+            /* Яркий голубой */
+            color: white;
+        }
+
+        /* Грустное 😢 */
+        .mood-btn[data-mood="грустное"] {
+            background-color: #ECEFF1;
+            /* Нежный серый */
+            color: #455A64;
+            /* Темный серо-синий текст */
+        }
+
+        .mood-btn[data-mood="грустное"].active {
+            background-color: #546E7A;
+            /* Темный серо-синий */
+            color: white;
+        }
+
+        .mood-btn[data-mood="все"] {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.9);
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+            background-color: #fbe9e7;
+            color: #bf360c;
+        }
+
+        .mood-btn[data-mood="все"].visible {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+            display: inline-block;
+        }
+
+        /* Градиент */
+
+        .gradient {
+            background: linear-gradient(149deg, rgb(253, 241, 74) 0%, rgb(83, 23, 167) 42%, rgb(5, 184, 207) 72%, rgba(115, 53, 134, 1) 100%);
+            animation: gradient 15s infinite linear;
+            background-size: 400%;
+            color: #fff;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 80% 0%;
+            }
+
+            50% {
+                background-position: 20% 100%;
+            }
+
+            100% {
+                background-position: 80% 0%;
+            }
+        }
     </style>
 </head>
 
@@ -310,17 +467,32 @@
                     GitHub)😺</a>
             </div>
         </div>
-        <section id="search-section">
-            <h2>🔍 Поиск трека</h2>
-            <input type="text" id="search-bar" placeholder="Введите название трека...">
-            <p id="search-feedback" style="display: none;">Треки не найдены 😞</p>
-            <div id="search-results"></div>
+        <section id="search-section" class="gradient">
+            <div id="mood-filter">
+                <h3>Подборка по настроению</h3>
+                <button class="mood-btn" data-mood="бодрое">Бодрое</button>
+                <button class="mood-btn" data-mood="весёлое">Весёлое</button>
+                <button class="mood-btn" data-mood="спокойное">Спокойное</button>
+                <button class="mood-btn" data-mood="грустное">Грустное</button>
+            </div>
+            <p id="mood-feedback" style="display: none;">Таких треков ещё нет, но вы можете это исправить, предложив
+                трек разработчику!</p>
+            <button class="mood-btn active" data-mood="все" style="font-size: 10px;">Сбросить</button>
         </section>
+        <div id="search-container">
+            <section id="search-section">
+                <input type="text" id="search-bar" placeholder="🔍 Введите название трека...">
+
+                <p id="search-feedback" style="display: none;">Треки не найдены 😞 Таких треков ещё нет, но вы можете
+                    это исправить, предложив трек разработчику!</p>
+                <div id="search-results"></div>
+            </section>
+        </div>
 
         <div id="music-players">
 
-            <div class="music-container" data-song="Северный ветер" data-artist="Green Apelsin" data-date="29.10.2021"
-                data-duration="3:13" data-img="./assets/Северный_ветер_имг.jpg"
+            <div class="music-container" data-mood="спокойное" data-song="Северный ветер" data-artist="Green Apelsin"
+                data-date="29.10.2021" data-duration="3:13" data-img="./assets/Северный_ветер_имг.jpg"
                 data-yandex-link="https://music.yandex.ru/album/1901385/track/17261210"
                 data-audio-src="./assets/Green_Apelsin_-_Северный_ветер.mp3">
                 <div class="song-title-container">
@@ -401,8 +573,8 @@
                 </div>
             </div>
 
-            <div class="music-container" data-song="Огненный конь" data-artist="Олег Мишин" data-date="15.04.2014"
-                data-duration="2:29" data-img="./assets/Oleg_Mishin_-_Огненый_конь.jpg"
+            <div class="music-container" data-mood="бодрое" data-song="Огненный конь" data-artist="Олег Мишин"
+                data-date="15.04.2014" data-duration="2:29" data-img="./assets/Oleg_Mishin_-_Огненый_конь.jpg"
                 data-yandex-link="https://music.yandex.ru/album/1901385/track/17261210"
                 data-audio-src="./assets/Oleg Mishin - Огненый конь.mp3">
                 <div class="song-title-container">
@@ -520,8 +692,8 @@
                 </div>
             </div>
 
-            <div class="music-container" data-song="Horns 2.0" data-artist="Groove Delight, Evoxx" data-date="29.12.24"
-                data-duration="2:29" data-img="./assets/Horns_004.jpg"
+            <div class="music-container" data-mood="бодрое" data-song="Horns 2.0" data-artist="Groove Delight, Evoxx"
+                data-date="29.12.24" data-duration="2:29" data-img="./assets/Horns_004.jpg"
                 data-yandex-link="https://music.yandex.kz/album/8039282/track/55212174"
                 data-audio-src="./assets/Horns_2.0.mp3">
                 <div class="song-title-container">
@@ -551,8 +723,8 @@
                 </div>
             </div>
 
-            <div class="music-container" data-song="Final Boss" data-artist="scara-kru$her" data-date="29.12.24"
-                data-duration="1:20" data-img="./assets/FB-sp-001.jpg"
+            <div class="music-container" data-mood="бодрое" data-song="Final Boss" data-artist="scara-kru$her"
+                data-date="29.12.24" data-duration="1:20" data-img="./assets/FB-sp-001.jpg"
                 data-yandex-link="https://music.yandex.ru/album/35659381/track/136733632"
                 data-audio-src="./assets/final_boss.wav">
                 <div class="song-title-container">
@@ -595,8 +767,8 @@
                 </div>
             </div>
 
-            <div class="music-container" data-song="Adrenaline Night Funk" data-artist="scara-kru$her"
-                data-date="20.07.24" data-duration="2:30" data-img="./assets/ANF-sp-002.jpg"
+            <div class="music-container" data-mood="бодрое" data-song="Adrenaline Night Funk"
+                data-artist="scara-kru$her" data-date="20.07.24" data-duration="2:30" data-img="./assets/ANF-sp-002.jpg"
                 data-yandex-link="https://music.yandex.ru/album/32207638/track/128397158"
                 data-audio-src="./assets/Adrenaline_night_funk.wav">
                 <div class="song-title-container">
@@ -632,8 +804,8 @@
                 </div>
             </div>
 
-            <div class="music-container" data-song="Legendary Dombra" data-artist="scara-kru$her" data-date="07.03.24"
-                data-duration="1:20" data-img="./assets/LD-sp-003.jpg"
+            <div class="music-container" data-mood="бодрое" data-song="Legendary Dombra" data-artist="scara-kru$her"
+                data-date="07.03.24" data-duration="1:20" data-img="./assets/LD-sp-003.jpg"
                 data-yandex-link="https://music.yandex.ru/album/31931296/track/127729662"
                 data-audio-src="./assets/Legendary_Dombra.mp3">
                 <div class="song-title-container">
@@ -699,105 +871,92 @@
     <script type="module" src="music.js"></script>
     <script src="./modal-window.js"></script>
     <script>
-        // Скрипт для управления анимацией текста
-        document.querySelectorAll('.lyrics-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                const lyricsContent = button.nextElementSibling;
-                lyricsContent.classList.toggle('show');
-                if (lyricsContent.classList.contains('show')) {
-                    button.innerHTML = '🔼 Скрыть текст';
-                } else {
-                    button.innerHTML = '📄 Текст песни';
-                }
-            });
-        });
-    </script>
-    <script>
-        // СКРИПТ ДЛЯ МИНИ-ПЛЕЕРА
-        const miniPlayer = document.getElementById('mini-player');
-        const miniPlayerTrackName = document.getElementById('mini-player-track-name');
-        const miniPlayerPlayPauseBtn = document.getElementById('mini-player-play-pause-btn');
-        const miniPlayerProgressBar = document.getElementById('mini-player-progress-bar');
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- ОБЩИЕ ЭЛЕМЕНТЫ ---
+            const allTracks = document.querySelectorAll('#music-players .music-container');
+            const searchBar = document.getElementById('search-bar');
+            const searchFeedback = document.getElementById('search-feedback');
 
-        const collapseBtn = document.getElementById('mini-player-collapse-btn');
-        const collapsedView = document.getElementById('mini-player-collapsed-view');
-        const collapsedTrackName = document.getElementById('collapsed-track-name'); // Элемент для названия трека в свернутом виде
+            // --- ЛОГИКА ДЛЯ ПОКАЗА/СКРЫТИЯ БЛОКА ПОИСКА ---
+            const showSearchBtn = document.getElementById('show-search-btn');
+            const searchContainer = document.getElementById('search-container');
+            const searchBtnContainer = document.querySelector('.search-toggle-container');
+            const closeSearchBtn = document.getElementById('close-search-btn');
 
-        let currentActiveAudio = null;
-        let currentActiveMainPlayBtn = null;
+            if (showSearchBtn && searchContainer && searchBtnContainer && closeSearchBtn) {
+                // Открыть поиск
+                showSearchBtn.addEventListener('click', () => {
+                    searchContainer.classList.add('visible');
+                    searchBtnContainer.style.display = 'none';
+                });
 
-        document.querySelectorAll('audio').forEach(audioEl => {
-            audioEl.addEventListener('play', () => {
-                if (currentActiveAudio && currentActiveAudio !== audioEl) {
-                    currentActiveAudio.pause();
-                }
-                currentActiveAudio = audioEl;
+                // Закрыть поиск по крестику
+                closeSearchBtn.addEventListener('click', () => {
+                    searchContainer.classList.remove('visible');
+                    searchBtnContainer.style.display = 'block';
 
-                const musicContainer = audioEl.closest('.music-container');
-                currentActiveMainPlayBtn = musicContainer.querySelector('.play-pause-btn');
-
-                const songName = musicContainer.dataset.song;
-                const artistName = musicContainer.dataset.artist;
-                const fullTrackTitle = `${songName} – ${artistName}`;
-
-                // Обновляем название в обеих версиях плеера
-                miniPlayerTrackName.textContent = fullTrackTitle;
-                collapsedTrackName.textContent = fullTrackTitle; // <--- ВОТ НОВАЯ СТРОКА
-
-                miniPlayer.classList.add('visible');
-                miniPlayer.classList.remove('collapsed');
-                miniPlayerPlayPauseBtn.innerHTML = '❚❚';
-            });
-
-            audioEl.addEventListener('pause', () => {
-                if (currentActiveAudio === audioEl) {
-                    miniPlayerPlayPauseBtn.innerHTML = '▶';
-                }
-            });
-
-            audioEl.addEventListener('ended', () => {
-                if (currentActiveAudio === audioEl) {
-                    miniPlayer.classList.remove('visible');
-                    currentActiveAudio = null;
-                }
-            });
-
-            audioEl.addEventListener('timeupdate', () => {
-                if (currentActiveAudio === audioEl && !isNaN(audioEl.duration)) {
-                    const progressPercent = (audioEl.currentTime / audioEl.duration) * 100;
-                    miniPlayerProgressBar.value = progressPercent;
-                }
-            });
-        });
-
-        // Управление с мини-плеера
-        miniPlayerPlayPauseBtn.addEventListener('click', () => {
-            if (currentActiveAudio) {
-                if (currentActiveAudio.paused) {
-                    currentActiveAudio.play();
-                } else {
-                    currentActiveAudio.pause();
-                }
-                if (currentActiveMainPlayBtn) {
-                    currentActiveMainPlayBtn.innerHTML = currentActiveAudio.paused ? '▶' : '❚❚';
-                }
+                    // Сбрасываем поиск и возвращаем все треки
+                    searchBar.value = '';
+                    searchBar.dispatchEvent(new Event('input', {
+                        bubbles: true
+                    }));
+                });
             }
-        });
 
-        miniPlayerProgressBar.addEventListener('input', () => {
-            if (currentActiveAudio && !isNaN(currentActiveAudio.duration)) {
-                const newTime = (miniPlayerProgressBar.value / 100) * currentActiveAudio.duration;
-                currentActiveAudio.currentTime = newTime;
-            }
-        });
+            // --- ЛОГИКА ДЛЯ ФИЛЬТРА ПО НАСТРОЕНИЮ ---
+            const moodButtons = document.querySelectorAll('.mood-btn');
+            const moodFeedback = document.getElementById('mood-feedback');
+            const resetButton = document.querySelector('.mood-btn[data-mood="все"]');
 
-        // Сворачивание и разворачивание плеера
-        collapseBtn.addEventListener('click', () => {
-            miniPlayer.classList.add('collapsed');
-        });
+            moodButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const selectedMood = button.dataset.mood;
+                    searchBar.value = '';
+                    searchFeedback.style.display = 'none';
 
-        collapsedView.addEventListener('click', () => {
-            miniPlayer.classList.remove('collapsed');
+                    moodButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    if (selectedMood === 'все') {
+                        if (resetButton) resetButton.classList.remove('visible');
+                    } else {
+                        if (resetButton) resetButton.classList.add('visible');
+                    }
+
+                    let tracksFound = 0;
+                    allTracks.forEach(track => {
+                        const isVisible = (selectedMood === 'все' || track.dataset.mood === selectedMood);
+                        track.style.display = isVisible ? 'block' : 'none';
+                        if (isVisible) tracksFound++;
+                    });
+
+                    moodFeedback.style.display = (tracksFound === 0 && selectedMood !== 'все') ? 'block' : 'none';
+                });
+            });
+
+            // --- ОСНОВНАЯ ЛОГИКА ПОИСКА ПО ТЕКСТУ ---
+            searchBar.addEventListener('input', () => {
+                const query = searchBar.value.toLowerCase().trim();
+                let tracksFound = 0;
+
+                // Сбрасываем фильтр по настроению при вводе текста
+                moodButtons.forEach(btn => btn.classList.remove('active'));
+                if (resetButton) resetButton.classList.remove('visible');
+                moodFeedback.style.display = 'none';
+
+                // Фильтруем основной список треков
+                allTracks.forEach(track => {
+                    const songTitle = track.dataset.song.toLowerCase();
+                    const artistName = track.dataset.artist.toLowerCase();
+                    const isMatch = songTitle.includes(query) || artistName.includes(query);
+
+                    track.style.display = isMatch ? 'block' : 'none';
+                    if (isMatch) tracksFound++;
+                });
+
+                // Показываем сообщение "не найдено", если нужно
+                searchFeedback.style.display = (tracksFound === 0 && query.length > 0) ? 'block' : 'none';
+            });
         });
     </script>
 </body>
