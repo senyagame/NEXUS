@@ -214,7 +214,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { initializeAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         try {
             const firebaseConfig = {
@@ -249,8 +249,8 @@
                     case 'auth/user-disabled':
                         return 'Пользователь с этим email отключён.';
                     case 'auth/user-not-found':
-                    case 'auth/invalid-credential': // Объединили для улучшения UX при неверных логине/пароле
-                        return 'Неверный email или пароль. Попробуйте снова.';
+                    case 'auth/invalid-credential':
+                        return 'Неверный логин, email или пароль. Попробуйте снова.'; // Обновлено сообщение
                     case 'auth/wrong-password':
                         return 'Неверный пароль. Попробуйте снова.';
                     case 'auth/invalid-email':
@@ -271,6 +271,7 @@
                 input.addEventListener('input', () => showMessage(registerMessageArea, ''));
             });
 
+            // ... (Ваш код для Яндекс.OAuth остается без изменений) ...
             const yandexClientId = "f930c404d1ca4a0b8b2ccc82a98c23a6";
             const redirectUrl = new URLSearchParams(window.location.search).get('redirectUrl');
 
@@ -286,8 +287,9 @@
             }
             document.getElementById('yandex-register-link').href = `https://oauth.yandex.ru/authorize?response_type=code&client_id=${yandexClientId}&redirect_uri=${encodeURIComponent(yandexRegisterRedirectUri)}`;
 
-            // Логика обнаружения авторизации при загрузке страницы
+
             document.addEventListener('DOMContentLoaded', () => {
+                // ... (Ваш код для DOMContentLoaded остается без изменений) ...
                 const localUrlParams = new URLSearchParams(window.location.search);
                 const yandexEmail = localUrlParams.get('yandex_email');
 
@@ -297,29 +299,21 @@
                 }
 
                 if (yandexEmail) {
-                    // Если есть параметры Яндекс, значит, это пре-регистрация через Яндекс
                     loginForm.style.display = 'none';
                     registerForm.style.display = 'block';
-
                     const yandexLogin = localUrlParams.get('yandex_login');
                     const yandexPhone = localUrlParams.get('yandex_phone');
-
                     document.getElementById('register-email').value = decodeURIComponent(yandexEmail);
                     document.getElementById('register-login').value = decodeURIComponent(yandexLogin);
                     if (yandexPhone) {
                         document.getElementById('register-phone').value = decodeURIComponent(yandexPhone);
                     }
-
                     document.getElementById('register-email').readOnly = true;
-
                     showMessage(registerMessageArea, 'Данные из Яндекс ID подставлены. Придумайте пароль.', 'info');
-                    // Очищаем параметры из URL, чтобы при обновлении страницы не повторять логику Яндекс
                     window.history.replaceState({}, document.title, window.location.pathname.split('?')[0]);
                 } else {
-                    // Если нет параметров Яндекс, проверяем состояние авторизации Firebase
                     onAuthStateChanged(auth, (user) => {
                         if (user) {
-                            // Пользователь авторизован, перенаправляем
                             console.log("Пользователь авторизован, перенаправление...");
                             if (redirectUrl) {
                                 window.location.href = redirectUrl;
@@ -327,7 +321,6 @@
                                 window.location.href = 'profile.html';
                             }
                         } else {
-                            // Пользователь не авторизован, показываем форму входа
                             console.log("Пользователь не авторизован, показываем формы входа/регистрации.");
                             loginForm.style.display = 'block';
                             registerForm.style.display = 'none';
@@ -336,15 +329,11 @@
                 }
             });
 
-            document.getElementById('login-button').addEventListener('click', () => {
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
-                showMessage(loginMessageArea, 'Вход...', 'info');
 
+            // НОВЫЙ КОД: Функция для выполнения входа, чтобы не дублировать код
+            function performLogin(email, password) {
                 signInWithEmailAndPassword(auth, email, password)
-                    .then(() => { // Убрали idToken из параметров
-                        // Firebase сам сохраняет состояние авторизации.
-                        // Просто перенаправляем, onAuthStateChanged на целевой странице подхватит пользователя.
+                    .then(() => {
                         if (redirectUrl) {
                             window.location.href = redirectUrl;
                         } else {
@@ -355,8 +344,49 @@
                         console.error("[Login Error]:", error);
                         showMessage(loginMessageArea, translateFirebaseError(error.code), 'error');
                     });
+            }
+
+
+            // ИЗМЕНЕНО: Полностью переписанная логика для кнопки входа
+            document.getElementById('login-button').addEventListener('click', async () => {
+                const loginInput = document.getElementById('login-email').value.trim();
+                const password = document.getElementById('login-password').value;
+
+                if (!loginInput || !password) {
+                    showMessage(loginMessageArea, 'Пожалуйста, введите логин/email и пароль.', 'error');
+                    return;
+                }
+
+                showMessage(loginMessageArea, 'Вход...', 'info');
+
+                // Проверяем, ввел пользователь email или логин
+                if (loginInput.includes('@')) {
+                    // Пользователь ввел email, входим как обычно
+                    performLogin(loginInput, password);
+                } else {
+                    // Пользователь ввел логин. Ищем email в Firestore.
+                    try {
+                        const usersRef = collection(db, "users");
+                        const q = query(usersRef, where("login", "==", loginInput));
+                        const querySnapshot = await getDocs(q);
+
+                        if (querySnapshot.empty) {
+                            // Пользователь с таким логином не найден
+                            showMessage(loginMessageArea, 'Пользователь с таким логином не найден.', 'error');
+                        } else {
+                            // Пользователь найден, берем его email
+                            const userDoc = querySnapshot.docs[0];
+                            const email = userDoc.data().email;
+                            performLogin(email, password);
+                        }
+                    } catch (error) {
+                        console.error("Ошибка при поиске пользователя по логину:", error);
+                        showMessage(loginMessageArea, 'Произошла ошибка при входе. Попробуйте позже.', 'error');
+                    }
+                }
             });
 
+            // ... (Ваш код для регистрации и переключения форм остается без изменений) ...
             document.getElementById('register-button').addEventListener('click', () => {
                 const email = document.getElementById('register-email').value;
                 const login = document.getElementById('register-login').value;
@@ -372,30 +402,25 @@
                     showMessage(registerMessageArea, 'Пароли не совпадают!', 'error');
                     return;
                 }
-
                 showMessage(registerMessageArea, 'Идет регистрация...', 'info');
-
                 createUserWithEmailAndPassword(auth, email, password)
                     .then((userCredential) => {
                         const user = userCredential.user;
-                        // Сохраняем дополнительные данные пользователя в Firestore
                         return setDoc(doc(db, "users", user.uid), {
                             login: login,
                             phone: phone,
                             email: email
                         });
                     })
-                    .then(() => { // Убрали idToken из параметров
+                    .then(() => {
                         showMessage(registerMessageArea, 'Регистрация прошла успешно!', 'success');
                         setTimeout(() => {
-                            // Firebase сам сохраняет состояние авторизации.
-                            // Просто перенаправляем, onAuthStateChanged на целевой странице подхватит пользователя.
                             if (redirectUrl) {
                                 window.location.href = redirectUrl;
                             } else {
                                 window.location.href = 'profile.html';
                             }
-                        }, 1500); // Даем пользователю время прочитать сообщение об успехе
+                        }, 1500);
                     })
                     .catch(error => {
                         console.error("[Registration Error]:", error);
@@ -407,7 +432,7 @@
                 e.preventDefault();
                 loginForm.style.display = 'none';
                 registerForm.style.display = 'block';
-                showMessage(loginMessageArea, ''); // Очищаем сообщения при переключении
+                showMessage(loginMessageArea, '');
                 showMessage(registerMessageArea, '');
             });
 
@@ -415,7 +440,7 @@
                 e.preventDefault();
                 registerForm.style.display = 'none';
                 loginForm.style.display = 'block';
-                showMessage(loginMessageArea, ''); // Очищаем сообщения при переключении
+                showMessage(loginMessageArea, '');
                 showMessage(registerMessageArea, '');
             });
 

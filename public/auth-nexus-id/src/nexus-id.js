@@ -18,16 +18,6 @@ import {
     getDoc
 } from './firebase.js'; // <-- Ключевое изменение: путь импорта на firebase.js
 
-// Удалены:
-// import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-// import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-// import { getFirestore, collection, doc, setDoc, getDocs, query, where, serverTimestamp, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-
-// Удалена firebaseConfig
-// Удалены const app = initializeApp(firebaseConfig);
-// Удалены export const auth = getAuth(app);
-// Удалены export const db = getFirestore(app);
-
 const authSection = document.getElementById('auth-section');
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
@@ -310,9 +300,7 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Эта проверка должна быть после onAuthStateChanged, чтобы избежать мерцания
-    // Если скрипт загружается на странице с формами авторизации, он должен показать нужную форму
-    if (authSection && loginForm) { // Проверяем, что элементы существуют на текущей странице
+    if (authSection && loginForm) { 
         if (!auth.currentUser) {
             showAuthForm('login');
         }

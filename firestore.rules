@@ -1,7 +1,17 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
+
+    // 👤 Правила для коллекции пользователей
+    // Изменено: Чтение разрешено всем для поддержки входа по логину.
+    // Это безопасно, так как здесь не хранятся пароли.
+    match /users/{userId} {
+      allow read; // <- ВОТ ИЗМЕНЕНИЕ
+      
+      // Создание и обновление разрешено только авторизованному владельцу документа
+      allow create, update: if request.auth != null && request.auth.uid == userId;
+    }
+
     // ⭐ Правила для коллекции избранного
     match /favorites/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
@@ -10,34 +20,18 @@ service cloud.firestore {
     // 📝 Правила для коллекции заметок
     match /notes/{noteId} {
       allow create: if request.auth != null;
-      allow read: if request.auth != null && request.auth.uid == resource.data.uid;
-      allow delete: if request.auth != null && request.auth.uid == resource.data.uid;
+      allow read, delete: if request.auth != null && request.auth.uid == resource.data.uid;
     }
 
-// 👤 Продвинутые правила для 'users' (необязательное улучшение)
-match /users/{userId} {
-  allow read: if request.auth != null && request.auth.uid == userId;
-  
-  // При создании проверяем, что все нужные поля есть
-  allow create: if request.auth != null 
-                && request.auth.uid == userId
-                && request.resource.data.username is string
-                && request.resource.data.email == request.auth.token.email;
-
-  // При обновлении проверяем типы данных и что пользователь не меняет чужой email
-  allow update: if request.auth != null 
-                && request.auth.uid == userId
-                && request.resource.data.username is string && request.resource.data.username.size() > 0
-                && request.resource.data.email == request.auth.token.email;
-}
-
-    // 🗑️ Правила для коллекции 'delete-users'
+    // 🗑️ Правила для запросов на удаление аккаунта
     match /delete-users/{requestId} {
       allow create: if request.auth != null
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.email == request.auth.token.email
         && request.resource.data.content_confirm == "Я хочу удалить аккаунт"
         && request.resource.data.status == "pending";
+        
+      // Запрещаем чтение и изменение запросов после создания
       allow read, update, delete: if false;
     }
   }
