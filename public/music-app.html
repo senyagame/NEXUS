@@ -327,6 +327,7 @@
             transition: all 0.2s ease-in-out;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
         .mood-btn
 
         /* Эффект при наведении на любую неактивную кнопку */
@@ -446,6 +447,19 @@
             }
         }
 
+        .gradient-bodroe,
+        .gradient-vesyoloe,
+        .gradient-spokoinoe,
+        .gradient-grustnoe {
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            color: white;
+            padding: 4em 1em;
+            text-align: center;
+            font-family: sans-serif;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
         .gradient-bodroe {
             background: linear-gradient(149deg, #ffe81d, #ff9419, #fd4128);
         }
@@ -488,7 +502,8 @@
                     <div class="eye-right"></div>
                 </div>
                 <h3>Информация о приложении Nexus Музыка 🎵</h3>
-                <p>В Nexus Музыка мы используем музыку только от исполнителя scara-kru$her</p>
+                <p>В Nexus Музыка мы используем музыку, которая есть на Яндекс музыке, а так-же от исполнителя
+                    scara-kru$her, это наш исполнитель.</p>
                 <p>Наше приложение использует API сервисов Яндекс, поэтому данное приложение доступно только для стран у
                     которых есть Яндекс (Yandex)</p>
                 <p>В приложении есть возможность поиска треков, но только тех, которые были добавлены! Вы можете
@@ -507,7 +522,7 @@
         </div>
         <section id="search-section" class="gradient">
             <div id="mood-filter">
-                <h3>Подборки музыки</h3>
+                <h3>Подборка музыки</h3>
                 <button class="mood-btn" data-mood="бодрое">Бодрое</button>
                 <button class="mood-btn" data-mood="весёлое">Весёлое</button>
                 <button class="mood-btn" data-mood="спокойное">Спокойное</button>
@@ -532,11 +547,9 @@
         </div>
         <div id="music-players">
 
-            <div class="music-container" data-mood="грустное" data-song="Ты неси меня река"
-                data-artist="Любэ" data-date="29.12.24" data-duration="3:36"
-                data-img="./assets/Любэ ты неси меня река.jpg"
-                data-yandex-link="https://music.yandex.ru/album/5060852/track/39257484"
-                data-audio-src="./assets/">
+            <div class="music-container" data-mood="грустное" data-song="Ты неси меня река" data-artist="Любэ"
+                data-date="29.12.24" data-duration="3:36" data-img="./assets/Любэ ты неси меня река.jpg"
+                data-yandex-link="https://music.yandex.ru/album/5060852/track/39257484" data-audio-src="./assets/">
                 <div class="song-title-container">
                     <hr>
                     <p class="song-title">Ты неси меня река</p>
@@ -549,10 +562,12 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track-тнмр">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.ru/album/5060852/track/39257484';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                        <button class="yandex-music-logo-btn"
+                            onclick="window.location.href = 'https://music.yandex.ru/album/5060852/track/39257484';"><img
+                                style="width: 49px; height: 49px; border-radius: 50px;"
+                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
-                    <audio id="audio-player-тнмр"
-                        src="./assets/ЛЮБЭ-Ты_неси_меня_река.mp3"></audio>
+                    <audio id="audio-player-тнмр" src="./assets/ЛЮБЭ-Ты_неси_меня_река.mp3"></audio>
                     <button class="lyrics-btn"
                         style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
                         Текст песни</button>
@@ -620,7 +635,10 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track-domoi">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.ru/iframe/album/22813620/track/105390182';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                        <button class="yandex-music-logo-btn"
+                            onclick="window.location.href = 'https://music.yandex.ru/iframe/album/22813620/track/105390182';"><img
+                                style="width: 49px; height: 49px; border-radius: 50px;"
+                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
                     <audio id="audio-player-domoi" src="./assets/DIEZ_-_Domojj_74527229.mp3"></audio>
                     <button class="lyrics-btn"
@@ -694,7 +712,10 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track-fyc">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.ru/iframe/album/14782261/track/80601674';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                        <button class="yandex-music-logo-btn"
+                            onclick="window.location.href = 'https://music.yandex.ru/iframe/album/14782261/track/80601674';"><img
+                                style="width: 49px; height: 49px; border-radius: 50px;"
+                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
                     <audio id="audio-player-fyc"
                         src="./assets/Andrea_von_Kampen_-_Forever_Young_Alphaville_cover_67716165.mp3"></audio>
@@ -767,7 +788,10 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track-sv">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.ru/album/16014532/track/84466802';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                        <button class="yandex-music-logo-btn"
+                            onclick="window.location.href = 'https://music.yandex.ru/album/16014532/track/84466802';"><img
+                                style="width: 49px; height: 49px; border-radius: 50px;"
+                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
                     <audio id="audio-player-sv" src="./assets/Green_Apelsin_-_Северный_ветер.mp3"></audio>
                     <button class="lyrics-btn"
@@ -846,7 +870,10 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track-ok">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.ru/album/1901385/track/17261210';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                        <button class="yandex-music-logo-btn"
+                            onclick="window.location.href = 'https://music.yandex.ru/album/1901385/track/17261210';"><img
+                                style="width: 49px; height: 49px; border-radius: 50px;"
+                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
                     <audio id="audio-player-ok" src="./assets/Oleg Mishin - Огненый конь.mp3"></audio>
                     <button class="lyrics-btn"
@@ -962,7 +989,10 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track3">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.kz/album/8039282/track/55212174';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                        <button class="yandex-music-logo-btn"
+                            onclick="window.location.href = 'https://music.yandex.kz/album/8039282/track/55212174';"><img
+                                style="width: 49px; height: 49px; border-radius: 50px;"
+                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
                     <audio id="audio-player-3" src="./assets/Horns_2.0.mp3"></audio>
                     <button class="lyrics-btn"
@@ -991,7 +1021,10 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track2">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.ru/album/35659381/track/136733632';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                        <button class="yandex-music-logo-btn"
+                            onclick="window.location.href = 'https://music.yandex.ru/album/35659381/track/136733632';"><img
+                                style="width: 49px; height: 49px; border-radius: 50px;"
+                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
                     <audio id="audio-player-2" src="./assets/final_boss.wav"></audio>
                     <button class="lyrics-btn"
@@ -1032,7 +1065,10 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track2">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.ru/iframe/album/32207638/track/128397158';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                        <button class="yandex-music-logo-btn"
+                            onclick="window.location.href = 'https://music.yandex.ru/iframe/album/32207638/track/128397158';"><img
+                                style="width: 49px; height: 49px; border-radius: 50px;"
+                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
                     <audio id="audio-player-2" src="./assets/Adrenaline_night_funk.wav"></audio>
                     <button class="lyrics-btn"
@@ -1066,7 +1102,10 @@
                     <div class="player-controls">
                         <button class="play-pause-btn" data-track-id="track1">▶</button>
                         <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn" onclick="window.location.href = 'https://music.yandex.ru/album/31931296/track/127729662';"><img style="width: 49px; height: 49px; border-radius: 50px;" src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                        <button class="yandex-music-logo-btn"
+                            onclick="window.location.href = 'https://music.yandex.ru/album/31931296/track/127729662';"><img
+                                style="width: 49px; height: 49px; border-radius: 50px;"
+                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
                     </div>
                     <audio id="audio-player-1" src="./assets/Legendary_Dombra.mp3"></audio>
                     <button class="lyrics-btn"
@@ -1228,7 +1267,7 @@
                 collapsedView.addEventListener('click', () => miniPlayer.classList.remove('collapsed'));
             }
 
-            // --- ЛОГИКА ФИЛЬТРА ПО НАСТРОЕНИЮ ---
+            // --- ЛОГИКА ФИЛЬТРА ПО НАСТРОЕНИЮ (ИЗМЕНЕНО) ---
             moodButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const selectedMood = button.dataset.mood;
@@ -1278,10 +1317,32 @@
                             track.style.display = isVisible ? 'block' : 'none';
                             if (isVisible) tracksFound++;
                         });
+
+                        // --- НАЧАЛО ИЗМЕНЕНИЙ ---
                         if (moodFeedback) {
-                            moodFeedback.textContent = "Таких треков ещё нет, но вы можете это исправить, предложив трек разработчику!";
-                            moodFeedback.style.display = (tracksFound === 0 && selectedMood !== 'все') ? 'block' : 'none';
+                            // Показываем сообщение только если выбрано конкретное настроение (не "все")
+                            if (selectedMood !== 'все') {
+                                if (tracksFound > 0) {
+                                    // Если треки найдены, показываем новое сообщение
+                                    if (selectedMood === 'новое') {
+                                        // Особый текст для кнопки "Время чего-то нового!"
+                                        moodFeedback.textContent = 'Вот наша подборка новой музыки!';
+                                    } else {
+                                        // Стандартный текст для остальных настроений
+                                        moodFeedback.textContent = `Подборка музыки из нашей библиотеки на тему «${selectedMood}»`;
+                                    }
+                                    moodFeedback.style.display = 'block';
+                                } else {
+                                    // Если треки НЕ найдены, показываем старое сообщение
+                                    moodFeedback.textContent = "Таких треков ещё нет, но вы можете это исправить, предложив трек разработчику!";
+                                    moodFeedback.style.display = 'block';
+                                }
+                            } else {
+                                // Если нажата кнопка "Сбросить" (data-mood="все"), скрываем сообщение
+                                moodFeedback.style.display = 'none';
+                            }
                         }
+                        // --- КОНЕЦ ИЗМЕНЕНИЙ ---
                     }
                 });
             });

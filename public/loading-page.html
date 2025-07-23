@@ -10,7 +10,8 @@
         /* Видео-загрузка */
         body {
             background-color: black;
-            transition: background-color 2s ease-in-out; /* Плавное изменение фона */
+            transition: background-color 2s ease-in-out;
+            /* Плавное изменение фона */
         }
 
         #video-overlay {
@@ -37,9 +38,9 @@
         .hidden {
             opacity: 0;
         }
-
     </style>
 </head>
+
 <body>
     <div id="video-overlay">
         <video id="loading-video" autoplay muted playsinline>
@@ -48,6 +49,17 @@
         </video>
     </div>
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const ALERT_VERSION = 'v5.4.10'; // Меняйте эту версию, чтобы alert появился снова
+
+            const ALERT_STORAGE_KEY = 'patch_alert_shown_version';
+            const lastShownVersion = localStorage.getItem(ALERT_STORAGE_KEY);
+            if (lastShownVersion !== ALERT_VERSION) {
+                alert(`🔷 Загружено небольшое исправление.\n✅ Исправлено:\nПодбор музыки в Nexus Музыка.\nℹ️ Версия приложения: ${ALERT_VERSION}`);
+                localStorage.setItem(ALERT_STORAGE_KEY, ALERT_VERSION);
+            }
+        });
         document.addEventListener("DOMContentLoaded", () => {
             const videoOverlay = document.getElementById("video-overlay");
             const video = document.getElementById("loading-video");
@@ -67,4 +79,5 @@
         });
     </script>
 </body>
+
 </html>
