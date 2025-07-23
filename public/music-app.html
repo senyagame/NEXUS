@@ -70,7 +70,7 @@
             transform: translateY(100%);
             z-index: 1000;
             box-sizing: border-box;
-            height: 125px;
+            height: 170px;
             transition: transform 0.4s ease-in-out, height 0.4s ease-in-out, padding 0.4s ease-in-out;
         }
 
@@ -104,6 +104,7 @@
 
         .mini-player-controls {
             margin-bottom: 10px;
+            padding-top: 5px;
         }
 
         #mini-player-play-pause-btn {
@@ -127,6 +128,7 @@
 
         .mini-player-progress-container {
             width: 100%;
+            padding-top: 5px;
         }
 
         #mini-player-progress-bar {
@@ -328,21 +330,16 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        .mood-btn
-
-        /* Эффект при наведении на любую неактивную кнопку */
         .mood-btn:not(.active):hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
 
-        /* Активная кнопка выглядит "нажатой" */
         .mood-btn.active {
             transform: translateY(1px);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset;
         }
 
-        /* Новоое */
         .mood-btn[data-mood="новое"] {
             background-color: #ffffff;
             color: #000000;
@@ -353,7 +350,6 @@
             color: white;
         }
 
-        /* Любимое */
         .mood-btn[data-mood="любимое"] {
             background-color: #ffffff;
             color: #c92626;
@@ -364,7 +360,6 @@
             color: white;
         }
 
-        /* Бодрое */
         .mood-btn[data-mood="бодрое"] {
             background-color: #FFF3E0;
             color: #E65100;
@@ -375,7 +370,6 @@
             color: white;
         }
 
-        /* Весёлое */
         .mood-btn[data-mood="весёлое"] {
             background-color: #FFFDE7;
             color: #FBC02D;
@@ -386,7 +380,6 @@
             color: #424242;
         }
 
-        /* Спокойное */
         .mood-btn[data-mood="спокойное"] {
             background-color: #E3F2FD;
             color: #1565C0;
@@ -397,7 +390,6 @@
             color: white;
         }
 
-        /* Грустное */
         .mood-btn[data-mood="грустное"] {
             background-color: #ECEFF1;
             color: #455A64;
@@ -423,8 +415,6 @@
             transform: scale(1);
             display: inline-block;
         }
-
-        /* Градиент */
 
         .gradient {
             background: linear-gradient(149deg, rgb(253, 241, 74) 0%, rgb(83, 23, 167) 42%, rgb(5, 184, 207) 72%, rgba(115, 53, 134, 1) 100%);
@@ -480,6 +470,98 @@
             font-family: "Rubik Mono One", monospace;
             font-size: 15px;
         }
+
+        .mini-player-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .mini-player-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        #mini-player-track-name {
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .mini-player-progress-container {
+            width: 80%;
+        }
+
+        .mini-player-btn {
+            background-color: transparent;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            color: #b3b3b3;
+        }
+
+        .mini-player-btn svg {
+            fill: currentColor;
+        }
+
+        .mini-player-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .mini-player-btn:active {
+            transform: scale(0.92);
+        }
+
+        .play-btn {
+            background-color: #ffffff;
+            width: 50px;
+            height: 50px;
+            color: #121212;
+        }
+
+        .play-btn:hover {
+            background-color: #ffffff;
+            color: #121212;
+            transform: scale(1.05);
+        }
+
+        .play-btn:active {
+            transform: scale(1);
+        }
+
+        .play-btn .pause-icon {
+            display: none;
+        }
+
+        .play-btn .play-icon {
+            display: block;
+        }
+
+        .play-btn.playing .pause-icon {
+            display: block;
+        }
+
+        .play-btn.playing .play-icon {
+            display: none;
+        }
+
+        #mini-player-repeat-btn.active {
+            color: #1DB954;
+        }
+
+        #mini-player-repeat-btn.active:hover {
+            color: #1ed760;
+        }
     </style>
 </head>
 
@@ -509,7 +591,8 @@
                 <h3>Информация о приложении Nexus Музыка 🎵</h3>
                 <p>В Nexus Музыка мы используем музыку, которая есть на Яндекс музыке, а так-же от исполнителя
                     scara-kru$her, это наш исполнитель.</p>
-                <p style="color: rgb(245, 147, 1);">Мы не зарабатываем деньги за счёт музыки добавленной в приложение. Приложение создано исключительно для удобства пользователя!</p>
+                <p style="color: rgb(245, 147, 1);">Мы не зарабатываем деньги за счёт музыки добавленной в приложение.
+                    Приложение создано исключительно для удобства пользователя!</p>
                 <p>Наше приложение использует API сервисов Яндекс, поэтому данное приложение доступно только для стран у
                     которых есть Яндекс (Yandex)</p>
                 <p>В приложении есть возможность поиска треков, но только тех, которые были добавлены! Вы можете
@@ -544,7 +627,7 @@
             <p class="mood-text" data-mood-text="грустное" style="display: none;">Подбор музыки: грустное</p>
             <p class="mood-text" data-mood-text="новое" style="display: none;">Подбор музыки: новинки</p>
             <p class="mood-text" data-mood-text="любимое" style="display: none;">Подбор музыки: любимое</p>
-            <p class="mood-text" data-mood-text="все" style="display: none;">Вы ещё ничего не лайкнули 🤍</p>
+            <p class="mood-text" data-mood-text="все" style="padding-top: 10px; padding-bottom: 10px; font-size: 14px; display: none;">Вы ещё ничего не лайкнули!</p>
             <button class="mood-btn active" data-mood="все" style="font-size: 10px;">Сбросить</button>
         </section>
 
@@ -1144,9 +1227,41 @@
         <div id="mini-player-full-view">
             <div class="mini-player-content">
                 <span id="mini-player-track-name"></span>
+
                 <div class="mini-player-controls">
-                    <button id="mini-player-play-pause-btn">▶</button>
+                    <button id="mini-player-prev-btn" class="mini-player-btn" style="margin-left: 75px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20px"
+                            height="20px">
+                            <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path>
+                        </svg>
+                    </button>
+
+                    <button id="mini-player-play-pause-btn" class="mini-player-btn play-btn">
+                        <svg class="play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            fill="currentColor" width="28px" height="28px">
+                            <path d="M8 5v14l11-7z"></path>
+                        </svg>
+                        <svg class="pause-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            fill="currentColor" width="28px" height="28px">
+                            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path>
+                        </svg>
+                    </button>
+
+                    <button id="mini-player-next-btn" class="mini-player-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20px"
+                            height="20px">
+                            <path d="M16 6h2v12h-2zm-4.5 6l-8.5 6V6z"></path>
+                        </svg>
+                    </button>
+
+                    <button id="mini-player-repeat-btn" class="mini-player-btn" style="margin-left: 20px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18px"
+                            height="18px">
+                            <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"></path>
+                        </svg>
+                    </button>
                 </div>
+
                 <div class="mini-player-progress-container">
                     <input type="range" id="mini-player-progress-bar" value="0" min="0" max="100">
                 </div>
@@ -1189,8 +1304,42 @@
             let currentActiveAudio = null;
             let currentActiveMainPlayBtn = null;
 
+            // Находим все кнопки управления
+            const miniPlayerRepeatBtn = document.getElementById('mini-player-repeat-btn');
+            const miniPlayerPrevBtn = document.getElementById('mini-player-prev-btn');
+            const miniPlayerNextBtn = document.getElementById('mini-player-next-btn');
+
+            // Переменная-флаг для отслеживания режима повтора
+            let isRepeatActive = false;
+
+            // 🧠 Центральная функция для смены трека
+            function changeTrack(direction) {
+                if (!currentActiveAudio) return; // Если ничего не играет, ничего не делаем
+
+                const visibleTracks = Array.from(allTracks).filter(track => track.style.display !== 'none');
+                if (visibleTracks.length <= 1) return; // Если трек один, не переключаем
+
+                const currentTrackContainer = currentActiveAudio.closest('.music-container');
+                const currentIndex = visibleTracks.indexOf(currentTrackContainer);
+                if (currentIndex === -1) return;
+
+                let nextIndex;
+                if (direction === 'next') {
+                    nextIndex = (currentIndex + 1) % visibleTracks.length;
+                } else { // 'prev'
+                    nextIndex = (currentIndex - 1 + visibleTracks.length) % visibleTracks.length;
+                }
+
+                const nextTrackContainer = visibleTracks[nextIndex];
+                const nextPlayBtn = nextTrackContainer.querySelector('.play-pause-btn');
+
+                if (nextPlayBtn) {
+                    nextPlayBtn.click(); // Запускаем следующий/предыдущий трек
+                }
+            }
+
+
             // --- ЛОГИКА ПОКАЗА/СКРЫТИЯ БЛОКА ПОИСКА ---
-            // ... (без изменений) ...
             if (showSearchBtn) {
                 showSearchBtn.addEventListener('click', () => {
                     if (searchContainer) searchContainer.classList.add('visible');
@@ -1211,7 +1360,37 @@
             }
 
             // --- ЛОГИКА МИНИ-ПЛЕЕРА ---
-            // ... (без изменений) ...
+
+            // Обработчик для кнопки "Повтор"
+            if (miniPlayerRepeatBtn) {
+                miniPlayerRepeatBtn.addEventListener('click', () => {
+                    isRepeatActive = !isRepeatActive;
+                    miniPlayerRepeatBtn.classList.toggle('active', isRepeatActive);
+                });
+            }
+
+            // Обработчик для кнопки "Следующий трек"
+            if (miniPlayerNextBtn) {
+                miniPlayerNextBtn.addEventListener('click', () => {
+                    changeTrack('next');
+                });
+            }
+
+            // Обработчик для кнопки "Предыдущий трек"
+            if (miniPlayerPrevBtn) {
+                miniPlayerPrevBtn.addEventListener('click', () => {
+                    if (currentActiveAudio) {
+                        // Если трек играет больше 3 секунд, он начнется заново
+                        if (currentActiveAudio.currentTime > 3) {
+                            currentActiveAudio.currentTime = 0;
+                        } else {
+                            // Иначе, переключаем на предыдущий
+                            changeTrack('prev');
+                        }
+                    }
+                });
+            }
+
             document.querySelectorAll('audio').forEach(audioEl => {
                 audioEl.addEventListener('play', () => {
                     if (currentActiveAudio && currentActiveAudio !== audioEl) {
@@ -1240,10 +1419,13 @@
                     }
                 });
 
+                // Обновленная логика окончания трека
                 audioEl.addEventListener('ended', () => {
-                    if (currentActiveAudio === audioEl && miniPlayer) {
-                        miniPlayer.classList.remove('visible');
-                        currentActiveAudio = null;
+                    if (isRepeatActive) {
+                        audioEl.currentTime = 0;
+                        audioEl.play();
+                    } else {
+                        changeTrack('next');
                     }
                 });
 
@@ -1332,21 +1514,16 @@
                             }
                         });
 
-                        // --- НАЧАЛО ИЗМЕНЕНИЙ ---
                         if (tracksFound === 0) {
-                            // Находим и показываем специальный текст для пустых "лайков"
                             const noLikesText = document.querySelector('.mood-text[data-mood-text="все"]');
                             if (noLikesText) {
                                 noLikesText.style.display = 'block';
                             }
-
-                            // Скрываем текст "Подборка: ваше любимое", т.к. ничего не найдено
                             const favoriteText = document.querySelector('.mood-text[data-mood-text="любимое"]');
                             if (favoriteText) {
                                 favoriteText.style.display = 'none';
                             }
                         }
-                        // --- КОНЕЦ ИЗМЕНЕНИЙ ---
 
                     } else {
                         allTracks.forEach(track => {
@@ -1396,7 +1573,6 @@
             }
 
             // --- ЛОГИКА КНОПКИ "ТЕКСТ ПЕСНИ" ---
-            // ... (без изменений) ...
             document.querySelectorAll('.lyrics-btn').forEach(button => {
                 button.addEventListener('click', () => {
                     const lyricsContent = button.nextElementSibling;
