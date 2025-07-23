@@ -543,7 +543,7 @@
             <p class="mood-text" data-mood-text="спокойное" style="display: none;">Подбор музыки: спокойное</p>
             <p class="mood-text" data-mood-text="грустное" style="display: none;">Подбор музыки: грустное</p>
             <p class="mood-text" data-mood-text="новое" style="display: none;">Подбор музыки: новинки</p>
-            <p class="mood-text" data-mood-text="любимое" style="display: none;">Подбор музыки: ваше любимое</p>
+            <p class="mood-text" data-mood-text="любимое" style="display: none;">Подбор музыки: любимое</p>
             <p class="mood-text" data-mood-text="все" style="display: none;">Вы ещё ничего не лайкнули 🤍</p>
             <button class="mood-btn active" data-mood="все" style="font-size: 10px;">Сбросить</button>
         </section>
@@ -1366,9 +1366,6 @@
                     }
                 });
             });
-
-            // --- ЛОГИКА ПОИСКА ПО ТЕКСТУ ---
-            // ... (без изменений) ...
             if (searchBar) {
                 searchBar.addEventListener('input', () => {
                     const query = searchBar.value.toLowerCase().trim();

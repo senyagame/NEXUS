@@ -33,29 +33,27 @@ export function initializeCustomPlayer(container) {
 
         audio.addEventListener('play', () => {
             playPauseBtn.textContent = '❚❚';
-            playPauseBtn.classList.add('playing'); // <-- ДОБАВЛЕНО
+            playPauseBtn.classList.add('playing');
         });
 
         audio.addEventListener('pause', () => {
             playPauseBtn.textContent = '▶';
-            playPauseBtn.classList.remove('playing'); // <-- ДОБАВЛЕНО
+            playPauseBtn.classList.remove('playing');
         });
 
         audio.addEventListener('ended', () => {
             playPauseBtn.textContent = '▶';
-            playPauseBtn.classList.remove('playing'); // <-- ДОБАВЛЕНО
+            playPauseBtn.classList.remove('playing');
         });
 
     } else {
         if (!audio) console.warn('Аудио элемент не найден в контейнере:', container);
         if (playPauseBtn) {
-             playPauseBtn.textContent = '⛔';
-             playPauseBtn.disabled = true;
+            playPauseBtn.textContent = '⛔';
+            playPauseBtn.disabled = true;
         }
     }
 }
-
-// --- Код для "Избранного" и авторизации остается без изменений ---
 
 document.addEventListener("DOMContentLoaded", async function () {
     if (!auth || !db) {
@@ -67,7 +65,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         try {
             if (!currentUserId) {
                 heartButton.textContent = '🔒';
-                heartButton.disabled = true;
+                heartButton.disabled = false; 
                 heartButton.title = 'Войдите для добавления в избранное';
                 heartButton.classList.remove("is-favorite");
                 return;
@@ -101,8 +99,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
     async function toggleFavorite(heartButton, songData) {
         if (!currentUserId) {
-            const authRedirectUrl = `/auth-nexus-id/auth.html?redirectUrl=${encodeURIComponent(window.location.href)}`;
-            if (confirm("Пожалуйста, войдите, чтобы добавлять треки в избранное. Перейти на страницу входа?")) {
+            const authRedirectUrl = `./auth-nexus-id/auth.html`;
+            if (confirm("❤️ Чтобы добавлять треки в избранное, необходимо авторизоваться.\nПерейти к авторизации?")) {
                 window.location.href = authRedirectUrl;
             }
             return;
@@ -179,6 +177,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     const authLink = document.getElementById('auth-link');
     if (authLink) {
         const redirectUrl = encodeURIComponent(window.location.href);
-        authLink.href = `/auth-nexus-id/auth.html?redirectUrl=${redirectUrl}`;
+        authLink.href = `./auth-nexus-id/auth.html`;
     }
 });
