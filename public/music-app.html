@@ -476,6 +476,10 @@
             background: linear-gradient(149deg, #37474f, #00649e, #607d8b);
         }
 
+        .mood-text {
+            font-family: "Rubik Mono One", monospace;
+            font-size: 15px;
+        }
     </style>
 </head>
 
@@ -505,6 +509,7 @@
                 <h3>Информация о приложении Nexus Музыка 🎵</h3>
                 <p>В Nexus Музыка мы используем музыку, которая есть на Яндекс музыке, а так-же от исполнителя
                     scara-kru$her, это наш исполнитель.</p>
+                <p style="color: rgb(245, 147, 1);">Мы не зарабатываем деньги за счёт музыки добавленной в приложение. Приложение создано исключительно для удобства пользователя!</p>
                 <p>Наше приложение использует API сервисов Яндекс, поэтому данное приложение доступно только для стран у
                     которых есть Яндекс (Yandex)</p>
                 <p>В приложении есть возможность поиска треков, но только тех, которые были добавлены! Вы можете
@@ -533,6 +538,13 @@
             </div>
             <p id="mood-feedback" style="display: none;">Таких треков ещё нет, но вы можете это исправить, предложив
                 трек разработчику!</p>
+            <p class="mood-text" data-mood-text="бодрое" style="display: none;">Подбор музыки: бодрое</p>
+            <p class="mood-text" data-mood-text="весёлое" style="display: none;">Подбор музыки: весёлое</p>
+            <p class="mood-text" data-mood-text="спокойное" style="display: none;">Подбор музыки: спокойное</p>
+            <p class="mood-text" data-mood-text="грустное" style="display: none;">Подбор музыки: грустное</p>
+            <p class="mood-text" data-mood-text="новое" style="display: none;">Подбор музыки: новинки</p>
+            <p class="mood-text" data-mood-text="любимое" style="display: none;">Подбор музыки: ваше любимое</p>
+            <p class="mood-text" data-mood-text="все" style="display: none;">Вы ещё ничего не лайкнули 🤍</p>
             <button class="mood-btn active" data-mood="все" style="font-size: 10px;">Сбросить</button>
         </section>
 
@@ -1164,6 +1176,7 @@
             const closeSearchBtn = document.getElementById('close-search-btn');
             const moodButtons = document.querySelectorAll('.mood-btn');
             const moodFeedback = document.getElementById('mood-feedback');
+            const moodTextElements = document.querySelectorAll('.mood-text');
             const resetButton = document.querySelector('.mood-btn[data-mood="все"]');
             const miniPlayer = document.getElementById('mini-player');
             const gradientSection = document.querySelector('.gradient');
@@ -1177,6 +1190,7 @@
             let currentActiveMainPlayBtn = null;
 
             // --- ЛОГИКА ПОКАЗА/СКРЫТИЯ БЛОКА ПОИСКА ---
+            // ... (без изменений) ...
             if (showSearchBtn) {
                 showSearchBtn.addEventListener('click', () => {
                     if (searchContainer) searchContainer.classList.add('visible');
@@ -1197,6 +1211,7 @@
             }
 
             // --- ЛОГИКА МИНИ-ПЛЕЕРА ---
+            // ... (без изменений) ...
             document.querySelectorAll('audio').forEach(audioEl => {
                 audioEl.addEventListener('play', () => {
                     if (currentActiveAudio && currentActiveAudio !== audioEl) {
@@ -1268,6 +1283,7 @@
                 collapsedView.addEventListener('click', () => miniPlayer.classList.remove('collapsed'));
             }
 
+
             // --- ЛОГИКА ФИЛЬТРА ПО НАСТРОЕНИЮ ---
             moodButtons.forEach(button => {
                 button.addEventListener('click', () => {
@@ -1277,6 +1293,17 @@
 
                     moodButtons.forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
+
+                    moodTextElements.forEach(textEl => {
+                        textEl.style.display = 'none';
+                    });
+
+                    if (selectedMood !== 'все') {
+                        const textToShow = document.querySelector(`.mood-text[data-mood-text="${selectedMood}"]`);
+                        if (textToShow) {
+                            textToShow.style.display = 'block';
+                        }
+                    }
 
                     if (selectedMood === 'все') {
                         if (resetButton) resetButton.classList.remove('visible');
@@ -1304,14 +1331,23 @@
                                 track.style.display = 'none';
                             }
                         });
-                        if (moodFeedback) {
-                            if (tracksFound === 0) {
-                                moodFeedback.textContent = "Вы ещё ничего не лайкнули 🤍";
-                                moodFeedback.style.display = 'block';
-                            } else {
-                                moodFeedback.style.display = 'none';
+
+                        // --- НАЧАЛО ИЗМЕНЕНИЙ ---
+                        if (tracksFound === 0) {
+                            // Находим и показываем специальный текст для пустых "лайков"
+                            const noLikesText = document.querySelector('.mood-text[data-mood-text="все"]');
+                            if (noLikesText) {
+                                noLikesText.style.display = 'block';
+                            }
+
+                            // Скрываем текст "Подборка: ваше любимое", т.к. ничего не найдено
+                            const favoriteText = document.querySelector('.mood-text[data-mood-text="любимое"]');
+                            if (favoriteText) {
+                                favoriteText.style.display = 'none';
                             }
                         }
+                        // --- КОНЕЦ ИЗМЕНЕНИЙ ---
+
                     } else {
                         allTracks.forEach(track => {
                             const isVisible = (selectedMood === 'все' || track.dataset.mood === selectedMood);
@@ -1321,12 +1357,18 @@
                         if (moodFeedback) {
                             moodFeedback.textContent = "Таких треков ещё нет, но вы можете это исправить, предложив трек разработчику!";
                             moodFeedback.style.display = (tracksFound === 0 && selectedMood !== 'все') ? 'block' : 'none';
+
+                            if (tracksFound === 0 && selectedMood !== 'все') {
+                                const textToHide = document.querySelector(`.mood-text[data-mood-text="${selectedMood}"]`);
+                                if (textToHide) textToHide.style.display = 'none';
+                            }
                         }
                     }
                 });
             });
 
             // --- ЛОГИКА ПОИСКА ПО ТЕКСТУ ---
+            // ... (без изменений) ...
             if (searchBar) {
                 searchBar.addEventListener('input', () => {
                     const query = searchBar.value.toLowerCase().trim();
@@ -1339,6 +1381,10 @@
                     moodButtons.forEach(btn => btn.classList.remove('active'));
                     if (resetButton) resetButton.classList.remove('visible');
                     if (moodFeedback) moodFeedback.style.display = 'none';
+
+                    moodTextElements.forEach(textEl => {
+                        textEl.style.display = 'none';
+                    });
 
                     allTracks.forEach(track => {
                         const songTitle = track.dataset.song.toLowerCase();
@@ -1353,6 +1399,7 @@
             }
 
             // --- ЛОГИКА КНОПКИ "ТЕКСТ ПЕСНИ" ---
+            // ... (без изменений) ...
             document.querySelectorAll('.lyrics-btn').forEach(button => {
                 button.addEventListener('click', () => {
                     const lyricsContent = button.nextElementSibling;
