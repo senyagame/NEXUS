@@ -475,6 +475,7 @@
         .gradient-grustnoe {
             background: linear-gradient(149deg, #37474f, #00649e, #607d8b);
         }
+
     </style>
 </head>
 
@@ -1267,7 +1268,7 @@
                 collapsedView.addEventListener('click', () => miniPlayer.classList.remove('collapsed'));
             }
 
-            // --- ЛОГИКА ФИЛЬТРА ПО НАСТРОЕНИЮ (ИЗМЕНЕНО) ---
+            // --- ЛОГИКА ФИЛЬТРА ПО НАСТРОЕНИЮ ---
             moodButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const selectedMood = button.dataset.mood;
@@ -1317,32 +1318,10 @@
                             track.style.display = isVisible ? 'block' : 'none';
                             if (isVisible) tracksFound++;
                         });
-
-                        // --- НАЧАЛО ИЗМЕНЕНИЙ ---
                         if (moodFeedback) {
-                            // Показываем сообщение только если выбрано конкретное настроение (не "все")
-                            if (selectedMood !== 'все') {
-                                if (tracksFound > 0) {
-                                    // Если треки найдены, показываем новое сообщение
-                                    if (selectedMood === 'новое') {
-                                        // Особый текст для кнопки "Время чего-то нового!"
-                                        moodFeedback.textContent = 'Вот наша подборка новой музыки!';
-                                    } else {
-                                        // Стандартный текст для остальных настроений
-                                        moodFeedback.textContent = `Подборка музыки из нашей библиотеки на тему «${selectedMood}»`;
-                                    }
-                                    moodFeedback.style.display = 'block';
-                                } else {
-                                    // Если треки НЕ найдены, показываем старое сообщение
-                                    moodFeedback.textContent = "Таких треков ещё нет, но вы можете это исправить, предложив трек разработчику!";
-                                    moodFeedback.style.display = 'block';
-                                }
-                            } else {
-                                // Если нажата кнопка "Сбросить" (data-mood="все"), скрываем сообщение
-                                moodFeedback.style.display = 'none';
-                            }
+                            moodFeedback.textContent = "Таких треков ещё нет, но вы можете это исправить, предложив трек разработчику!";
+                            moodFeedback.style.display = (tracksFound === 0 && selectedMood !== 'все') ? 'block' : 'none';
                         }
-                        // --- КОНЕЦ ИЗМЕНЕНИЙ ---
                     }
                 });
             });
