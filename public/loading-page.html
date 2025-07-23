@@ -56,7 +56,7 @@
             const ALERT_STORAGE_KEY = 'patch_alert_shown_version';
             const lastShownVersion = localStorage.getItem(ALERT_STORAGE_KEY);
             if (lastShownVersion !== ALERT_VERSION) {
-                alert(`🔷 Загружено небольшое исправление.\n✅ Исправлено:\nПодбор музыки в Nexus Музыка.\nℹ️ Версия приложения: ${ALERT_VERSION}`);
+                alert(`✅ Загружено небольшое исправление.\nℹ️ Версия приложения: ${ALERT_VERSION}`);
                 localStorage.setItem(ALERT_STORAGE_KEY, ALERT_VERSION);
             }
         });
