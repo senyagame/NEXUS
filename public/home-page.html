@@ -132,6 +132,18 @@
         import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const ALERT_VERSION = 'v5.4.14'; // Меняйте эту версию, чтобы alert появился снова
+
+            const ALERT_STORAGE_KEY = 'patch_alert_shown_version';
+            const lastShownVersion = localStorage.getItem(ALERT_STORAGE_KEY);
+            if (lastShownVersion !== ALERT_VERSION) {
+                alert(`✅ Загружено обновление\nисправлены некоторые ошибки\nдобавлено 4 новых трека.\nℹ️ Версия приложения: ${ALERT_VERSION}`);
+                localStorage.setItem(ALERT_STORAGE_KEY, ALERT_VERSION);
+            }
+        });
+
         // Firebase конфигурация (из config.js)
         const firebaseConfig = {
             apiKey: "AIzaSyBIF6s94-IuXl3accPXPQzVYWYciO5D5lg",
