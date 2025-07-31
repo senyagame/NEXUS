@@ -10,6 +10,18 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap');
 
+        .header-icon {
+            width: 30px;
+            height: 30px;
+            vertical-align: sub;
+        }
+
+        .header-icon-minified {
+            width: 25px;
+            height: 25px;
+            vertical-align: sub;
+        }
+
         .search-header {
             display: flex;
             justify-content: space-between;
@@ -27,282 +39,6 @@
             margin-left: auto;
             margin-right: auto;
             display: block;
-        }
-
-        .lyrics-content {
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-            transition: max-height 0.8s ease-in-out, opacity 0.8s ease-in-out;
-            padding: 0 10px;
-            margin-top: 10px;
-            border: 1px solid transparent;
-            border-radius: 5px;
-        }
-
-        .lyrics-content.show {
-            max-height: 2000px;
-            opacity: 1;
-            padding: 10px;
-            border-color: #ccc;
-        }
-
-        .lyrics-content p {
-            margin-top: 5px;
-            margin-bottom: 5px;
-            font-size: 14px;
-            line-height: 1.3;
-        }
-
-        .lyrics-content strong {
-            font-weight: bold;
-            color: #818181;
-        }
-
-        #mini-player {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #100058;
-            color: white;
-            padding: 15px 20px;
-            box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.4);
-            transform: translateY(100%);
-            z-index: 1000;
-            box-sizing: border-box;
-            height: 170px;
-            transition: transform 0.4s ease-in-out, height 0.4s ease-in-out, padding 0.4s ease-in-out;
-        }
-
-        #mini-player.visible {
-            transform: translateY(0);
-        }
-
-        #mini-player.collapsed {
-            height: 45px;
-            padding-top: 0;
-            padding-bottom: 0;
-        }
-
-        .mini-player-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            max-width: 450px;
-            margin: 0 auto;
-        }
-
-        #mini-player-track-name {
-            font-size: 15px;
-            font-weight: 500;
-            margin-bottom: 10px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100%;
-        }
-
-        .mini-player-controls {
-            margin-bottom: 10px;
-            padding-top: 5px;
-        }
-
-        #mini-player-play-pause-btn {
-            background: #010024;
-            border: none;
-            color: white;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            line-height: 45px;
-        }
-
-        #mini-player-play-pause-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .mini-player-progress-container {
-            width: 100%;
-            padding-top: 5px;
-        }
-
-        #mini-player-progress-bar {
-            width: 100%;
-            cursor: pointer;
-        }
-
-        #mini-player-collapse-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: none;
-            border: none;
-            color: #ffffff;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 5px;
-            line-height: 1;
-        }
-
-        #mini-player-collapse-btn:hover {
-            color: white;
-        }
-
-        #mini-player-collapsed-view {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        #mini-player-expand-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-        }
-
-        #mini-player.collapsed #mini-player-full-view {
-            display: none;
-        }
-
-        #mini-player:not(.collapsed) #mini-player-collapsed-view {
-            display: none;
-        }
-
-        #mini-player-collapsed-view {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            padding: 0 10px;
-        }
-
-        #collapsed-track-name {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            padding-right: 20px;
-        }
-
-        #mini-player-collapsed-view span:last-child {
-            font-size: 24px;
-            color: white;
-        }
-
-        #mini-player-expand-btn {
-            display: none;
-        }
-
-        .player-controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .player-controls .play-pause-btn,
-        .player-controls .favorite-heart-btn,
-        .player-controls .yandex-music-logo-btn {
-            width: 48px;
-            height: 48px;
-            font-size: 22px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background: #010024;
-            border: none;
-        }
-
-        .player-controls .yandex-music-logo-btn {
-            margin: 0 10px;
-        }
-
-        .player-controls .play-pause-btn {
-            background-color: #010024;
-            color: #ffffff;
-            margin-left: 10px;
-        }
-
-        .player-controls .play-pause-btn:hover {
-            background-color: #010024;
-            transform: scale(1.05);
-        }
-
-        .player-controls .play-pause-btn.playing {
-            background-color: #010024;
-            border-color: #010024;
-            color: rgb(255, 255, 255);
-        }
-
-        .player-controls .favorite-heart-btn {
-            margin-left: 10px;
-        }
-
-        .player-controls .favorite-heart-btn,
-        .player-controls .yandex-music-logo-btn {
-            background-color: transparent;
-            color: #000000;
-        }
-
-        .player-controls .favorite-heart-btn:hover,
-        .player-controls .yandex-music-logo-btn:hover {
-            background-color: #010024;
-            transform: scale(1.05);
-        }
-
-        .player-controls .favorite-heart-btn.is-favorite {
-            border-color: #e91e63;
-            color: #e91e63;
-            background-color: #fce4ec;
-        }
-
-        .or-divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            color: #ffffff;
-            margin: 15px 0;
-        }
-
-        .or-divider::before,
-        .or-divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid #ccc;
-        }
-
-        .or-divider:not(:empty)::before {
-            margin-right: .25em;
-        }
-
-        .or-divider:not(:empty)::after {
-            margin-left: .25em;
-        }
-
-        .song-title-img {
-            width: 180px;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 10px;
         }
 
         #mood-filter {
@@ -417,6 +153,11 @@
             display: inline-block;
         }
 
+        .mood-text {
+            font-family: "Rubik Mono One", monospace;
+            font-size: 15px;
+        }
+
         .gradient {
             background: linear-gradient(149deg, rgb(253, 241, 74) 0%, rgb(83, 23, 167) 42%, rgb(5, 184, 207) 72%, rgba(115, 53, 134, 1) 100%);
             animation: gradient 15s infinite linear;
@@ -467,33 +208,219 @@
             background: linear-gradient(149deg, #37474f, #00649e, #607d8b);
         }
 
-        .mood-text {
-            font-family: "Rubik Mono One", monospace;
-            font-size: 15px;
+        .song-title-img {
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .player-controls .play-pause-btn,
+        .player-controls .favorite-heart-btn,
+        .player-controls .yandex-music-logo-btn {
+            width: 48px;
+            height: 48px;
+            font-size: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #010024;
+            border: none;
+        }
+
+        .player-controls .yandex-music-logo-btn {
+            margin: 0 10px;
+        }
+
+        .player-controls .play-pause-btn {
+            background-color: #010024;
+            color: #ffffff;
+            margin-left: 10px;
+        }
+
+        .player-controls .play-pause-btn:hover {
+            background-color: #010024;
+            transform: scale(1.05);
+        }
+
+        .player-controls .play-pause-btn.playing {
+            background-color: #010024;
+            border-color: #010024;
+            color: rgb(255, 255, 255);
+        }
+
+        .player-controls .favorite-heart-btn {
+            margin-left: 10px;
+        }
+
+        .player-controls .favorite-heart-btn,
+        .player-controls .yandex-music-logo-btn {
+            background-color: transparent;
+            color: #000000;
+        }
+
+        .player-controls .favorite-heart-btn:hover,
+        .player-controls .yandex-music-logo-btn:hover {
+            background-color: #010024;
+            transform: scale(1.05);
+        }
+
+        .player-controls .favorite-heart-btn.is-favorite {
+            border-color: #e91e63;
+            color: #e91e63;
+            background-color: #fce4ec;
+        }
+
+        .or-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #ffffff;
+            margin: 15px 0;
+        }
+
+        .or-divider::before,
+        .or-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .or-divider:not(:empty)::before {
+            margin-right: .25em;
+        }
+
+        .or-divider:not(:empty)::after {
+            margin-left: .25em;
+        }
+
+        .lyrics-content {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.8s ease-in-out, opacity 0.8s ease-in-out;
+            padding: 0 10px;
+            margin-top: 10px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+        }
+
+        .lyrics-content.show {
+            max-height: 2000px;
+            opacity: 1;
+            padding: 10px;
+            border-color: #ccc;
+        }
+
+        .lyrics-content p {
+            margin-top: 5px;
+            margin-bottom: 5px;
+            font-size: 14px;
+            line-height: 1.3;
+        }
+
+        .lyrics-content strong {
+            font-weight: bold;
+            color: #818181;
+        }
+
+        #mini-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #100058;
+            color: white;
+            box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.4);
+            transform: translateY(100%);
+            z-index: 1000;
+            box-sizing: border-box;
+            height: 45px;
+            transition: transform 0.4s ease-in-out, height 0.4s ease-in-out;
+        }
+
+        #mini-player.visible {
+            transform: translateY(0);
+            height: 100vh;
+        }
+
+        #mini-player.collapsed {
+            height: 45px;
+        }
+
+        #mini-player-full-view {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .mini-player-content {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: space-evenly;
+            height: 100%;
             width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+
+        #mini-player-img {
+            width: 70%;
+            max-width: 300px;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .mini-player-track-info {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        #mini-player-track-name {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        #mini-player-artist-name {
+            font-size: 16px;
+            color: #b3b3b3;
+            font-weight: 500;
+        }
+
+        .mini-player-progress-container {
+            width: 100%;
+            padding-top: 5px;
+        }
+
+        #mini-player-progress-bar {
+            width: 100%;
+            cursor: pointer;
         }
 
         .mini-player-controls {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        #mini-player-track-name {
-            margin-bottom: 15px;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .mini-player-progress-container {
-            width: 80%;
+            width: 100%;
         }
 
         .mini-player-btn {
@@ -515,7 +442,6 @@
         }
 
         .mini-player-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
             color: #ffffff;
         }
 
@@ -523,36 +449,31 @@
             transform: scale(0.92);
         }
 
-        .play-btn {
+        #mini-player-play-pause-btn {
             background-color: #ffffff;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             color: #121212;
         }
 
-        .play-btn:hover {
+        #mini-player-play-pause-btn:hover {
             background-color: #ffffff;
-            color: #121212;
             transform: scale(1.05);
         }
 
-        .play-btn:active {
-            transform: scale(1);
-        }
-
-        .play-btn .pause-icon {
+        #mini-player-play-pause-btn .pause-icon {
             display: none;
         }
 
-        .play-btn .play-icon {
+        #mini-player-play-pause-btn .play-icon {
             display: block;
         }
 
-        .play-btn.playing .pause-icon {
+        #mini-player-play-pause-btn.playing .pause-icon {
             display: block;
         }
 
-        .play-btn.playing .play-icon {
+        #mini-player-play-pause-btn.playing .play-icon {
             display: none;
         }
 
@@ -562,15 +483,6 @@
 
         #mini-player-repeat-btn.active:hover {
             color: #1ed760;
-        }
-
-        #mini-player-download-btn {
-            color: #b3b3b3;
-            transition: color 0.2s ease;
-        }
-
-        #mini-player-download-btn:hover {
-            color: #ffffff;
         }
 
         #mini-player-download-btn .download-icon,
@@ -602,16 +514,56 @@
             pointer-events: none;
         }
 
-        .header-icon {
-            width: 30px;
-            height: 30px;
-            vertical-align: sub;
+        #mini-player-collapse-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border: none;
+            color: #ffffff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            line-height: 1;
+            border-radius: 50%;
+            z-index: 1001;
         }
 
-        .header-icon-minified {
-            width: 25px;
-            height: 25px;
-            vertical-align: sub;
+        #mini-player-collapse-btn:hover {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        #mini-player.collapsed #mini-player-full-view {
+            display: none;
+        }
+
+        #mini-player:not(.collapsed) #mini-player-collapsed-view {
+            display: none;
+        }
+
+        #mini-player-collapsed-view {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        #collapsed-track-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 20px;
+        }
+
+        #mini-player-collapsed-view span:last-child {
+            font-size: 24px;
+            color: white;
         }
 
         @media screen and (max-width: 600px) {
@@ -620,6 +572,7 @@
                 height: 20px;
                 vertical-align: sub;
             }
+
             .header-icon-minified {
                 width: 20px;
                 height: 20px;
@@ -1586,11 +1539,22 @@
 
     <div id="mini-player">
         <div id="mini-player-full-view">
+            <button id="mini-player-collapse-btn">⤵</button>
+
             <div class="mini-player-content">
-                <span id="mini-player-track-name"></span>
+
+                <img id="mini-player-img" src="" alt="Обложка трека">
+
+                <div class="mini-player-track-info">
+                    <span id="mini-player-track-name"></span>
+                    <p id="mini-player-artist-name"></p>
+                </div>
+
+                <div class="mini-player-progress-container">
+                    <input type="range" id="mini-player-progress-bar" value="0" min="0" max="100">
+                </div>
 
                 <div class="mini-player-controls">
-
                     <button id="mini-player-download-btn" class="mini-player-btn">
                         <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             viewBox="0 0 24 24">
@@ -1613,14 +1577,12 @@
                             </path>
                         </svg>
                     </button>
-
                     <button id="mini-player-prev-btn" class="mini-player-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20px"
                             height="20px">
                             <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path>
                         </svg>
                     </button>
-
                     <button id="mini-player-play-pause-btn" class="mini-player-btn play-btn">
                         <svg class="play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                             fill="currentColor" width="28px" height="28px">
@@ -1631,14 +1593,12 @@
                             <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path>
                         </svg>
                     </button>
-
                     <button id="mini-player-next-btn" class="mini-player-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20px"
                             height="20px">
                             <path d="M16 6h2v12h-2zm-4.5 6l-8.5 6V6z"></path>
                         </svg>
                     </button>
-
                     <button id="mini-player-repeat-btn" class="mini-player-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18px"
                             height="18px">
@@ -1646,12 +1606,7 @@
                         </svg>
                     </button>
                 </div>
-
-                <div class="mini-player-progress-container">
-                    <input type="range" id="mini-player-progress-bar" value="0" min="0" max="100">
-                </div>
             </div>
-            <button id="mini-player-collapse-btn">⤵</button>
         </div>
         <div id="mini-player-collapsed-view">
             <span id="collapsed-track-name"></span>
@@ -1707,7 +1662,7 @@
             }
 
             // --- ЭЛЕМЕНТЫ ---
-            const allTracks = document.querySelectorAll('#music-players .music-container');
+            const allTracks = document.querySelectorAll('.music-container'); // Изменил селектор для большей точности
             const searchBar = document.getElementById('search-bar');
             const searchFeedback = document.getElementById('search-feedback');
             const showSearchBtn = document.getElementById('show-search-btn');
@@ -1718,22 +1673,29 @@
             const moodFeedback = document.getElementById('mood-feedback');
             const moodTextElements = document.querySelectorAll('.mood-text');
             const resetButton = document.querySelector('.mood-btn[data-mood="все"]');
-            const miniPlayer = document.getElementById('mini-player');
             const gradientSection = document.querySelector('.gradient');
+
+            // Элементы мини-плеера
+            const miniPlayer = document.getElementById('mini-player');
             const miniPlayerTrackName = document.getElementById('mini-player-track-name');
             const miniPlayerPlayPauseBtn = document.getElementById('mini-player-play-pause-btn');
             const miniPlayerProgressBar = document.getElementById('mini-player-progress-bar');
             const collapseBtn = document.getElementById('mini-player-collapse-btn');
             const collapsedView = document.getElementById('mini-player-collapsed-view');
             const collapsedTrackName = document.getElementById('collapsed-track-name');
-            let currentActiveAudio = null;
-            let currentActiveMainPlayBtn = null;
-
             const miniPlayerRepeatBtn = document.getElementById('mini-player-repeat-btn');
             const miniPlayerPrevBtn = document.getElementById('mini-player-prev-btn');
             const miniPlayerNextBtn = document.getElementById('mini-player-next-btn');
             const miniPlayerDownloadBtn = document.getElementById('mini-player-download-btn');
 
+            // ✨ НОВЫЕ ЭЛЕМЕНТЫ
+            const miniPlayerImg = document.getElementById('mini-player-img');
+            const miniPlayerArtistName = document.getElementById('mini-player-artist-name');
+
+
+            // Переменные состояния
+            let currentActiveAudio = null;
+            let currentActiveMainPlayBtn = null;
             let isRepeatActive = false;
 
             function changeTrack(direction) {
@@ -1822,11 +1784,14 @@
                 collapseBtn.addEventListener('click', () => miniPlayer.classList.add('collapsed'));
             }
             if (collapsedView) {
-                collapsedView.addEventListener('click', () => miniPlayer.classList.remove('collapsed'));
+                collapsedView.addEventListener('click', (e) => {
+                    // Предотвращаем срабатывание других кликов, если они есть
+                    e.stopPropagation();
+                    miniPlayer.classList.remove('collapsed')
+                });
             }
 
             // --- ОСНОВНАЯ ЛОГИКА ---
-            // Сохраняем оригинальный src в data-атрибут при загрузке
             allTracks.forEach(container => {
                 const audioEl = container.querySelector('audio');
                 if (audioEl) {
@@ -1840,13 +1805,11 @@
 
                 if (playBtn && audioEl) {
                     playBtn.addEventListener('click', async () => {
-                        // Пауза, если трек уже играет
                         if (currentActiveAudio === audioEl && !audioEl.paused) {
                             audioEl.pause();
                             return;
                         }
 
-                        // Пауза для другого трека
                         if (currentActiveAudio && currentActiveAudio !== audioEl) {
                             currentActiveAudio.pause();
                         }
@@ -1871,7 +1834,6 @@
 
             document.querySelectorAll('audio').forEach(audioEl => {
                 audioEl.addEventListener('play', async () => {
-                    // Сброс иконки старого трека
                     if (currentActiveAudio && currentActiveAudio !== audioEl) {
                         const oldPlayBtn = currentActiveAudio.closest('.music-container')?.querySelector('.play-pause-btn');
                         if (oldPlayBtn) oldPlayBtn.classList.remove('playing');
@@ -1885,15 +1847,23 @@
 
                     const musicContainer = audioEl.closest('.music-container');
                     if (musicContainer) {
-                        miniPlayerTrackName.textContent = `${musicContainer.dataset.song} – ${musicContainer.dataset.artist}`;
-                        collapsedTrackName.textContent = miniPlayerTrackName.textContent;
+                        // ✨ ОБНОВЛЯЕМ ДАННЫЕ В МИНИ-ПЛЕЕРЕ
+                        const song = musicContainer.dataset.song;
+                        const artist = musicContainer.dataset.artist;
+                        const imgSrc = musicContainer.dataset.img;
+
+                        miniPlayerTrackName.textContent = song;
+                        miniPlayerArtistName.textContent = artist;
+                        if (miniPlayerImg) miniPlayerImg.src = imgSrc;
+
+                        collapsedTrackName.textContent = `${song} – ${artist}`;
                     }
                     if (miniPlayer) {
                         miniPlayer.classList.add('visible');
+                        // Убираем 'collapsed' при старте нового трека, если плеер был свернут
                         miniPlayer.classList.remove('collapsed');
                     }
 
-                    // Обновление статуса кнопки скачивания
                     const audioSrc = audioEl.dataset.originalSrc;
                     const isDownloaded = await getAudioFromDB(audioSrc);
                     if (miniPlayerDownloadBtn) {
@@ -1919,12 +1889,14 @@
 
                 audioEl.addEventListener('timeupdate', () => {
                     if (currentActiveAudio === audioEl && !isNaN(audioEl.duration)) {
-                        miniPlayerProgressBar.value = (audioEl.currentTime / audioEl.duration) * 100;
+                        const progress = (audioEl.currentTime / audioEl.duration) * 100;
+                        if (miniPlayerProgressBar) miniPlayerProgressBar.value = progress;
                     }
                 });
             });
 
             // --- ЛОГИКА ФИЛЬТРА ПО НАСТРОЕНИЮ И ПОИСКА (БЕЗ ИЗМЕНЕНИЙ) ---
+            // ... (вся твоя логика для поиска, фильтров и текстов песен остается здесь без изменений)
             if (showSearchBtn) {
                 showSearchBtn.addEventListener('click', () => {
                     if (searchContainer) searchContainer.classList.add('visible');
@@ -2024,6 +1996,7 @@
                     }
                 });
             });
+
         });
     </script>
 </body>
