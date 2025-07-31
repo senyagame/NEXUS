@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus Музыка</title>
     <link rel="stylesheet" href="styles/music-styles.css">
+    <link rel="icon" href="./assets/Nexus-музыка-favicon.png" type="image/x-icon">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap');
 
@@ -562,6 +563,56 @@
         #mini-player-repeat-btn.active:hover {
             color: #1ed760;
         }
+
+        #mini-player-download-btn {
+            color: #b3b3b3;
+            transition: color 0.2s ease;
+        }
+
+        #mini-player-download-btn:hover {
+            color: #ffffff;
+        }
+
+        #mini-player-download-btn .download-icon,
+        #mini-player-download-btn .downloaded-icon,
+        #mini-player-download-btn .loading-icon {
+            display: none;
+        }
+
+        #mini-player-download-btn.not-downloaded .download-icon {
+            display: block;
+        }
+
+        #mini-player-download-btn.downloading .loading-icon {
+            display: block;
+        }
+
+        #mini-player-download-btn.downloaded .downloaded-icon {
+            display: block;
+        }
+
+        #mini-player-download-btn.downloaded {
+            color: #1DB954;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        #mini-player-download-btn.downloading {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .header-icon {
+            width: 30px;
+            height: 30px;
+            vertical-align: sub;
+        }
+
+        .header-icon-minified {
+            width: 25px;
+            height: 25px;
+            vertical-align: sub;
+        }
     </style>
 </head>
 
@@ -570,8 +621,10 @@
         <a href="./home-page.html" class="return-link">
             &#8592; </a>
         <h3 id="header-text">
-            <span class="full-title">NEXUS 🎵 МУЗЫКА</span>
-            <span class="minified-title">NEXUS 🎵 МУЗЫКА</span>
+            <span class="full-title">NEXUS <img class="header-icon" src="./assets/Nexus-музыка-2.png" alt="icon">
+                МУЗЫКА</span>
+            <span class="minified-title">NEXUS <img class="header-icon-minified" src="./assets/Nexus-музыка-2.png"
+                    alt="icon"> МУЗЫКА</span>
         </h3>
         <div class="header-right-actions">
             <img src="./assets/information-icon.png" alt="Information Icon" id="info-icon" onclick="openModal()">
@@ -1524,7 +1577,31 @@
                 <span id="mini-player-track-name"></span>
 
                 <div class="mini-player-controls">
-                    <button id="mini-player-prev-btn" class="mini-player-btn" style="margin-left: 75px;">
+
+                    <button id="mini-player-download-btn" class="mini-player-btn">
+                        <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7l7-7zM5 18v2h14v-2H5z"></path>
+                        </svg>
+                        <svg class="downloaded-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19L21 7l-1.41-1.41L9 16.17z">
+                            </path>
+                        </svg>
+                        <svg class="loading-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z"
+                                opacity=".5" />
+                            <path fill="currentColor"
+                                d="M12 4a8 8 0 0 1 7.89 6.7A1.53 1.53 0 0 0 21.38 12a1.5 1.5 0 0 0 0-2.53A1.53 1.53 0 0 0 19.89 7.3A8 8 0 0 1 12 4Z">
+                                <animateTransform attributeName="transform" dur="0.75s" repeatCount="indefinite"
+                                    type="rotate" values="0 12 12;360 12 12" />
+                            </path>
+                        </svg>
+                    </button>
+
+                    <button id="mini-player-prev-btn" class="mini-player-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20px"
                             height="20px">
                             <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path>
@@ -1549,7 +1626,7 @@
                         </svg>
                     </button>
 
-                    <button id="mini-player-repeat-btn" class="mini-player-btn" style="margin-left: 20px;">
+                    <button id="mini-player-repeat-btn" class="mini-player-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18px"
                             height="18px">
                             <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"></path>
@@ -1563,7 +1640,6 @@
             </div>
             <button id="mini-player-collapse-btn">⤵</button>
         </div>
-
         <div id="mini-player-collapsed-view">
             <span id="collapsed-track-name"></span>
             <span>⤴</span>
@@ -1576,6 +1652,47 @@
     <script src="./modal-window.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+
+            // --- БЛОК ЛОГИКИ ДЛЯ ОФЛАЙН-ХРАНИЛИЩА (INDEXEDDB) ---
+            const DB_NAME = 'audioDB';
+            const STORE_NAME = 'tracks';
+
+            function openAudioDB() {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(DB_NAME, 1);
+                    request.onerror = () => reject("Ошибка открытия IndexedDB");
+                    request.onsuccess = () => resolve(request.result);
+                    request.onupgradeneeded = (event) => {
+                        const db = event.target.result;
+                        if (!db.objectStoreNames.contains(STORE_NAME)) {
+                            db.createObjectStore(STORE_NAME);
+                        }
+                    };
+                });
+            }
+
+            async function saveAudioToDB(key, blob) {
+                const db = await openAudioDB();
+                return new Promise((resolve, reject) => {
+                    const transaction = db.transaction([STORE_NAME], 'readwrite');
+                    const store = transaction.objectStore(STORE_NAME);
+                    const request = store.put(blob, key);
+                    transaction.oncomplete = () => resolve(request.result);
+                    transaction.onerror = () => reject(transaction.error);
+                });
+            }
+
+            async function getAudioFromDB(key) {
+                const db = await openAudioDB();
+                return new Promise((resolve, reject) => {
+                    const transaction = db.transaction([STORE_NAME], 'readonly');
+                    const store = transaction.objectStore(STORE_NAME);
+                    const request = store.get(key);
+                    transaction.oncomplete = () => resolve(request.result);
+                    transaction.onerror = () => reject(transaction.error);
+                });
+            }
+
             // --- ЭЛЕМЕНТЫ ---
             const allTracks = document.querySelectorAll('#music-players .music-container');
             const searchBar = document.getElementById('search-bar');
@@ -1599,21 +1716,17 @@
             let currentActiveAudio = null;
             let currentActiveMainPlayBtn = null;
 
-            // Находим все кнопки управления
             const miniPlayerRepeatBtn = document.getElementById('mini-player-repeat-btn');
             const miniPlayerPrevBtn = document.getElementById('mini-player-prev-btn');
             const miniPlayerNextBtn = document.getElementById('mini-player-next-btn');
+            const miniPlayerDownloadBtn = document.getElementById('mini-player-download-btn');
 
-            // Переменная-флаг для отслеживания режима повтора
             let isRepeatActive = false;
 
-            // 🧠 Центральная функция для смены трека
             function changeTrack(direction) {
-                if (!currentActiveAudio) return; // Если ничего не играет, ничего не делаем
-
+                if (!currentActiveAudio) return;
                 const visibleTracks = Array.from(allTracks).filter(track => track.style.display !== 'none');
-                if (visibleTracks.length <= 1) return; // Если трек один, не переключаем
-
+                if (visibleTracks.length <= 1) return;
                 const currentTrackContainer = currentActiveAudio.closest('.music-container');
                 const currentIndex = visibleTracks.indexOf(currentTrackContainer);
                 if (currentIndex === -1) return;
@@ -1629,12 +1742,176 @@
                 const nextPlayBtn = nextTrackContainer.querySelector('.play-pause-btn');
 
                 if (nextPlayBtn) {
-                    nextPlayBtn.click(); // Запускаем следующий/предыдущий трек
+                    nextPlayBtn.click();
                 }
             }
 
+            // --- ЛОГИКА МИНИ-ПЛЕЕРА ---
+            if (miniPlayerRepeatBtn) {
+                miniPlayerRepeatBtn.addEventListener('click', () => {
+                    isRepeatActive = !isRepeatActive;
+                    miniPlayerRepeatBtn.classList.toggle('active', isRepeatActive);
+                });
+            }
+            if (miniPlayerNextBtn) {
+                miniPlayerNextBtn.addEventListener('click', () => {
+                    changeTrack('next');
+                });
+            }
+            if (miniPlayerPrevBtn) {
+                miniPlayerPrevBtn.addEventListener('click', () => {
+                    if (currentActiveAudio) {
+                        if (currentActiveAudio.currentTime > 3) {
+                            currentActiveAudio.currentTime = 0;
+                        } else {
+                            changeTrack('prev');
+                        }
+                    }
+                });
+            }
+            if (miniPlayerDownloadBtn) {
+                miniPlayerDownloadBtn.addEventListener('click', async () => {
+                    if (!currentActiveAudio) {
+                        alert("Сначала выберите трек для воспроизведения.");
+                        return;
+                    }
+                    const audioSrc = currentActiveAudio.dataset.originalSrc;
+                    miniPlayerDownloadBtn.className = 'mini-player-btn downloading';
 
-            // --- ЛОГИКА ПОКАЗА/СКРЫТИЯ БЛОКА ПОИСКА ---
+                    try {
+                        const response = await fetch(audioSrc);
+                        if (!response.ok) throw new Error('Ошибка сети');
+                        const audioBlob = await response.blob();
+                        await saveAudioToDB(audioSrc, audioBlob);
+                        miniPlayerDownloadBtn.className = 'mini-player-btn downloaded';
+                    } catch (error) {
+                        console.error('Ошибка скачивания:', error);
+                        miniPlayerDownloadBtn.className = 'mini-player-btn not-downloaded';
+                        alert('Не удалось сохранить трек.');
+                    }
+                });
+            }
+            if (miniPlayerPlayPauseBtn) {
+                miniPlayerPlayPauseBtn.addEventListener('click', () => {
+                    if (currentActiveAudio) {
+                        currentActiveAudio.paused ? currentActiveAudio.play() : currentActiveAudio.pause();
+                    }
+                });
+            }
+            if (miniPlayerProgressBar) {
+                miniPlayerProgressBar.addEventListener('input', () => {
+                    if (currentActiveAudio && !isNaN(currentActiveAudio.duration)) {
+                        currentActiveAudio.currentTime = (miniPlayerProgressBar.value / 100) * currentActiveAudio.duration;
+                    }
+                });
+            }
+            if (collapseBtn) {
+                collapseBtn.addEventListener('click', () => miniPlayer.classList.add('collapsed'));
+            }
+            if (collapsedView) {
+                collapsedView.addEventListener('click', () => miniPlayer.classList.remove('collapsed'));
+            }
+
+            // --- ОСНОВНАЯ ЛОГИКА ---
+            // Сохраняем оригинальный src в data-атрибут при загрузке
+            allTracks.forEach(container => {
+                const audioEl = container.querySelector('audio');
+                if (audioEl) {
+                    audioEl.dataset.originalSrc = audioEl.src;
+                }
+            });
+
+            allTracks.forEach(container => {
+                const playBtn = container.querySelector('.play-pause-btn');
+                const audioEl = container.querySelector('audio');
+
+                if (playBtn && audioEl) {
+                    playBtn.addEventListener('click', async () => {
+                        // Пауза, если трек уже играет
+                        if (currentActiveAudio === audioEl && !audioEl.paused) {
+                            audioEl.pause();
+                            return;
+                        }
+
+                        // Пауза для другого трека
+                        if (currentActiveAudio && currentActiveAudio !== audioEl) {
+                            currentActiveAudio.pause();
+                        }
+
+                        const audioSrcOriginal = audioEl.dataset.originalSrc;
+                        const offlineAudioBlob = await getAudioFromDB(audioSrcOriginal);
+
+                        if (offlineAudioBlob) {
+                            const objectURL = URL.createObjectURL(offlineAudioBlob);
+                            if (audioEl.src !== objectURL) {
+                                audioEl.src = objectURL;
+                            }
+                        } else {
+                            if (audioEl.src !== audioSrcOriginal) {
+                                audioEl.src = audioSrcOriginal;
+                            }
+                        }
+                        audioEl.play();
+                    });
+                }
+            });
+
+            document.querySelectorAll('audio').forEach(audioEl => {
+                audioEl.addEventListener('play', async () => {
+                    // Сброс иконки старого трека
+                    if (currentActiveAudio && currentActiveAudio !== audioEl) {
+                        const oldPlayBtn = currentActiveAudio.closest('.music-container')?.querySelector('.play-pause-btn');
+                        if (oldPlayBtn) oldPlayBtn.classList.remove('playing');
+                    }
+
+                    currentActiveAudio = audioEl;
+                    currentActiveMainPlayBtn = audioEl.closest('.music-container').querySelector('.play-pause-btn');
+
+                    if (currentActiveMainPlayBtn) currentActiveMainPlayBtn.classList.add('playing');
+                    if (miniPlayerPlayPauseBtn) miniPlayerPlayPauseBtn.classList.add('playing');
+
+                    const musicContainer = audioEl.closest('.music-container');
+                    if (musicContainer) {
+                        miniPlayerTrackName.textContent = `${musicContainer.dataset.song} – ${musicContainer.dataset.artist}`;
+                        collapsedTrackName.textContent = miniPlayerTrackName.textContent;
+                    }
+                    if (miniPlayer) {
+                        miniPlayer.classList.add('visible');
+                        miniPlayer.classList.remove('collapsed');
+                    }
+
+                    // Обновление статуса кнопки скачивания
+                    const audioSrc = audioEl.dataset.originalSrc;
+                    const isDownloaded = await getAudioFromDB(audioSrc);
+                    if (miniPlayerDownloadBtn) {
+                        miniPlayerDownloadBtn.className = isDownloaded ? 'mini-player-btn downloaded' : 'mini-player-btn not-downloaded';
+                    }
+                });
+
+                audioEl.addEventListener('pause', () => {
+                    if (currentActiveAudio === audioEl) {
+                        if (currentActiveMainPlayBtn) currentActiveMainPlayBtn.classList.remove('playing');
+                        if (miniPlayerPlayPauseBtn) miniPlayerPlayPauseBtn.classList.remove('playing');
+                    }
+                });
+
+                audioEl.addEventListener('ended', () => {
+                    if (isRepeatActive) {
+                        audioEl.currentTime = 0;
+                        audioEl.play();
+                    } else {
+                        changeTrack('next');
+                    }
+                });
+
+                audioEl.addEventListener('timeupdate', () => {
+                    if (currentActiveAudio === audioEl && !isNaN(audioEl.duration)) {
+                        miniPlayerProgressBar.value = (audioEl.currentTime / audioEl.duration) * 100;
+                    }
+                });
+            });
+
+            // --- ЛОГИКА ФИЛЬТРА ПО НАСТРОЕНИЮ И ПОИСКА (БЕЗ ИЗМЕНЕНИЙ) ---
             if (showSearchBtn) {
                 showSearchBtn.addEventListener('click', () => {
                     if (searchContainer) searchContainer.classList.add('visible');
@@ -1647,179 +1924,48 @@
                     if (searchBtnContainer) searchBtnContainer.style.display = 'block';
                     if (searchBar) {
                         searchBar.value = '';
-                        searchBar.dispatchEvent(new Event('input', {
-                            bubbles: true
-                        }));
+                        searchBar.dispatchEvent(new Event('input', { bubbles: true }));
                     }
                 });
             }
-
-            // --- ЛОГИКА МИНИ-ПЛЕЕРА ---
-
-            // Обработчик для кнопки "Повтор"
-            if (miniPlayerRepeatBtn) {
-                miniPlayerRepeatBtn.addEventListener('click', () => {
-                    isRepeatActive = !isRepeatActive;
-                    miniPlayerRepeatBtn.classList.toggle('active', isRepeatActive);
-                });
-            }
-
-            // Обработчик для кнопки "Следующий трек"
-            if (miniPlayerNextBtn) {
-                miniPlayerNextBtn.addEventListener('click', () => {
-                    changeTrack('next');
-                });
-            }
-
-            // Обработчик для кнопки "Предыдущий трек"
-            if (miniPlayerPrevBtn) {
-                miniPlayerPrevBtn.addEventListener('click', () => {
-                    if (currentActiveAudio) {
-                        // Если трек играет больше 3 секунд, он начнется заново
-                        if (currentActiveAudio.currentTime > 3) {
-                            currentActiveAudio.currentTime = 0;
-                        } else {
-                            // Иначе, переключаем на предыдущий
-                            changeTrack('prev');
-                        }
-                    }
-                });
-            }
-
-            document.querySelectorAll('audio').forEach(audioEl => {
-                audioEl.addEventListener('play', () => {
-                    if (currentActiveAudio && currentActiveAudio !== audioEl) {
-                        currentActiveAudio.pause();
-                    }
-                    currentActiveAudio = audioEl;
-                    const musicContainer = audioEl.closest('.music-container');
-                    if (musicContainer) {
-                        currentActiveMainPlayBtn = musicContainer.querySelector('.play-pause-btn');
-                        const songName = musicContainer.dataset.song;
-                        const artistName = musicContainer.dataset.artist;
-                        const fullTrackTitle = `${songName} – ${artistName}`;
-                        if (miniPlayerTrackName) miniPlayerTrackName.textContent = fullTrackTitle;
-                        if (collapsedTrackName) collapsedTrackName.textContent = fullTrackTitle;
-                    }
-                    if (miniPlayer) {
-                        miniPlayer.classList.add('visible');
-                        miniPlayer.classList.remove('collapsed');
-                    }
-                    if (miniPlayerPlayPauseBtn) miniPlayerPlayPauseBtn.innerHTML = '❚❚';
-                });
-
-                audioEl.addEventListener('pause', () => {
-                    if (currentActiveAudio === audioEl && miniPlayerPlayPauseBtn) {
-                        miniPlayerPlayPauseBtn.innerHTML = '▶';
-                    }
-                });
-
-                // Обновленная логика окончания трека
-                audioEl.addEventListener('ended', () => {
-                    if (isRepeatActive) {
-                        audioEl.currentTime = 0;
-                        audioEl.play();
-                    } else {
-                        changeTrack('next');
-                    }
-                });
-
-                audioEl.addEventListener('timeupdate', () => {
-                    if (currentActiveAudio === audioEl && !isNaN(audioEl.duration) && miniPlayerProgressBar) {
-                        const progressPercent = (audioEl.currentTime / audioEl.duration) * 100;
-                        miniPlayerProgressBar.value = progressPercent;
-                    }
-                });
-            });
-
-            if (miniPlayerPlayPauseBtn) {
-                miniPlayerPlayPauseBtn.addEventListener('click', () => {
-                    if (currentActiveAudio) {
-                        if (currentActiveAudio.paused) currentActiveAudio.play();
-                        else currentActiveAudio.pause();
-                        if (currentActiveMainPlayBtn) {
-                            currentActiveMainPlayBtn.innerHTML = currentActiveAudio.paused ? '▶' : '❚❚';
-                        }
-                    }
-                });
-            }
-
-            if (miniPlayerProgressBar) {
-                miniPlayerProgressBar.addEventListener('input', () => {
-                    if (currentActiveAudio && !isNaN(currentActiveAudio.duration)) {
-                        currentActiveAudio.currentTime = (miniPlayerProgressBar.value / 100) * currentActiveAudio.duration;
-                    }
-                });
-            }
-
-            if (collapseBtn) {
-                collapseBtn.addEventListener('click', () => miniPlayer.classList.add('collapsed'));
-            }
-
-            if (collapsedView) {
-                collapsedView.addEventListener('click', () => miniPlayer.classList.remove('collapsed'));
-            }
-
-
-            // --- ЛОГИКА ФИЛЬТРА ПО НАСТРОЕНИЮ ---
             moodButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const selectedMood = button.dataset.mood;
                     if (searchBar) searchBar.value = '';
                     if (searchFeedback) searchFeedback.style.display = 'none';
-
                     moodButtons.forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
-
-                    moodTextElements.forEach(textEl => {
-                        textEl.style.display = 'none';
-                    });
-
+                    moodTextElements.forEach(textEl => textEl.style.display = 'none');
                     if (selectedMood !== 'все') {
                         const textToShow = document.querySelector(`.mood-text[data-mood-text="${selectedMood}"]`);
-                        if (textToShow) {
-                            textToShow.style.display = 'block';
-                        }
+                        if (textToShow) textToShow.style.display = 'block';
                     }
-
                     if (selectedMood === 'все') {
                         if (resetButton) resetButton.classList.remove('visible');
                     } else {
                         if (resetButton) resetButton.classList.add('visible');
                     }
-
                     if (gradientSection) {
-                        gradientSection.classList.remove('gradient-bodroe', 'gradient-vesyoloe', 'gradient-spokoinoe', 'gradient-grustnoe');
+                        gradientSection.className = 'gradient';
                         if (selectedMood === 'бодрое') gradientSection.classList.add('gradient-bodroe');
                         else if (selectedMood === 'весёлое') gradientSection.classList.add('gradient-vesyoloe');
                         else if (selectedMood === 'спокойное') gradientSection.classList.add('gradient-spokoinoe');
                         else if (selectedMood === 'грустное') gradientSection.classList.add('gradient-grustnoe');
                     }
-
                     let tracksFound = 0;
                     if (selectedMood === 'любимое') {
                         allTracks.forEach(track => {
                             const heartBtn = track.querySelector('.favorite-heart-btn');
                             const isFavorite = heartBtn && heartBtn.classList.contains('is-favorite');
-                            if (isFavorite) {
-                                track.style.display = 'block';
-                                tracksFound++;
-                            } else {
-                                track.style.display = 'none';
-                            }
+                            track.style.display = isFavorite ? 'block' : 'none';
+                            if (isFavorite) tracksFound++;
                         });
-
                         if (tracksFound === 0) {
                             const noLikesText = document.querySelector('.mood-text[data-mood-text="все"]');
-                            if (noLikesText) {
-                                noLikesText.style.display = 'block';
-                            }
+                            if (noLikesText) noLikesText.style.display = 'block';
                             const favoriteText = document.querySelector('.mood-text[data-mood-text="любимое"]');
-                            if (favoriteText) {
-                                favoriteText.style.display = 'none';
-                            }
+                            if (favoriteText) favoriteText.style.display = 'none';
                         }
-
                     } else {
                         allTracks.forEach(track => {
                             const isVisible = (selectedMood === 'все' || track.dataset.mood === selectedMood);
@@ -1829,7 +1975,6 @@
                         if (moodFeedback) {
                             moodFeedback.textContent = "Таких треков ещё нет, но вы можете это исправить, предложив трек разработчику!";
                             moodFeedback.style.display = (tracksFound === 0 && selectedMood !== 'все') ? 'block' : 'none';
-
                             if (tracksFound === 0 && selectedMood !== 'все') {
                                 const textToHide = document.querySelector(`.mood-text[data-mood-text="${selectedMood}"]`);
                                 if (textToHide) textToHide.style.display = 'none';
@@ -1842,19 +1987,11 @@
                 searchBar.addEventListener('input', () => {
                     const query = searchBar.value.toLowerCase().trim();
                     let tracksFound = 0;
-
-                    if (gradientSection) {
-                        gradientSection.classList.remove('gradient-bodroe', 'gradient-vesyoloe', 'gradient-spokoinoe', 'gradient-grustnoe');
-                    }
-
+                    if (gradientSection) gradientSection.className = 'gradient';
                     moodButtons.forEach(btn => btn.classList.remove('active'));
                     if (resetButton) resetButton.classList.remove('visible');
                     if (moodFeedback) moodFeedback.style.display = 'none';
-
-                    moodTextElements.forEach(textEl => {
-                        textEl.style.display = 'none';
-                    });
-
+                    moodTextElements.forEach(textEl => textEl.style.display = 'none');
                     allTracks.forEach(track => {
                         const songTitle = track.dataset.song.toLowerCase();
                         const artistName = track.dataset.artist.toLowerCase();
@@ -1862,12 +1999,9 @@
                         track.style.display = isMatch ? 'block' : 'none';
                         if (isMatch) tracksFound++;
                     });
-
                     if (searchFeedback) searchFeedback.style.display = (tracksFound === 0 && query.length > 0) ? 'block' : 'none';
                 });
             }
-
-            // --- ЛОГИКА КНОПКИ "ТЕКСТ ПЕСНИ" ---
             document.querySelectorAll('.lyrics-btn').forEach(button => {
                 button.addEventListener('click', () => {
                     const lyricsContent = button.nextElementSibling;
