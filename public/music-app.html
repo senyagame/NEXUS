@@ -554,6 +554,7 @@
             box-sizing: border-box;
         }
 
+
         #collapsed-track-name {
             white-space: nowrap;
             overflow: hidden;
@@ -578,6 +579,192 @@
                 height: 20px;
                 vertical-align: sub;
             }
+        }
+
+        .music-player-section {
+            width: 90%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+
+        #music-players {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-container {
+            background-color: #1e1e3f;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            overflow: hidden;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-container:hover {
+            background-color: #2c2c54;
+        }
+
+        .track-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+            gap: 8px;
+        }
+
+
+        .track-left,
+        .track-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .track-album-art {
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .track-info {
+            flex: 1 1 auto;
+            min-width: 0;
+            max-width: 300px;
+        }
+
+        .track-title {
+            font-size: 16px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+
+        .track-artist {
+            font-size: 13px;
+            color: #ccc;
+        }
+
+        .track-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+
+        .track-controls .play-pause-btn,
+        .track-controls .favorite-heart-btn,
+        .track-controls .lyrics-toggle-btn {
+            background: none;
+            border: none;
+            color: #a0a0b8;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .track-controls .play-pause-btn:hover,
+        .track-controls .favorite-heart-btn:hover,
+        .track-controls .lyrics-toggle-btn:hover {
+            color: #ffffff;
+        }
+
+        .track-controls .play-pause-btn {
+            font-size: 0;
+            width: 24px;
+            height: 24px;
+        }
+
+        .track-controls .play-pause-btn::before {
+            content: '▶';
+            font-size: 16px;
+        }
+
+        .track-controls .play-pause-btn.playing::before {
+            content: '⏸';
+            font-size: 20px;
+        }
+
+        .yandex-music-link img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            transition: transform 0.2s ease;
+            display: block;
+        }
+
+        .yandex-music-link:hover img {
+            transform: scale(1.1);
+        }
+
+        .track-duration {
+            color: #a0a0b8;
+            font-size: 14px;
+            min-width: 40px;
+            text-align: right;
+        }
+
+        /* 5. БЛОК С ТЕКСТОМ ПЕСНИ */
+        .lyrics-content {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 0 20px;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+            max-height: 0;
+            overflow: hidden;
+            color: #c0c0d8;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .lyrics-content.show {
+            max-height: 1000px;
+            padding: 15px 20px;
+            overflow-y: auto;
+        }
+
+        .music-container.active-track {
+            background-color: #2c2c5a !important;
+            transition: background-color 0.3s ease;
+        }
+
+        @media (max-width: 480px) {
+            .play-pause-btn {
+                display: none !important;
+            }
+        }
+
+        #collapsed-play-pause-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background-color: #f0f0f0;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        #collapsed-play-pause-btn:hover {
+            background-color: #e0e0e0;
         }
     </style>
 </head>
@@ -662,135 +849,111 @@
                 <div id="search-results"></div>
             </section>
         </div>
-        <div id="music-players">
+        <section class="music-player-section">
+            <div id="music-players">
 
-            <div class="music-container" data-mood="спокойное" data-song="На заре" data-artist="Nadeya"
-                data-date="28.06.22" data-duration="3:28" data-img="./assets/NADEYA-На-заре.jpg"
-                data-yandex-link="https://music.yandex.kz/album/29150089/track/121367486"
-                data-audio-src="./assets/NADEYA-На-заре.mp3">
-                <div class="song-title-container">
-                    <hr>
-                    <p class="song-title">На заре (cover)</p>
-                    <p class="song-duration">Длительность: 3:28</p>
-                    <p class="song-duration">Исполнитель: Nadeya</p>
-                    <img class="song-title-img" src="./assets/NADEYA-На-заре.jpg" alt="">
-                </div>
-                <p class="nexus-player-title">Nexus музыка</p>
-                <div class="custom-player" data-player-id="player-na-zare-cover">
-                    <div class="player-controls">
-                        <button class="play-pause-btn" data-track-id="track-na-zare-cover">▶</button>
-                        <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn"
-                            onclick="window.location.href = 'https://music.yandex.kz/album/29150089/track/121367486';"><img
-                                style="width: 49px; height: 49px; border-radius: 50px;"
-                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                <div class="music-container" data-mood="спокойное" data-song="На заре (cover)" data-artist="Nadeya"
+                    data-date="28.06.22" data-duration="3:28" data-img="./assets/NADEYA-На-заре.jpg"
+                    data-yandex-link="https://music.yandex.kz/album/29150089/track/121367486"
+                    data-audio-src="./assets/NADEYA-На-заре.mp3">
+                    <div class="track-row">
+                        <img class="track-album-art" src="./assets/NADEYA-На-заре.jpg" alt="Обложка трека">
+                        <div class="track-info">
+                            <p class="track-title">На заре (cover)</p>
+                            <p class="track-artist">Nadeya</p>
+                        </div>
+                        <div class="track-controls">
+                            <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                            <a href="https://music.yandex.kz/album/29150089/track/121367486" target="_blank"
+                                class="yandex-music-link" title="Слушать в Яндекс Музыке">
+                                <img src="./assets/yandex-music-logo-mini.png" alt="Яндекс Музыка">
+                            </a>
+                            <button class="lyrics-toggle-btn" title="Показать текст песни">📄</button>
+                        </div>
                     </div>
-                    <audio id="audio-player-na-zare-cover" src="./assets/NADEYA-На-заре.mp3"></audio>
-                    <button class="lyrics-btn"
-                        style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
-                        Текст песни</button>
+                    <audio src="./assets/NADEYA-На-заре.mp3"></audio>
                     <div class="lyrics-content">
                         <p>Ровный бег моей судьбы</p>
                         <p>Ночь, печаль и блеск души</p>
                         <p>Лунный свет и майский дождь</p>
-                        <p>В небесах</p>
-                        <br>
+                        <p>В небесах</p><br>
                         <p>Долгий век моей звезды</p>
                         <p>Сонный блеск земной росы</p>
                         <p>Громкий смех и райский мед</p>
-                        <p>В небесах</p>
-                        <br>
+                        <p>В небесах</p><br>
                         <p><strong>Припев:</strong></p>
                         <p>На заре голоса зовут меня</p>
-                        <p>На заре голоса зовут меня</p>
-                        <br>
+                        <p>На заре голоса зовут меня</p><br>
                         <p>Солнца свет и сердца звук</p>
                         <p>Робкий взгляд и сила рук</p>
                         <p>Звездный час моей мечты</p>
-                        <p>В небесах</p>
-                        <br>
+                        <p>В небесах</p><br>
                         <p><strong>Припев:</strong></p>
                         <p>На заре голоса зовут меня</p>
-                        <p>На заре голоса зовут меня</p>
-                        <br>
+                        <p>На заре голоса зовут меня</p><br>
                         <p style="color: #9e9e9e;">ℹ️ Текст составлен Nexus Музыкой</p>
                         <p style="color: #9e9e9e;">Авторы текста — Олег Парастаев</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="music-container" data-mood="грустное" data-song="Половинка" data-artist="Танцы Минус"
-                data-date="28.06.22" data-duration="2:51" data-img="./assets/танцы-минус-половинка.jpg"
-                data-yandex-link="https://music.yandex.kz/album/62989/track/27317897"
-                data-audio-src="./assets/танцы-минус-половинка.mp3">
-                <div class="song-title-container">
-                    <hr>
-                    <p class="song-title">Половинка</p>
-                    <p class="song-duration">Длительность: 2:51</p>
-                    <p class="song-duration">Исполнитель: Танцы Минус</p>
-                    <img class="song-title-img" src="./assets/танцы-минус-половинка.jpg" alt="">
-                </div>
-                <p class="nexus-player-title">Nexus музыка</p>
-                <div class="custom-player" data-player-id="player-polovinka">
-                    <div class="player-controls">
-                        <button class="play-pause-btn" data-track-id="track-polovinka">▶</button>
-                        <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn"
-                            onclick="window.location.href = 'https://music.yandex.kz/album/62989/track/27317897';"><img
-                                style="width: 49px; height: 49px; border-radius: 50px;"
-                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                <div class="music-container" data-mood="грустное" data-song="Половинка" data-artist="Танцы Минус"
+                    data-date="28.06.22" data-duration="2:51" data-img="./assets/танцы-минус-половинка.jpg"
+                    data-yandex-link="https://music.yandex.kz/album/62989/track/27317897"
+                    data-audio-src="./assets/танцы-минус-половинка.mp3">
+                    <div class="track-row">
+                        <img class="track-album-art" src="./assets/танцы-минус-половинка.jpg" alt="Обложка трека">
+                        <div class="track-info">
+                            <p class="track-title">Половинка</p>
+                            <p class="track-artist">Танцы Минус</p>
+                        </div>
+                        <div class="track-controls">
+                            <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                            <a href="https://music.yandex.kz/album/62989/track/27317897" target="_blank"
+                                class="yandex-music-link" title="Слушать в Яндекс Музыке">
+                                <img src="./assets/yandex-music-logo-mini.png" alt="Яндекс Музыка">
+                            </a>
+                            <button class="lyrics-toggle-btn" title="Показать текст песни">📄</button>
+                        </div>
                     </div>
-                    <audio id="audio-player-polovinka" src="./assets/танцы-минус-половинка.mp3"></audio>
-                    <button class="lyrics-btn"
-                        style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
-                        Текст песни</button>
+                    <audio src="./assets/танцы-минус-половинка.mp3"></audio>
                     <div class="lyrics-content">
                         <p>У ночного огня под огромной луной</p>
                         <p>Тёмный лес укрывал нас зелёной листвой</p>
                         <p>Я тебя целовал у ночного огня</p>
-                        <p>Я тебе подарил половинку себя</p>
-                        <br>
+                        <p>Я тебе подарил половинку себя</p><br>
                         <p>Свет далёкой звезды, песни птиц до утра</p>
                         <p>Ты смотрела в глаза мои, шептала слова</p>
                         <p>Ты не верила мне, но любила меня</p>
-                        <p>Я оставил с тобой половинку себя</p>
-                        <br>
+                        <p>Я оставил с тобой половинку себя</p><br>
                         <p>То, что было — забыто, то, что было — прошло</p>
                         <p>Ты махала мне вслед бирюзовым платком</p>
                         <p>Я тебя целовал у ночного огня</p>
-                        <p>Ты оставила мне половинку меня</p>
-                        <br>
+                        <p>Ты оставила мне половинку меня</p><br>
                         <p style="color: #9e9e9e;">ℹ️ Текст составлен Nexus Музыкой</p>
                         <p style="color: #9e9e9e;">Авторы текста — Петкун В.Б.</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="music-container" data-mood="весёлое" data-song="Едем на машине" data-artist="ГУДЗОН"
-                data-date="28.06.22" data-duration="3:14" data-img="./assets/гудзон-едем-на-машине.jpg"
-                data-yandex-link="https://music.yandex.kz/album/10196971/track/63864540"
-                data-audio-src="./assets/гудзон-едем-на-машине.mp3">
-                <div class="song-title-container">
-                    <hr>
-                    <p class="song-title">Едем на машине</p>
-                    <p class="song-duration">Длительность: 3:14</p>
-                    <p class="song-duration">Исполнитель: ГУДЗОН</p>
-                    <img class="song-title-img" src="./assets/гудзон-едем-на-машине.jpg" alt="">
-                </div>
-                <p class="nexus-player-title">Nexus музыка</p>
-                <div class="custom-player" data-player-id="player-edem-na-mashine">
-                    <div class="player-controls">
-                        <button class="play-pause-btn" data-track-id="track-edem-na-mashine">▶</button>
-                        <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn"
-                            onclick="window.location.href = 'https://music.yandex.kz/album/10196971/track/63864540';"><img
-                                style="width: 49px; height: 49px; border-radius: 50px;"
-                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                <div class="music-container" data-mood="весёлое" data-song="Едем на машине" data-artist="ГУДЗОН"
+                    data-date="28.06.22" data-duration="3:14" data-img="./assets/гудзон-едем-на-машине.jpg"
+                    data-yandex-link="https://music.yandex.kz/album/10196971/track/63864540"
+                    data-audio-src="./assets/гудзон-едем-на-машине.mp3">
+                    <div class="track-row">
+                        <img class="track-album-art" src="./assets/гудзон-едем-на-машине.jpg" alt="Обложка трека">
+                        <div class="track-info">
+                            <p class="track-title">Едем на машине</p>
+                            <p class="track-artist">ГУДЗОН</p>
+                        </div>
+                        <div class="track-controls">
+                            <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                            <a href="https://music.yandex.kz/album/10196971/track/63864540" target="_blank"
+                                class="yandex-music-link" title="Слушать в Яндекс Музыке">
+                                <img src="./assets/yandex-music-logo-mini.png" alt="Яндекс Музыка">
+                            </a>
+                            <button class="lyrics-toggle-btn" title="Показать текст песни">📄</button>
+                        </div>
                     </div>
-                    <audio id="audio-player-edem-na-mashine" src="./assets/гудзон-едем-на-машине.mp3"></audio>
-                    <button class="lyrics-btn"
-                        style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
-                        Текст песни</button>
+                    <audio src="./assets/гудзон-едем-на-машине.mp3"></audio>
                     <div class="lyrics-content">
                         <p>По дворам свистят шины</p>
                         <p>Мы с тобою едем на машине</p>
@@ -865,7 +1028,7 @@
                         <p>(По дворам свистят шины)</p>
                         <p>(Мы с тобою едем на машине)</p>
                         <br>
-                        <p><strong>Припев (х4):</strong></p>
+                        <p><strong>Припев (x4):</strong></p>
                         <p>По дворам свистят шины</p>
                         <p>Мы с тобою едем на машине</p>
                         <p>Прокололи колесо, вот же невезуха!</p>
@@ -876,41 +1039,39 @@
                             Валериевич</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="music-container" data-mood="грустное" data-song="Ты неси меня река" data-artist="Любэ"
-                data-date="29.12.24" data-duration="3:36" data-img="./assets/Любэ ты неси меня река.jpg"
-                data-yandex-link="https://music.yandex.ru/album/5060852/track/39257484"
-                data-audio-src="./assets/ЛЮБЭ-Ты_неси_меня_река.mp3">
-                <div class="song-title-container">
-                    <hr>
-                    <p class="song-title">Ты неси меня река</p>
-                    <p class="song-duration">Длительность: 3:36</p>
-                    <p class="song-duration">Исполнитель: ЛЮБЭ</p>
-                    <img class="song-title-img" src="./assets/Любэ ты неси меня река.jpg" alt="">
-                </div>
-                <p class="nexus-player-title">Nexus музыка</p>
-                <div class="custom-player" data-player-id="player-тнмр">
-                    <div class="player-controls">
-                        <button class="play-pause-btn" data-track-id="track-тнмр">▶</button>
-                        <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn"
-                            onclick="window.location.href = 'https://music.yandex.ru/album/5060852/track/39257484';"><img
-                                style="width: 49px; height: 49px; border-radius: 50px;"
-                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                <div class="music-container" data-mood="грустное" data-song="Ты неси меня река" data-artist="Любэ"
+                    data-date="29.12.24" data-duration="3:36" data-img="./assets/Любэ ты неси меня река.jpg"
+                    data-yandex-link="https://music.yandex.ru/album/5060852/track/39257484"
+                    data-audio-src="./assets/ЛЮБЭ-Ты_неси_меня_река.mp3">
+                    <div class="track-row">
+                        <img class="track-album-art" src="./assets/Любэ ты неси меня река.jpg" alt="Обложка трека">
+                        <div class="track-info">
+                            <p class="track-title">Ты неси меня река</p>
+                            <p class="track-artist">Любэ</p>
+                        </div>
+                        <div class="track-controls">
+                            <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                            <a href="https://music.yandex.ru/album/5060852/track/39257484" target="_blank"
+                                class="yandex-music-link" title="Слушать в Яндекс Музыке">
+                                <img src="./assets/yandex-music-logo-mini.png" alt="Яндекс Музыка">
+                            </a>
+                            <button class="lyrics-toggle-btn" title="Показать текст песни">📄</button>
+                        </div>
                     </div>
-                    <audio id="audio-player-тнмр" src="./assets/ЛЮБЭ-Ты_неси_меня_река.mp3"></audio>
-                    <button class="lyrics-btn"
-                        style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
-                        Текст песни</button>
+                    <audio src="./assets/ЛЮБЭ-Ты_неси_меня_река.mp3"></audio>
                     <div class="lyrics-content">
                         <p>Ты неси меня, река</p>
                         <p>За крутые берега</p>
+                        <p>(где поля)</p>
                         <p>Где поля, мои поля</p>
+                        <p>(где леса)</p>
                         <p>Где леса, мои леса</p>
+                        <p>(ты неси)</p>
                         <p>Ты неси меня, река</p>
                         <p>Да в родные мне места</p>
-                        <p>Где живет моя краса</p>
+                        <p>(где живет)</p>
+                        <p>Где живет моя (моя) краса</p>
                         <p>Голубые у нее глаза</p>
                         <br>
                         <p><strong>Припев:</strong></p>
@@ -919,12 +1080,12 @@
                         <p>Как одинокая луна</p>
                         <p>На небе ждет меня она</p>
                         <br>
-                        <p>За туманом огонек</p>
-                        <p>Как же он еще далек</p>
+                        <p>За туманом огонек (огонек)</p>
+                        <p>Как же он еще далек (ой далек)</p>
                         <p>Ты мне ветер помоги</p>
                         <p>Милой весточку шепни</p>
                         <p>(знаю ждет)</p>
-                        <p>Знаю ждет меня краса</p>
+                        <p>Знаю ждет меня (моя) краса</p>
                         <p>Проглядела в ночь глаза</p>
                         <br>
                         <p><strong>Припев:</strong></p>
@@ -940,42 +1101,36 @@
                         <p>Голубые у нее глаза</p>
                         <br>
                         <p><strong>Припев:</strong></p>
-                        <p>Как ночка темная</p>
-                        <p>Как речка быстрая</p>
+                        <p>Как (как) ночка темная</p>
+                        <p>Как (как) речка быстрая</p>
                         <p>Как одинокая луна</p>
                         <p>На небе ждет меня она</p>
                         <br>
                         <p style="color: #9e9e9e;">ℹ️ Текст составлен Nexus Музыкой</p>
-                        <p style="color: #9e9e9e;">Автор текста — Игорь Матвиенко и Александр Шаганов</p>
+                        <p style="color: #9e9e9e;">Авторы текста — Шаганов А., Матвиенко И.</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="music-container" data-mood="весёлое" data-song="Домой" data-artist="ДИЕЗ" data-date="28.06.22"
-                data-duration="3:44" data-img="./assets/Домой-ДИЕЗ.jpg"
-                data-yandex-link="https://music.yandex.ru/iframe/album/22813620/track/105390182"
-                data-audio-src="./assets/DIEZ_-_Domojj_74527229.mp3">
-                <div class="song-title-container">
-                    <hr>
-                    <p class="song-title">Домой</p>
-                    <p class="song-duration">Длительность: 3:44</p>
-                    <p class="song-duration">Исполнитель: ДИЕЗ</p>
-                    <img class="song-title-img" src="./assets/Домой-ДИЕЗ.jpg" alt="">
-                </div>
-                <p class="nexus-player-title">Nexus музыка</p>
-                <div class="custom-player" data-player-id="player-domoi">
-                    <div class="player-controls">
-                        <button class="play-pause-btn" data-track-id="track-domoi">▶</button>
-                        <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn"
-                            onclick="window.location.href = 'https://music.yandex.ru/iframe/album/22813620/track/105390182';"><img
-                                style="width: 49px; height: 49px; border-radius: 50px;"
-                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                <div class="music-container" data-mood="весёлое" data-song="Домой" data-artist="ДИЕЗ"
+                    data-date="28.06.22" data-duration="3:44" data-img="./assets/Домой-ДИЕЗ.jpg"
+                    data-yandex-link="https://music.yandex.ru/iframe/album/22813620/track/105390182"
+                    data-audio-src="./assets/DIEZ_-_Domojj_74527229.mp3">
+                    <div class="track-row">
+                        <img class="track-album-art" src="./assets/Домой-ДИЕЗ.jpg" alt="Обложка трека">
+                        <div class="track-info">
+                            <p class="track-title">Домой</p>
+                            <p class="track-artist">ДИЕЗ</p>
+                        </div>
+                        <div class="track-controls">
+                            <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                            <a href="https://music.yandex.ru/iframe/album/22813620/track/105390182" target="_blank"
+                                class="yandex-music-link" title="Слушать в Яндекс Музыке">
+                                <img src="./assets/yandex-music-logo-mini.png" alt="Яндекс Музыка">
+                            </a>
+                            <button class="lyrics-toggle-btn" title="Показать текст песни">📄</button>
+                        </div>
                     </div>
-                    <audio id="audio-player-domoi" src="./assets/DIEZ_-_Domojj_74527229.mp3"></audio>
-                    <button class="lyrics-btn"
-                        style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
-                        Текст песни</button>
+                    <audio src="./assets/DIEZ_-_Domojj_74527229.mp3"></audio>
                     <div class="lyrics-content">
                         <p>Где бы ни был я</p>
                         <p>И где б ни скитался</p>
@@ -1025,37 +1180,31 @@
                         <p style="color: #9e9e9e;">Авторы текста — Евгений Вольтов, Мария Кольцова</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="music-container" data-mood="бодрое" data-song="Take Me Home, Country Roads"
-                data-artist="John Denver" data-date="29.12.24" data-duration="3:10"
-                data-img="./assets/John_Denver_-_Take_Me_Home_Country_Roads_Original_Version_Remastered_Remastered.jpg"
-                data-yandex-link="https://music.yandex.kz/album/6956777/track/20134644"
-                data-audio-src="./assets/John_Denver_-_Take_Me_Home_Country_Roads_Original_Version_Remastered_Remastered_63040527 (1).mp3">
-                <div class="song-title-container">
-                    <hr>
-                    <p class="song-title">Take Me Home, Country Roads</p>
-                    <p class="song-duration">Длительность: 3:10</p>
-                    <p class="song-duration">Исполнитель: John Denver</p>
-                    <img class="song-title-img"
-                        src="./assets/John_Denver_-_Take_Me_Home_Country_Roads_Original_Version_Remastered_Remastered.jpg"
-                        alt="">
-                </div>
-                <p class="nexus-player-title">Nexus музыка</p>
-                <div class="custom-player" data-player-id="player-crtmh">
-                    <div class="player-controls">
-                        <button class="play-pause-btn" data-track-id="track-crtmh">▶</button>
-                        <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn"
-                            onclick="window.location.href = 'https://music.yandex.kz/album/6956777/track/20134644';"><img
-                                style="width: 49px; height: 49px; border-radius: 50px;"
-                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                <div class="music-container" data-mood="бодрое" data-song="Take Me Home, Country Roads"
+                    data-artist="John Denver" data-date="29.12.24" data-duration="3:10"
+                    data-img="./assets/John_Denver_-_Take_Me_Home_Country_Roads_Original_Version_Remastered_Remastered.jpg"
+                    data-yandex-link="https://music.yandex.kz/album/6956777/track/20134644"
+                    data-audio-src="./assets/John_Denver_-_Take_Me_Home_Country_Roads_Original_Version_Remastered_Remastered_63040527 (1).mp3">
+                    <div class="track-row">
+                        <img class="track-album-art"
+                            src="./assets/John_Denver_-_Take_Me_Home_Country_Roads_Original_Version_Remastered_Remastered.jpg"
+                            alt="Обложка трека">
+                        <div class="track-info">
+                            <p class="track-title">Take Me Home, Country Roads</p>
+                            <p class="track-artist">John Denver</p>
+                        </div>
+                        <div class="track-controls">
+                            <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                            <a href="https://music.yandex.kz/album/6956777/track/20134644" target="_blank"
+                                class="yandex-music-link" title="Слушать в Яндекс Музыке">
+                                <img src="./assets/yandex-music-logo-mini.png" alt="Яндекс Музыка">
+                            </a>
+                            <button class="lyrics-toggle-btn" title="Показать текст песни">📄</button>
+                        </div>
                     </div>
-                    <audio id="audio-player-crtmh"
+                    <audio
                         src="./assets/John_Denver_-_Take_Me_Home_Country_Roads_Original_Version_Remastered_Remastered_63040527 (1).mp3"></audio>
-                    <button class="lyrics-btn"
-                        style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
-                        Текст песни</button>
                     <div class="lyrics-content">
                         <p>Almost heaven, West Virginia</p>
                         <p>Blue ridge mountains, Shenandoah river</p>
@@ -1100,208 +1249,188 @@
                         <p>Take me home, country roads</p>
                         <br>
                         <p style="color: #9e9e9e;">ℹ️ Текст составлен Nexus Музыкой</p>
-                        <p style="color: #9e9e9e;">Автор текста — John Denver, Taffy Danoff, William Thomas Danoff</p>
+                        <p style="color: #9e9e9e;">Авторы текста — John Denver, Taffy Danoff, William T Danoff</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="music-container" data-mood="грустное" data-song="Forever Young (Alphaville Cover)"
-                data-artist="Andrea von Kampen" data-date="29.12.24" data-duration="3:05"
-                data-img="./assets/Forever Young (cover).jpg"
-                data-yandex-link="https://music.yandex.ru/album/14782261/track/80601674"
-                data-audio-src="./assets/Andrea_von_Kampen_-_Forever_Young_Alphaville_cover_67716165.mp3">
-                <div class="song-title-container">
-                    <hr>
-                    <p class="song-title">Forever Young (Alphaville Cover)</p>
-                    <p class="song-duration">Длительность: 3:05</p>
-                    <p class="song-duration">Исполнитель: Andrea von Kampen</p>
-                    <img class="song-title-img" src="./assets/Forever Young (cover).jpg" alt="">
-                </div>
-                <p class="nexus-player-title">Nexus музыка</p>
-                <div class="custom-player" data-player-id="player-fyc">
-                    <div class="player-controls">
-                        <button class="play-pause-btn" data-track-id="track-fyc">▶</button>
-                        <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn"
-                            onclick="window.location.href = 'https://music.yandex.ru/iframe/album/14782261/track/80601674';"><img
-                                style="width: 49px; height: 49px; border-radius: 50px;"
-                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                <div class="music-container" data-mood="грустное" data-song="Forever Young (Alphaville Cover)"
+                    data-artist="Andrea von Kampen" data-date="29.12.24" data-duration="3:05"
+                    data-img="./assets/Forever Young (cover).jpg"
+                    data-yandex-link="https://music.yandex.ru/album/14782261/track/80601674"
+                    data-audio-src="./assets/Andrea_von_Kampen_-_Forever_Young_Alphaville_cover_67716165.mp3">
+                    <div class="track-row">
+                        <img class="track-album-art" src="./assets/Forever Young (cover).jpg" alt="Обложка трека">
+                        <div class="track-info">
+                            <p class="track-title">Forever Young (Alphaville Cover)</p>
+                            <p class="track-artist">Andrea von Kampen</p>
+                        </div>
+                        <div class="track-controls">
+                            <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                            <a href="https://music.yandex.ru/album/14782261/track/80601674" target="_blank"
+                                class="yandex-music-link" title="Слушать в Яндекс Музыке">
+                                <img src="./assets/yandex-music-logo-mini.png" alt="Яндекс Музыка">
+                            </a>
+                            <button class="lyrics-toggle-btn" title="Показать текст песни">📄</button>
+                        </div>
                     </div>
-                    <audio id="audio-player-fyc"
-                        src="./assets/Andrea_von_Kampen_-_Forever_Young_Alphaville_cover_67716165.mp3"></audio>
-                    <button class="lyrics-btn"
-                        style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
-                        Текст песни</button>
+                    <audio src="./assets/Andrea_von_Kampen_-_Forever_Young_Alphaville_cover_67716165.mp3"></audio>
                     <div class="lyrics-content">
                         <p>Let's dance in style, let's dance for a while</p>
-                        <p>Heaven can wait we're only watching the skies</p>
-                        <p>Hoping for the best, but expecting the worst</p>
+                        <p>Heaven can wait, we're only watching the skies</p>
+                        <p>Hoping for the best but expecting the worst</p>
                         <p>Are you gonna drop the bomb or not?</p>
+                        <br>
                         <p>Let us die young or let us live forever</p>
-                        <p>We don't have the power, but we never say never</p>
+                        <p>We don't have the power but we never say never</p>
                         <p>Sitting in a sandpit, life is a short trip</p>
-                        <p>The music's for the sad man</p>
-                        <p>Can you imagine when this race is won?</p>
-                        <p>Turn our golden the faces into the sun</p>
+                        <p>The music's for the sad men</p>
+                        <br>
+                        <p>Can you imagine when this race is won</p>
+                        <p>Turn our golden faces into the sun</p>
                         <p>Praising our leaders, we're getting in tune</p>
-                        <p>The music's played by the, the madman</p>
+                        <p>The music's played by the, the mad men</p>
                         <br>
                         <p><strong>Припев:</strong></p>
-                        <p>Forever young</p>
-                        <p>I want to be forever young</p>
-                        <p>Do you really want to live forever?</p>
-                        <p>Forever, and ever</p>
-                        <p>Forever young</p>
-                        <p>I want to be forever young</p>
-                        <p>Do you really want to live forever?</p>
-                        <p>Forever, forever young</p>
+                        <p>Forever young, I want to be forever young</p>
+                        <p>Do you really want to live forever, forever and ever?</p>
+                        <p>Forever young, I want to be forever young</p>
+                        <p>Do you really want to live forever? Forever young</p>
                         <br>
                         <p>Some are like water, some are like the heat</p>
                         <p>Some are a melody and some are the beat</p>
-                        <p>Sooner or later they all will be gone</p>
+                        <p>Sooner or later, they all will be gone</p>
                         <p>Why don't they stay young?</p>
+                        <br>
                         <p>It's so hard to get old without a cause</p>
                         <p>I don't want to perish like a fading horse</p>
                         <p>Youth's like diamonds in the sun</p>
                         <p>And diamonds are forever</p>
                         <br>
+                        <p>So many adventures couldn't happen today</p>
+                        <p>So many songs we forgot to play</p>
+                        <p>So many dreams swinging out of the blue</p>
+                        <p>We let them come true</p>
+                        <br>
                         <p><strong>Припев:</strong></p>
-                        <p>Forever young</p>
-                        <p>I want to be forever young</p>
-                        <p>Do you really want to live forever</p>
-                        <p>Forever, and ever?</p>
-                        <p>Forever young</p>
-                        <p>I want to be forever young</p>
-                        <p>Do you really want to live forever</p>
-                        <p>Forever</p>
-                        <p>Forever young</p>
+                        <p>Forever young, I want to be forever young</p>
+                        <p>Do you really want to live forever, forever and ever?</p>
+                        <p>Forever young, I want to be forever young</p>
+                        <p>Do you really want to live forever, forever and ever?</p>
+                        <p>Forever young, I want to be forever young</p>
+                        <p>Do you really want to live forever?</p>
                         <br>
                         <p style="color: #9e9e9e;">ℹ️ Текст составлен Nexus Музыкой</p>
-                        <p style="color: #9e9e9e;">Автор текста — Bernhard Lloyd, Marian Gold, Ricky Echolette</p>
+                        <p style="color: #9e9e9e;">Авторы текста — Bernhard Lloyd, Marian Gold, Ricky Echolette</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="music-container" data-mood="спокойное" data-song="Северный ветер" data-artist="Green Apelsin"
-                data-date="29.10.2021" data-duration="3:13" data-img="./assets/Северный_ветер_имг.jpg"
-                data-yandex-link="https://music.yandex.ru/album/1901385/track/17261210"
-                data-audio-src="./assets/Green_Apelsin_-_Северный_ветер.mp3">
-                <div class="song-title-container">
-                    <hr>
-                    <p class="song-title">Северный ветер</p>
-                    <p class="song-duration">Длительность: 3:13</p>
-                    <p class="song-duration">Исполнитель: Green Apelsin</p>
-                    <img class="song-title-img" src="./assets/Северный_ветер_имг.jpg" alt="">
-                </div>
-                <p class="nexus-player-title">Nexus музыка</p>
-                <div class="custom-player" data-player-id="player-sv">
-                    <div class="player-controls">
-                        <button class="play-pause-btn" data-track-id="track-sv">▶</button>
-                        <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn"
-                            onclick="window.location.href = 'https://music.yandex.ru/album/16014532/track/84466802';"><img
-                                style="width: 49px; height: 49px; border-radius: 50px;"
-                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                <div class="music-container" data-mood="спокойное" data-song="Северный ветер"
+                    data-artist="Green Apelsin" data-date="29.10.2021" data-duration="3:13"
+                    data-img="./assets/Северный_ветер_имг.jpg"
+                    data-yandex-link="https://music.yandex.ru/album/1901385/track/17261210"
+                    data-audio-src="./assets/Green_Apelsin_-_Северный_ветер.mp3">
+                    <div class="track-row">
+                        <img class="track-album-art" src="./assets/Северный_ветер_имг.jpg" alt="Обложка трека">
+                        <div class="track-info">
+                            <p class="track-title">Северный ветер</p>
+                            <p class="track-artist">Green Apelsin</p>
+                        </div>
+                        <div class="track-controls">
+                            <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                            <a href="https://music.yandex.ru/album/1901385/track/17261210" target="_blank"
+                                class="yandex-music-link" title="Слушать в Яндекс Музыке">
+                                <img src="./assets/yandex-music-logo-mini.png" alt="Яндекс Музыка">
+                            </a>
+                            <button class="lyrics-toggle-btn" title="Показать текст песни">📄</button>
+                        </div>
                     </div>
-                    <audio id="audio-player-sv" src="./assets/Green_Apelsin_-_Северный_ветер.mp3"></audio>
-                    <button class="lyrics-btn"
-                        style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
-                        Текст песни</button>
+                    <audio src="./assets/Green_Apelsin_-_Северный_ветер.mp3"></audio>
                     <div class="lyrics-content">
-                        <p>Ты говоришь, что в моих венах течет северный ветер</p>
-                        <p>Пусть я младше, и тебе по плечо</p>
-                        <p>Я твой на свете</p>
-                        <p>Самый страшный губительный шторм</p>
-                        <p>На всей планете</p>
-                        <p>Не найдешь ты утешения в другом</p>
-                        <p>Любовь - не сказка многочисленных книг</p>
-                        <p>Она опасна</p>
-                        <p>Я согласна с тобой вместе в тупик</p>
-                        <p>Вместе на рабство</p>
+                        <p>Ты говоришь, что в моих венах течёт северный ветер</p>
+                        <p>Пусть я младше и тебе по плечо</p>
+                        <p>Я твой на свете самый страшный губительный шторм</p>
+                        <p>На всей планете не найдёшь ты утешенья в другом</p>
+                        <br>
+                        <p>Любовь — не сказка многочисленных книг, она опасна</p>
+                        <p>Я согласна с тобой вместе в тупик, вместе на рабство</p>
                         <p>Коль напрасна моя жертва, так что ж</p>
-                        <p>Закон негласный</p>
-                        <p>Разрешает тебе взять в руки нож</p>
+                        <p>Закон негласный разрешает тебе взять в руки нож</p>
                         <br>
                         <p><strong>Припев:</strong></p>
-                        <p>Так рви, рви сердца не жалей, руби</p>
-                        <p>Пусть рекой прольется хаан моей любви</p>
+                        <p>Так рви, рви, сердца не жалей, руби</p>
+                        <p>Пусть рекой прольётся хаан моей любви</p>
                         <p>Так рви, рви, только дай коснуться губ и</p>
-                        <p>Без сомнения слова свои и чувства отзови, отзови</p>
-                        <p>Коль не любишь отзови</p>
+                        <p>Без сомненья слова свои и чувства отзови</p>
                         <br>
-                        <p>Ты беззаботного ребенка рука, а я крапива</p>
-                        <p>И пусть льется слез невинных река, зато красиво</p>
-                        <p>Багровеют поцелуев следы</p>
-                        <p>Под плач мотивы</p>
+                        <p>Отзови, коль не любишь, отзови</p>
+                        <br>
+                        <p>Ты беззаботного ребёнка рука, а я крапива</p>
+                        <p>И пусть льётся слёз невинных река, зато красиво</p>
+                        <p>Багровеют поцелуев следы под плач мотивы</p>
                         <p>Распускаются ожогов цветы</p>
                         <br>
                         <p><strong>Припев:</strong></p>
-                        <p>Так рви, рви сердца не жалей, руби</p>
-                        <p>Пусть рекой прольется хаан моей любви</p>
+                        <p>Так рви, рви, сердца не жалей, руби</p>
+                        <p>Пусть рекой прольётся хаан моей любви</p>
                         <p>Так рви, рви, только дай коснуться губ и</p>
-                        <p>Без сомнения слова свои и чувства отзови, отзови</p>
-                        <p>Коль не любишь отзови (отзови)</p>
-                        <p>Oтзови коль не любишь отзови</p>
+                        <p>Без сомненья слова свои и чувства отзови</p>
                         <br>
-                        <p>Но ты мальчишка совершенно другой</p>
-                        <p>И рвать не станешь</p>
-                        <p>Своей нежной, покрасневшей рукой</p>
-                        <p>В объятия манишь</p>
-                        <p>Я растаю и иголки сожму</p>
-                        <p>И не завяну</p>
+                        <p>Отзови, коль не любишь отзови (отзови)</p>
+                        <p>Oтзови, коль не любишь, отзови</p>
+                        <br>
+                        <p>Но ты мальчишка совершенно другой и рвать не станешь</p>
+                        <p>Своей нежной, покрасневшей рукой в объятья манишь</p>
+                        <p>Я растаю и иголки сожму, и не завяну</p>
                         <p>Я отдам любовь тебе одному</p>
                         <br>
                         <p><strong>Припев:</strong></p>
-                        <p>Так рви, рви сердца не жалей, руби</p>
-                        <p>Пусть рекой прольется хаан моей любви</p>
-                        <p>Так рви рви, только дай коснуться губ и</p>
-                        <p>Без сомнения слова свои и чувства отзови, отзови</p>
-                        <p>Коль не любишь отзови</p>
+                        <p>Так рви, рви, сердца не жалей, руби</p>
+                        <p>Пусть рекой прольётся хаан моей любви</p>
+                        <p>Так рви, рви, только дай коснуться губ и</p>
+                        <p>Без сомненья слова свои и чувства отзови</p>
+                        <br>
+                        <p>Отзови, коль не любишь, отзови</p>
                         <br>
                         <p style="color: #9e9e9e;">ℹ️ Текст составлен Nexus Музыкой</p>
-                        <p style="color: #9e9e9e;">Автор текста — Анжела Жиркова</p>
+                        <p style="color: #9e9e9e;">Авторы текста — Bernhard Lloyd, Marian Gold, Ricky Echolette</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="music-container" data-mood="бодрое" data-song="Огненный конь" data-artist="Олег Мишин"
-                data-date="15.04.2014" data-duration="2:29" data-img="./assets/Oleg_Mishin_-_Огненый_конь.jpg"
-                data-yandex-link="https://music.yandex.ru/album/1901385/track/17261210"
-                data-audio-src="./assets/Oleg Mishin - Огненый конь.mp3">
-                <div class="song-title-container">
-                    <hr>
-                    <p class="song-title">Огненный конь</p>
-                    <p class="song-duration">Длительность: 3:20</p>
-                    <p class="song-duration">Исполнитель: Олег Мишин</p>
-                    <img class="song-title-img" src="./assets/Oleg_Mishin_-_Огненый_конь.jpg" alt="">
-                </div>
-                <p class="nexus-player-title">Nexus музыка</p>
-                <div class="custom-player" data-player-id="player-ok">
-                    <div class="player-controls">
-                        <button class="play-pause-btn" data-track-id="track-ok">▶</button>
-                        <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn"
-                            onclick="window.location.href = 'https://music.yandex.ru/album/1901385/track/17261210';"><img
-                                style="width: 49px; height: 49px; border-radius: 50px;"
-                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                <div class="music-container" data-mood="бодрое" data-song="Огненный конь" data-artist="Олег Мишин"
+                    data-date="15.04.2014" data-duration="2:29" data-img="./assets/Oleg_Mishin_-_Огненый_конь.jpg"
+                    data-yandex-link="https://music.yandex.ru/album/1901385/track/17261210"
+                    data-audio-src="./assets/Oleg Mishin - Огненый конь.mp3">
+                    <div class="track-row">
+                        <img class="track-album-art" src="./assets/Oleg_Mishin_-_Огненый_конь.jpg" alt="Обложка трека">
+                        <div class="track-info">
+                            <p class="track-title">Огненный конь</p>
+                            <p class="track-artist">Олег Мишин</p>
+                        </div>
+                        <div class="track-controls">
+                            <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                            <a href="https://music.yandex.ru/album/1901385/track/17261210" target="_blank"
+                                class="yandex-music-link" title="Слушать в Яндекс Музыке">
+                                <img src="./assets/yandex-music-logo-mini.png" alt="Яндекс Музыка">
+                            </a>
+                            <button class="lyrics-toggle-btn" title="Показать текст песни">📄</button>
+                        </div>
                     </div>
-                    <audio id="audio-player-ok" src="./assets/Oleg Mishin - Огненый конь.mp3"></audio>
-                    <button class="lyrics-btn"
-                        style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
-                        Текст песни</button>
+                    <audio src="./assets/Oleg Mishin - Огненый конь.mp3"></audio>
                     <div class="lyrics-content">
                         <p>Выйду в степь я на заре,</p>
                         <p>По муравушке-траве,</p>
                         <p>Погляжу, как первый луч,</p>
                         <p>Расплетает космы туч.</p>
+                        <br>
                         <p>Солнце огненным конём</p>
                         <p>Скачет в небо-водоём.</p>
                         <p>Разгорается заря</p>
                         <p>От небесного огня.</p>
                         <br>
-                        <p><strong>Припев:</strong></p>
                         <p>Благослови меня, рассветный ветер.</p>
                         <p>Благослови меня, слезами роса.</p>
+                        <br>
+                        <p><strong>Припев:</strong></p>
                         <p>Степь – кругом тишина,</p>
                         <p>Заблудилась жизнь моя,</p>
                         <p>А в небе огненный конь</p>
@@ -1309,21 +1438,23 @@
                         <br>
                         <p>Разгоняя с сердца хворь</p>
                         <p>Плач свирель моя и пой</p>
-                        <p>По коромыслу степи</p>
+                        <p>По кормилице степи</p>
                         <p>Мою песню пронеси.</p>
+                        <br>
                         <p>Солнце с гривой расписной</p>
                         <p>Разыгралось над землей.</p>
                         <p>А я встану во весь рост</p>
                         <p>Да схвачу коня за хвост.</p>
                         <br>
-                        <p><strong>Припев:</strong></p>
                         <p>Благослови меня, безбрежность неба.</p>
-                        <p>Благослови меня, степная трава.</p>
+                        <p>Благослови меня, степная трава</p>
+                        <br>
+                        <p><strong>ПРИПЕВ 2:</strong></p>
                         <p>Миг – исчезает земля,</p>
                         <p>Грива – огонь костра,</p>
                         <p>Подковы горят как огонь</p>
                         <p>Танцует в небе конь.</p>
-                        <br>
+                        <p>О-о-о……………………</p>
                         <p>Подковы горят как огонь</p>
                         <p>Танцует в небе конь.</p>
                         <br>
@@ -1331,16 +1462,18 @@
                         <p>Ноты в гриву заплетай,</p>
                         <p>Научи-ка ты меня</p>
                         <p>Оседлать того коня.</p>
+                        <br>
                         <p>Что б подковами звеня,</p>
                         <p>Понесло оно меня,</p>
                         <p>Да по матушке степи,</p>
                         <p>Выжгло горе из груди.</p>
                         <br>
-                        <p><strong>Припев:</strong></p>
                         <p>Благослови меня, рассветный ветер.</p>
                         <p>Благослови меня, слезами роса.</p>
                         <p>Благослови меня, безбрежность неба.</p>
                         <p>Благослови меня, степная трава.</p>
+                        <br>
+                        <p><strong>ПРИПЕВ 3:</strong></p>
                         <p>Степь – кругом тишина,</p>
                         <p>Заблудилась жизнь моя,</p>
                         <p>А в небе огненный конь</p>
@@ -1350,96 +1483,58 @@
                         <p>Грива – огонь костра,</p>
                         <p>Подковы горят как огонь</p>
                         <p>Танцует в небе конь.</p>
-                        <br>
                         <p style="color: #9e9e9e;">ℹ️ Текст составлен Nexus Музыкой</p>
-                        <p style="color: #9e9e9e;">Автор текста — Вадим Авласенко</p>
+                        <p style="color: #9e9e9e;">Авторы текста — Вадим Авласенко</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="music-container" data-song="Intro" data-artist="Dreamtale, Hans Zimmer" data-date="29.12.24"
-                data-duration="4:06" data-img="./assets/Intro_005.jpg"
-                data-yandex-link="https://music.yandex.kz/album/4418483/track/35431736"
-                data-audio-src="./assets/music/intro.wav">
-                <div class="song-title-container">
-                    <hr>
-                    <p class="song-title">Intro</p>
-                    <p class="song-duration">Длительность: 4:06</p>
-                    <p class="song-duration">Исполнитель: Dreamtale, Hans Zimmer</p>
-                    <img class="song-title-img" src="./assets/no-music-icon.png" alt="">
-                </div>
-                <p class="nexus-player-title">Nexus музыка</p>
-                <div class="custom-player" data-player-id="player-4">
-                    <div class="player-controls">
-                        <p class="song-duration" style="font-size: 13px; color: red;">Удалено с платформы по инициативе
-                            разработчика. <br> Вы можете прослушать трек на Яндекс Музыке.</p>
-                        </p>
-                    </div>
-                    <audio id="audio-player-1" src="./assets/Intro.wav"></audio>
-                    <a href="https://music.yandex.kz/album/4418483/track/35431736" target="_blank"
-                        class="goto-yandex-btn">
-                        Альбом на Яндекс Музыке
-                    </a>
-                </div>
-            </div>
 
-            <div class="music-container" data-mood="бодрое" data-song="Horns 2.0" data-artist="Groove Delight, Evoxx"
-                data-date="29.12.24" data-duration="2:29" data-img="./assets/Horns_004.jpg"
-                data-yandex-link="https://music.yandex.kz/album/8039282/track/55212174"
-                data-audio-src="./assets/Horns_2.0.mp3">
-                <div class="song-title-container">
-                    <hr>
-                    <p class="song-title">Horns 2.0</p>
-                    <p class="song-duration">Длительность: 2:29</p>
-                    <p class="song-duration">Исполнитель: Groove Delight, Evoxx</p>
-                    <img class="song-title-img" src="./assets/Horns_004.jpg" alt="">
-                </div>
-                <p class="nexus-player-title">Nexus музыка</p>
-                <div class="custom-player" data-player-id="player-3">
-                    <div class="player-controls">
-                        <button class="play-pause-btn" data-track-id="track3">▶</button>
-                        <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn"
-                            onclick="window.location.href = 'https://music.yandex.kz/album/8039282/track/55212174';"><img
-                                style="width: 49px; height: 49px; border-radius: 50px;"
-                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                <div class="music-container" data-mood="бодрое" data-song="Horns 2.0"
+                    data-artist="Groove Delight, Evoxx" data-date="29.12.24" data-duration="2:29"
+                    data-img="./assets/Horns_004.jpg"
+                    data-yandex-link="https://music.yandex.kz/album/8039282/track/55212174"
+                    data-audio-src="./assets/Horns_2.0.mp3">
+                    <div class="track-row">
+                        <img class="track-album-art" src="./assets/Horns_004.jpg" alt="Обложка трека">
+                        <div class="track-info">
+                            <p class="track-title">Horns 2.0</p>
+                            <p class="track-artist">Groove Delight, Evoxx</p>
+                        </div>
+                        <div class="track-controls">
+                            <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                            <a href="https://music.yandex.kz/album/8039282/track/55212174" target="_blank"
+                                class="yandex-music-link" title="Слушать в Яндекс Музыке">
+                                <img src="./assets/yandex-music-logo-mini.png" alt="Яндекс Музыка">
+                            </a>
+                            <button class="lyrics-toggle-btn" title="Показать текст песни">📄</button>
+                        </div>
                     </div>
-                    <audio id="audio-player-3" src="./assets/Horns_2.0.mp3"></audio>
-                    <button class="lyrics-btn"
-                        style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
-                        Текст песни</button>
+                    <audio src="./assets/Horns_2.0.mp3"></audio>
                     <div class="lyrics-content">
                         <p>❓ Текст не найден</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="music-container" data-mood="новое" data-song="Final Boss" data-artist="scara-kru$her"
-                data-date="29.12.24" data-duration="1:20" data-img="./assets/FB-sp-001.jpg"
-                data-yandex-link="https://music.yandex.ru/album/35659381/track/136733632"
-                data-audio-src="./assets/final_boss.wav">
-                <div class="song-title-container">
-                    <hr>
-                    <p class="song-title">Final Boss</p>
-                    <p class="song-title-data">Дата выхода: 29.12.24</p>
-                    <p class="song-duration">Длительность: 1:20</p>
-                    <p class="song-duration">Исполнитель: scara-kru$her</p>
-                    <img class="song-title-img" src="./assets/FB-sp-001.jpg" alt="">
-                </div>
-                <p class="nexus-player-title">Nexus музыка</p>
-                <div class="custom-player" data-player-id="player-2">
-                    <div class="player-controls">
-                        <button class="play-pause-btn" data-track-id="track2">▶</button>
-                        <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn"
-                            onclick="window.location.href = 'https://music.yandex.ru/album/35659381/track/136733632';"><img
-                                style="width: 49px; height: 49px; border-radius: 50px;"
-                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                <div class="music-container" data-mood="новое" data-song="Final Boss" data-artist="scara-kru$her"
+                    data-date="29.12.24" data-duration="1:20" data-img="./assets/FB-sp-001.jpg"
+                    data-yandex-link="https://music.yandex.ru/album/35659381/track/136733632"
+                    data-audio-src="./assets/final_boss.wav">
+                    <div class="track-row">
+                        <img class="track-album-art" src="./assets/FB-sp-001.jpg" alt="Обложка трека">
+                        <div class="track-info">
+                            <p class="track-title">Final Boss</p>
+                            <p class="track-artist">scara-kru$her</p>
+                        </div>
+                        <div class="track-controls">
+                            <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                            <a href="https://music.yandex.ru/album/35659381/track/136733632" target="_blank"
+                                class="yandex-music-link" title="Слушать в Яндекс Музыке">
+                                <img src="./assets/yandex-music-logo-mini.png" alt="Яндекс Музыка">
+                            </a>
+                            <button class="lyrics-toggle-btn" title="Показать текст песни">📄</button>
+                        </div>
                     </div>
-                    <audio id="audio-player-2" src="./assets/final_boss.wav"></audio>
-                    <button class="lyrics-btn"
-                        style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
-                        Текст песни</button>
+                    <audio src="./assets/final_boss.wav"></audio>
                     <div class="lyrics-content">
                         <p>scara krusher!</p>
                         <p>ai!</p>
@@ -1451,82 +1546,69 @@
                         <p>fika avo tach-da!</p>
                         <p>asuasota liberada.</p>
                         <p>Plikaraute firaya sere skirida</p>
-                        <p>ah!</p>
-                        <br>
+                        <p>ah!</p><br>
                         <p style="color: #9e9e9e;">ℹ️ Текст составлен Nexus Музыкой (на основе ИИ)</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="music-container" data-mood="новое" data-song="Adrenaline Night Funk" data-artist="scara-kru$her"
-                data-date="20.07.24" data-duration="2:30" data-img="./assets/ANF-sp-002.jpg"
-                data-yandex-link="https://music.yandex.ru/album/32207638/track/128397158"
-                data-audio-src="./assets/Adrenaline_night_funk.wav">
-                <div class="song-title-container">
-                    <hr>
-                    <p class="song-title">Adrenaline Night Funk</p>
-                    <p class="song-title-data">Дата выхода: 20.07.24</p>
-                    <p class="song-duration">Длительность: 2:30</p>
-                    <p class="song-duration">Исполнитель: scara-kru$her</p>
-                    <img class="song-title-img" src="./assets/ANF-sp-002.jpg" alt="">
-                </div>
-                <p class="nexus-player-title">Nexus музыка</p>
-                <div class="custom-player" data-player-id="player-2">
-                    <div class="player-controls">
-                        <button class="play-pause-btn" data-track-id="track2">▶</button>
-                        <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn"
-                            onclick="window.location.href = 'https://music.yandex.ru/iframe/album/32207638/track/128397158';"><img
-                                style="width: 49px; height: 49px; border-radius: 50px;"
-                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                <div class="music-container" data-mood="новое" data-song="Adrenaline Night Funk"
+                    data-artist="scara-kru$her" data-date="20.07.24" data-duration="2:30"
+                    data-img="./assets/ANF-sp-002.jpg"
+                    data-yandex-link="https://music.yandex.ru/album/32207638/track/128397158"
+                    data-audio-src="./assets/Adrenaline_night_funk.wav">
+                    <div class="track-row">
+                        <img class="track-album-art" src="./assets/ANF-sp-002.jpg" alt="Обложка трека">
+                        <div class="track-info">
+                            <p class="track-title">Adrenaline Night Funk</p>
+                            <p class="track-artist">scara-kru$her</p>
+                        </div>
+                        <div class="track-controls">
+                            <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                            <a href="https://music.yandex.ru/album/32207638/track/128397158" target="_blank"
+                                class="yandex-music-link" title="Слушать в Яндекс Музыке">
+                                <img src="./assets/yandex-music-logo-mini.png" alt="Яндекс Музыка">
+                            </a>
+                            <button class="lyrics-toggle-btn" title="Показать текст песни">📄</button>
+                        </div>
                     </div>
-                    <audio id="audio-player-2" src="./assets/Adrenaline_night_funk.wav"></audio>
-                    <button class="lyrics-btn"
-                        style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
-                        Текст песни</button>
+                    <audio src="./assets/Adrenaline_night_funk.wav"></audio>
                     <div class="lyrics-content">
                         <p>scara krusher!</p>
                         <p>bye-bye!</p>
                         <p>bye-bye!</p>
-                        <p>bye-bye!</p>
-                        <br>
+                        <p>bye-bye!</p><br>
                         <p style="color: #9e9e9e;">ℹ️ Текст составлен Nexus Музыкой (на основе ИИ)</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="music-container" data-mood="спокойное" data-song="Legendary Dombra" data-artist="scara-kru$her"
-                data-date="07.03.24" data-duration="1:20" data-img="./assets/LD-sp-003.jpg"
-                data-yandex-link="https://music.yandex.ru/album/31931296/track/127729662"
-                data-audio-src="./assets/Legendary_Dombra.mp3">
-                <div class="song-title-container">
-                    <hr>
-                    <p class="song-title">Legendary Dombra</p>
-                    <p class="song-title-data">Дата выхода: 07.03.24</p>
-                    <p class="song-duration">Длительность: 1:20</p>
-                    <p class="song-duration">Исполнитель: scara-kru$her</p>
-                    <img class="song-title-img" src="./assets/LD-sp-003.jpg" alt="">
-                </div>
-                <p class="nexus-player-title">Nexus музыка</p>
-                <div class="custom-player" data-player-id="player-1">
-                    <div class="player-controls">
-                        <button class="play-pause-btn" data-track-id="track1">▶</button>
-                        <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
-                        <button class="yandex-music-logo-btn"
-                            onclick="window.location.href = 'https://music.yandex.ru/album/31931296/track/127729662';"><img
-                                style="width: 49px; height: 49px; border-radius: 50px;"
-                                src="./assets/yandex-music-logo-mini.png" alt=""></button>
+                <div class="music-container" data-mood="спокойное" data-song="Legendary Dombra"
+                    data-artist="scara-kru$her" data-date="07.03.24" data-duration="1:20"
+                    data-img="./assets/LD-sp-003.jpg"
+                    data-yandex-link="https://music.yandex.ru/album/31931296/track/127729662"
+                    data-audio-src="./assets/Legendary_Dombra.mp3">
+                    <div class="track-row">
+                        <img class="track-album-art" src="./assets/LD-sp-003.jpg" alt="Обложка трека">
+                        <div class="track-info">
+                            <p class="track-title">Legendary Dombra</p>
+                            <p class="track-artist">scara-kru$her</p>
+                        </div>
+                        <div class="track-controls">
+                            <button class="favorite-heart-btn" title="Добавить в избранное">🤍</button>
+                            <a href="https://music.yandex.ru/album/31931296/track/127729662" target="_blank"
+                                class="yandex-music-link" title="Слушать в Яндекс Музыке">
+                                <img src="./assets/yandex-music-logo-mini.png" alt="Яндекс Музыка">
+                            </a>
+                            <button class="lyrics-toggle-btn" title="Показать текст песни">📄</button>
+                        </div>
                     </div>
-                    <audio id="audio-player-1" src="./assets/Legendary_Dombra.mp3"></audio>
-                    <button class="lyrics-btn"
-                        style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">📄
-                        Текст песни</button>
+                    <audio src="./assets/Legendary_Dombra.mp3"></audio>
                     <div class="lyrics-content">
                         <p>❓ Текст не найден</p>
                     </div>
                 </div>
+
             </div>
-        </div>
+        </section>
     </main>
     <footer class="footer">
         <h5>Большую часть информации о музыке, мы получаем с помощью:</h5>
@@ -1609,9 +1691,12 @@
             </div>
         </div>
         <div id="mini-player-collapsed-view">
+            <img id="collapsed-track-img" width="32" height="32" alt="Обложка" />
             <span id="collapsed-track-name"></span>
-            <span>⤴</span>
-        </div>
+            <button id="collapsed-play-pause-btn">▶</button>
+            <p>⤴</p>
+        </div>  
+
     </div>
 
     <script type="module" src="script.js"></script>
@@ -1620,8 +1705,6 @@
     <script src="./modal-window.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-
-            // --- БЛОК ЛОГИКИ ДЛЯ ОФЛАЙН-ХРАНИЛИЩА (INDEXEDDB) ---
             const DB_NAME = 'audioDB';
             const STORE_NAME = 'tracks';
 
@@ -1661,21 +1744,7 @@
                 });
             }
 
-            // --- ЭЛЕМЕНТЫ ---
-            const allTracks = document.querySelectorAll('.music-container'); // Изменил селектор для большей точности
-            const searchBar = document.getElementById('search-bar');
-            const searchFeedback = document.getElementById('search-feedback');
-            const showSearchBtn = document.getElementById('show-search-btn');
-            const searchContainer = document.getElementById('search-container');
-            const searchBtnContainer = document.querySelector('.search-toggle-container');
-            const closeSearchBtn = document.getElementById('close-search-btn');
-            const moodButtons = document.querySelectorAll('.mood-btn');
-            const moodFeedback = document.getElementById('mood-feedback');
-            const moodTextElements = document.querySelectorAll('.mood-text');
-            const resetButton = document.querySelector('.mood-btn[data-mood="все"]');
-            const gradientSection = document.querySelector('.gradient');
-
-            // Элементы мини-плеера
+            const allTracks = document.querySelectorAll('.music-container');
             const miniPlayer = document.getElementById('mini-player');
             const miniPlayerTrackName = document.getElementById('mini-player-track-name');
             const miniPlayerPlayPauseBtn = document.getElementById('mini-player-play-pause-btn');
@@ -1683,17 +1752,15 @@
             const collapseBtn = document.getElementById('mini-player-collapse-btn');
             const collapsedView = document.getElementById('mini-player-collapsed-view');
             const collapsedTrackName = document.getElementById('collapsed-track-name');
+            const collapsedTrackImg = document.getElementById('collapsed-track-img');
+            const collapsedPlayPauseBtn = document.getElementById('collapsed-play-pause-btn');
             const miniPlayerRepeatBtn = document.getElementById('mini-player-repeat-btn');
             const miniPlayerPrevBtn = document.getElementById('mini-player-prev-btn');
             const miniPlayerNextBtn = document.getElementById('mini-player-next-btn');
             const miniPlayerDownloadBtn = document.getElementById('mini-player-download-btn');
-
-            // ✨ НОВЫЕ ЭЛЕМЕНТЫ
             const miniPlayerImg = document.getElementById('mini-player-img');
             const miniPlayerArtistName = document.getElementById('mini-player-artist-name');
 
-
-            // Переменные состояния
             let currentActiveAudio = null;
             let currentActiveMainPlayBtn = null;
             let isRepeatActive = false;
@@ -1706,33 +1773,25 @@
                 const currentIndex = visibleTracks.indexOf(currentTrackContainer);
                 if (currentIndex === -1) return;
 
-                let nextIndex;
-                if (direction === 'next') {
-                    nextIndex = (currentIndex + 1) % visibleTracks.length;
-                } else { // 'prev'
-                    nextIndex = (currentIndex - 1 + visibleTracks.length) % visibleTracks.length;
-                }
+                let nextIndex = direction === 'next'
+                    ? (currentIndex + 1) % visibleTracks.length
+                    : (currentIndex - 1 + visibleTracks.length) % visibleTracks.length;
 
                 const nextTrackContainer = visibleTracks[nextIndex];
-                const nextPlayBtn = nextTrackContainer.querySelector('.play-pause-btn');
-
-                if (nextPlayBtn) {
-                    nextPlayBtn.click();
-                }
+                nextTrackContainer.click();
             }
 
-            // --- ЛОГИКА МИНИ-ПЛЕЕРА ---
             if (miniPlayerRepeatBtn) {
                 miniPlayerRepeatBtn.addEventListener('click', () => {
                     isRepeatActive = !isRepeatActive;
                     miniPlayerRepeatBtn.classList.toggle('active', isRepeatActive);
                 });
             }
+
             if (miniPlayerNextBtn) {
-                miniPlayerNextBtn.addEventListener('click', () => {
-                    changeTrack('next');
-                });
+                miniPlayerNextBtn.addEventListener('click', () => changeTrack('next'));
             }
+
             if (miniPlayerPrevBtn) {
                 miniPlayerPrevBtn.addEventListener('click', () => {
                     if (currentActiveAudio) {
@@ -1744,6 +1803,7 @@
                     }
                 });
             }
+
             if (miniPlayerDownloadBtn) {
                 miniPlayerDownloadBtn.addEventListener('click', async () => {
                     if (!currentActiveAudio) {
@@ -1752,20 +1812,19 @@
                     }
                     const audioSrc = currentActiveAudio.dataset.originalSrc;
                     miniPlayerDownloadBtn.className = 'mini-player-btn downloading';
-
                     try {
                         const response = await fetch(audioSrc);
                         if (!response.ok) throw new Error('Ошибка сети');
                         const audioBlob = await response.blob();
                         await saveAudioToDB(audioSrc, audioBlob);
                         miniPlayerDownloadBtn.className = 'mini-player-btn downloaded';
-                    } catch (error) {
-                        console.error('Ошибка скачивания:', error);
+                    } catch {
                         miniPlayerDownloadBtn.className = 'mini-player-btn not-downloaded';
                         alert('Не удалось сохранить трек.');
                     }
                 });
             }
+
             if (miniPlayerPlayPauseBtn) {
                 miniPlayerPlayPauseBtn.addEventListener('click', () => {
                     if (currentActiveAudio) {
@@ -1773,6 +1832,7 @@
                     }
                 });
             }
+
             if (miniPlayerProgressBar) {
                 miniPlayerProgressBar.addEventListener('input', () => {
                     if (currentActiveAudio && !isNaN(currentActiveAudio.duration)) {
@@ -1780,101 +1840,88 @@
                     }
                 });
             }
+
             if (collapseBtn) {
                 collapseBtn.addEventListener('click', () => miniPlayer.classList.add('collapsed'));
             }
+
             if (collapsedView) {
-                collapsedView.addEventListener('click', (e) => {
-                    // Предотвращаем срабатывание других кликов, если они есть
+                collapsedView.addEventListener('click', e => {
                     e.stopPropagation();
-                    miniPlayer.classList.remove('collapsed')
+                    miniPlayer.classList.remove('collapsed');
                 });
             }
 
-            // --- ОСНОВНАЯ ЛОГИКА ---
             allTracks.forEach(container => {
                 const audioEl = container.querySelector('audio');
                 if (audioEl) {
-                    audioEl.dataset.originalSrc = audioEl.src;
+                    audioEl.dataset.originalSrc = container.dataset.audioSrc;
                 }
-            });
 
-            allTracks.forEach(container => {
-                const playBtn = container.querySelector('.play-pause-btn');
-                const audioEl = container.querySelector('audio');
+                container.addEventListener('click', async (e) => {
+                    if (e.target.closest('.lyrics-toggle-btn')) return;
 
-                if (playBtn && audioEl) {
-                    playBtn.addEventListener('click', async () => {
-                        if (currentActiveAudio === audioEl && !audioEl.paused) {
-                            audioEl.pause();
-                            return;
+                    if (currentActiveAudio === audioEl && !audioEl.paused) {
+                        audioEl.pause();
+                        return;
+                    }
+
+                    if (currentActiveAudio && currentActiveAudio !== audioEl) {
+                        currentActiveAudio.pause();
+                        document.querySelectorAll('.music-container').forEach(el => el.classList.remove('active-track'));
+                    }
+
+                    currentActiveAudio = audioEl;
+                    const audioSrcOriginal = audioEl.dataset.originalSrc;
+                    const offlineAudioBlob = await getAudioFromDB(audioSrcOriginal);
+
+                    if (offlineAudioBlob) {
+                        const objectURL = URL.createObjectURL(offlineAudioBlob);
+                        if (audioEl.src !== objectURL) {
+                            audioEl.src = objectURL;
                         }
-
-                        if (currentActiveAudio && currentActiveAudio !== audioEl) {
-                            currentActiveAudio.pause();
+                    } else {
+                        if (audioEl.src !== audioSrcOriginal) {
+                            audioEl.src = audioSrcOriginal;
                         }
+                    }
 
-                        const audioSrcOriginal = audioEl.dataset.originalSrc;
-                        const offlineAudioBlob = await getAudioFromDB(audioSrcOriginal);
-
-                        if (offlineAudioBlob) {
-                            const objectURL = URL.createObjectURL(offlineAudioBlob);
-                            if (audioEl.src !== objectURL) {
-                                audioEl.src = objectURL;
-                            }
-                        } else {
-                            if (audioEl.src !== audioSrcOriginal) {
-                                audioEl.src = audioSrcOriginal;
-                            }
-                        }
-                        audioEl.play();
-                    });
-                }
+                    audioEl.play();
+                    document.querySelectorAll('.music-container').forEach(el => el.classList.remove('active-track'));
+                    container.classList.add('active-track');
+                });
             });
 
             document.querySelectorAll('audio').forEach(audioEl => {
                 audioEl.addEventListener('play', async () => {
-                    if (currentActiveAudio && currentActiveAudio !== audioEl) {
-                        const oldPlayBtn = currentActiveAudio.closest('.music-container')?.querySelector('.play-pause-btn');
-                        if (oldPlayBtn) oldPlayBtn.classList.remove('playing');
-                    }
-
                     currentActiveAudio = audioEl;
-                    currentActiveMainPlayBtn = audioEl.closest('.music-container').querySelector('.play-pause-btn');
-
-                    if (currentActiveMainPlayBtn) currentActiveMainPlayBtn.classList.add('playing');
-                    if (miniPlayerPlayPauseBtn) miniPlayerPlayPauseBtn.classList.add('playing');
+                    currentActiveMainPlayBtn = audioEl.closest('.music-container')?.querySelector('.play-pause-btn');
+                    currentActiveMainPlayBtn?.classList.add('playing');
+                    miniPlayerPlayPauseBtn?.classList.add('playing');
 
                     const musicContainer = audioEl.closest('.music-container');
                     if (musicContainer) {
-                        // ✨ ОБНОВЛЯЕМ ДАННЫЕ В МИНИ-ПЛЕЕРЕ
-                        const song = musicContainer.dataset.song;
-                        const artist = musicContainer.dataset.artist;
-                        const imgSrc = musicContainer.dataset.img;
-
-                        miniPlayerTrackName.textContent = song;
-                        miniPlayerArtistName.textContent = artist;
-                        if (miniPlayerImg) miniPlayerImg.src = imgSrc;
-
-                        collapsedTrackName.textContent = `${song} – ${artist}`;
+                        miniPlayerTrackName.textContent = musicContainer.dataset.song;
+                        miniPlayerArtistName.textContent = musicContainer.dataset.artist;
+                        miniPlayerImg.src = musicContainer.dataset.img;
+                        collapsedTrackName.textContent = `${musicContainer.dataset.song} – ${musicContainer.dataset.artist}`;
+                        collapsedTrackImg.src = musicContainer.dataset.img;
+                        collapsedPlayPauseBtn.textContent = '⏸';
                     }
-                    if (miniPlayer) {
-                        miniPlayer.classList.add('visible');
-                        // Убираем 'collapsed' при старте нового трека, если плеер был свернут
-                        miniPlayer.classList.remove('collapsed');
-                    }
+
+                    miniPlayer.classList.add('visible');
+                    miniPlayer.classList.remove('collapsed');
 
                     const audioSrc = audioEl.dataset.originalSrc;
                     const isDownloaded = await getAudioFromDB(audioSrc);
-                    if (miniPlayerDownloadBtn) {
-                        miniPlayerDownloadBtn.className = isDownloaded ? 'mini-player-btn downloaded' : 'mini-player-btn not-downloaded';
-                    }
+                    miniPlayerDownloadBtn.className = isDownloaded ? 'mini-player-btn downloaded' : 'mini-player-btn not-downloaded';
                 });
 
                 audioEl.addEventListener('pause', () => {
                     if (currentActiveAudio === audioEl) {
-                        if (currentActiveMainPlayBtn) currentActiveMainPlayBtn.classList.remove('playing');
-                        if (miniPlayerPlayPauseBtn) miniPlayerPlayPauseBtn.classList.remove('playing');
+                        currentActiveMainPlayBtn?.classList.remove('playing');
+                        miniPlayerPlayPauseBtn?.classList.remove('playing');
+                        collapsedPlayPauseBtn.textContent = '▶';
                     }
                 });
 
@@ -1890,115 +1937,40 @@
                 audioEl.addEventListener('timeupdate', () => {
                     if (currentActiveAudio === audioEl && !isNaN(audioEl.duration)) {
                         const progress = (audioEl.currentTime / audioEl.duration) * 100;
-                        if (miniPlayerProgressBar) miniPlayerProgressBar.value = progress;
+                        miniPlayerProgressBar.value = progress;
                     }
                 });
             });
 
-            // --- ЛОГИКА ФИЛЬТРА ПО НАСТРОЕНИЮ И ПОИСКА (БЕЗ ИЗМЕНЕНИЙ) ---
-            // ... (вся твоя логика для поиска, фильтров и текстов песен остается здесь без изменений)
-            if (showSearchBtn) {
-                showSearchBtn.addEventListener('click', () => {
-                    if (searchContainer) searchContainer.classList.add('visible');
-                    if (searchBtnContainer) searchBtnContainer.style.display = 'none';
-                });
-            }
-            if (closeSearchBtn) {
-                closeSearchBtn.addEventListener('click', () => {
-                    if (searchContainer) searchContainer.classList.remove('visible');
-                    if (searchBtnContainer) searchBtnContainer.style.display = 'block';
-                    if (searchBar) {
-                        searchBar.value = '';
-                        searchBar.dispatchEvent(new Event('input', { bubbles: true }));
-                    }
-                });
-            }
-            moodButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const selectedMood = button.dataset.mood;
-                    if (searchBar) searchBar.value = '';
-                    if (searchFeedback) searchFeedback.style.display = 'none';
-                    moodButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    moodTextElements.forEach(textEl => textEl.style.display = 'none');
-                    if (selectedMood !== 'все') {
-                        const textToShow = document.querySelector(`.mood-text[data-mood-text="${selectedMood}"]`);
-                        if (textToShow) textToShow.style.display = 'block';
-                    }
-                    if (selectedMood === 'все') {
-                        if (resetButton) resetButton.classList.remove('visible');
-                    } else {
-                        if (resetButton) resetButton.classList.add('visible');
-                    }
-                    if (gradientSection) {
-                        gradientSection.className = 'gradient';
-                        if (selectedMood === 'бодрое') gradientSection.classList.add('gradient-bodroe');
-                        else if (selectedMood === 'весёлое') gradientSection.classList.add('gradient-vesyoloe');
-                        else if (selectedMood === 'спокойное') gradientSection.classList.add('gradient-spokoinoe');
-                        else if (selectedMood === 'грустное') gradientSection.classList.add('gradient-grustnoe');
-                    }
-                    let tracksFound = 0;
-                    if (selectedMood === 'любимое') {
-                        allTracks.forEach(track => {
-                            const heartBtn = track.querySelector('.favorite-heart-btn');
-                            const isFavorite = heartBtn && heartBtn.classList.contains('is-favorite');
-                            track.style.display = isFavorite ? 'block' : 'none';
-                            if (isFavorite) tracksFound++;
-                        });
-                        if (tracksFound === 0) {
-                            const noLikesText = document.querySelector('.mood-text[data-mood-text="все"]');
-                            if (noLikesText) noLikesText.style.display = 'block';
-                            const favoriteText = document.querySelector('.mood-text[data-mood-text="любимое"]');
-                            if (favoriteText) favoriteText.style.display = 'none';
-                        }
-                    } else {
-                        allTracks.forEach(track => {
-                            const isVisible = (selectedMood === 'все' || track.dataset.mood === selectedMood);
-                            track.style.display = isVisible ? 'block' : 'none';
-                            if (isVisible) tracksFound++;
-                        });
-                        if (moodFeedback) {
-                            moodFeedback.textContent = "Таких треков ещё нет, но вы можете это исправить, предложив трек разработчику!";
-                            moodFeedback.style.display = (tracksFound === 0 && selectedMood !== 'все') ? 'block' : 'none';
-                            if (tracksFound === 0 && selectedMood !== 'все') {
-                                const textToHide = document.querySelector(`.mood-text[data-mood-text="${selectedMood}"]`);
-                                if (textToHide) textToHide.style.display = 'none';
-                            }
+            if (collapsedPlayPauseBtn) {
+                collapsedPlayPauseBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (currentActiveAudio) {
+                        if (currentActiveAudio.paused) {
+                            currentActiveAudio.play();
+                            collapsedPlayPauseBtn.textContent = '⏸';
+                        } else {
+                            currentActiveAudio.pause();
+                            collapsedPlayPauseBtn.textContent = '▶';
                         }
                     }
                 });
-            });
-            if (searchBar) {
-                searchBar.addEventListener('input', () => {
-                    const query = searchBar.value.toLowerCase().trim();
-                    let tracksFound = 0;
-                    if (gradientSection) gradientSection.className = 'gradient';
-                    moodButtons.forEach(btn => btn.classList.remove('active'));
-                    if (resetButton) resetButton.classList.remove('visible');
-                    if (moodFeedback) moodFeedback.style.display = 'none';
-                    moodTextElements.forEach(textEl => textEl.style.display = 'none');
-                    allTracks.forEach(track => {
-                        const songTitle = track.dataset.song.toLowerCase();
-                        const artistName = track.dataset.artist.toLowerCase();
-                        const isMatch = songTitle.includes(query) || artistName.includes(query);
-                        track.style.display = isMatch ? 'block' : 'none';
-                        if (isMatch) tracksFound++;
-                    });
-                    if (searchFeedback) searchFeedback.style.display = (tracksFound === 0 && query.length > 0) ? 'block' : 'none';
-                });
             }
-            document.querySelectorAll('.lyrics-btn').forEach(button => {
+
+            document.querySelectorAll('.lyrics-toggle-btn').forEach(button => {
                 button.addEventListener('click', () => {
-                    const lyricsContent = button.nextElementSibling;
-                    if (lyricsContent && lyricsContent.classList.contains('lyrics-content')) {
+                    const musicContainer = button.closest('.music-container');
+                    const lyricsContent = musicContainer.querySelector('.lyrics-content');
+                    if (lyricsContent) {
                         lyricsContent.classList.toggle('show');
-                        button.innerHTML = lyricsContent.classList.contains('show') ? '🔼 Скрыть текст' : '📄 Текст песни';
+                        button.textContent = lyricsContent.classList.contains('show') ? '❌' : '📄';
+                        button.title = lyricsContent.classList.contains('show') ? 'Скрыть текст песни' : 'Показать текст песни';
                     }
                 });
             });
-
         });
     </script>
+
 </body>
 
 </html>
