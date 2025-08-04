@@ -144,6 +144,8 @@
             transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
             background-color: #fbe9e7;
             color: #bf360c;
+            font-size: 13px;
+            margin-top: 20px;
         }
 
         .mood-btn[data-mood="все"].visible {
@@ -766,6 +768,23 @@
         #collapsed-play-pause-btn:hover {
             background-color: #e0e0e0;
         }
+
+        .loading-icon circle {
+            fill: transparent;
+            stroke-width: 2.5;
+        }
+
+        .loading-circle-bg {
+            stroke: currentColor;
+            opacity: 0.3;
+        }
+
+        .loading-circle-fg {
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-dasharray: 48 62.8;
+            transform-origin: center;
+        }
     </style>
 </head>
 
@@ -825,6 +844,8 @@
                 <button class="mood-btn" data-mood="новое">Время чего-то нового!</button>
                 <button class="mood-btn" data-mood="любимое">Любимое ❤️</button>
             </div>
+            <button class="mood-btn active" data-mood="все">Сбросить</button>
+
             <p id="mood-feedback" style="display: none;"></p>
             <p class="mood-text" data-mood-text="бодрое" style="display: none;">Подбор музыки: бодрое</p>
             <p class="mood-text" data-mood-text="весёлое" style="display: none;">Подбор музыки: весёлое</p>
@@ -832,12 +853,10 @@
             <p class="mood-text" data-mood-text="грустное" style="display: none;">Подбор музыки: грустное</p>
             <p class="mood-text" data-mood-text="новое" style="display: none;">Подбор музыки: новинки</p>
             <p class="mood-text" data-mood-text="любимое" style="display: none;">Подбор музыки: любимое</p>
-            <p class="mood-text" data-mood-text="все"
-                style="padding-top: 10px; padding-bottom: 10px; font-size: 14px; display: none;">Вы ещё ничего не
+            <p id="empty-liked-message" class="mood-text"
+                style="display: none; padding-top: 10px; padding-bottom: 10px; font-size: 14px;">Вы ещё ничего не
                 лайкнули!</p>
-            <button class="mood-btn active" data-mood="все" style="font-size: 10px;">Сбросить</button>
         </section>
-
 
         <div id="search-container">
             <section id="search-section">
@@ -1646,16 +1665,9 @@
                             <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19L21 7l-1.41-1.41L9 16.17z">
                             </path>
                         </svg>
-                        <svg class="loading-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                            viewBox="0 0 24 24">
-                            <path fill="currentColor"
-                                d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z"
-                                opacity=".5" />
-                            <path fill="currentColor"
-                                d="M12 4a8 8 0 0 1 7.89 6.7A1.53 1.53 0 0 0 21.38 12a1.5 1.5 0 0 0 0-2.53A1.53 1.53 0 0 0 19.89 7.3A8 8 0 0 1 12 4Z">
-                                <animateTransform attributeName="transform" dur="0.75s" repeatCount="indefinite"
-                                    type="rotate" values="0 12 12;360 12 12" />
-                            </path>
+                        <svg class="loading-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <circle class="loading-circle-bg" cx="12" cy="12" r="10"></circle>
+                            <circle class="loading-circle-fg" cx="12" cy="12" r="10"></circle>
                         </svg>
                     </button>
                     <button id="mini-player-prev-btn" class="mini-player-btn">
@@ -1693,7 +1705,7 @@
             <img id="collapsed-track-img" width="32" height="32" alt="Обложка" />
             <span id="collapsed-track-name"></span>
             <p>⤴</p>
-        </div>  
+        </div>
 
     </div>
 
@@ -1702,334 +1714,370 @@
     <script type="module" src="music.js"></script>
     <script src="./modal-window.js"></script>
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const DB_NAME = 'audioDB';
-        const STORE_NAME = 'tracks';
+        document.addEventListener('DOMContentLoaded', () => {
+            const DB_NAME = 'audioDB';
+            const STORE_NAME = 'tracks';
 
-        function openAudioDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, 1);
-                request.onerror = () => reject("Ошибка открытия IndexedDB");
-                request.onsuccess = () => resolve(request.result);
-                request.onupgradeneeded = (event) => {
-                    const db = event.target.result;
-                    if (!db.objectStoreNames.contains(STORE_NAME)) {
-                        db.createObjectStore(STORE_NAME);
-                    }
-                };
-            });
-        }
-
-        async function saveAudioToDB(key, blob) {
-            const db = await openAudioDB();
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([STORE_NAME], 'readwrite');
-                const store = transaction.objectStore(STORE_NAME);
-                const request = store.put(blob, key);
-                transaction.oncomplete = () => resolve(request.result);
-                transaction.onerror = () => reject(transaction.error);
-            });
-        }
-
-        async function getAudioFromDB(key) {
-            const db = await openAudioDB();
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([STORE_NAME], 'readonly');
-                const store = transaction.objectStore(STORE_NAME);
-                const request = store.get(key);
-                transaction.oncomplete = () => resolve(request.result);
-                transaction.onerror = () => reject(transaction.error);
-            });
-        }
-
-        const allTracks = document.querySelectorAll('.music-container');
-        const miniPlayer = document.getElementById('mini-player');
-        const miniPlayerTrackName = document.getElementById('mini-player-track-name');
-        const miniPlayerPlayPauseBtn = document.getElementById('mini-player-play-pause-btn');
-        const miniPlayerProgressBar = document.getElementById('mini-player-progress-bar');
-        const collapseBtn = document.getElementById('mini-player-collapse-btn');
-        const collapsedView = document.getElementById('mini-player-collapsed-view');
-        const collapsedTrackName = document.getElementById('collapsed-track-name');
-        const collapsedTrackImg = document.getElementById('collapsed-track-img');
-        const collapsedPlayPauseBtn = document.getElementById('collapsed-play-pause-btn');
-        const miniPlayerRepeatBtn = document.getElementById('mini-player-repeat-btn');
-        const miniPlayerPrevBtn = document.getElementById('mini-player-prev-btn');
-        const miniPlayerNextBtn = document.getElementById('mini-player-next-btn');
-        const miniPlayerDownloadBtn = document.getElementById('mini-player-download-btn');
-        const miniPlayerImg = document.getElementById('mini-player-img');
-        const miniPlayerArtistName = document.getElementById('mini-player-artist-name');
-
-        let currentActiveAudio = null;
-        let currentActiveMainPlayBtn = null;
-        let isRepeatActive = false;
-
-        function changeTrack(direction) {
-            if (!currentActiveAudio) return;
-            const visibleTracks = Array.from(allTracks).filter(track => track.style.display !== 'none');
-            if (visibleTracks.length <= 1) return;
-            const currentTrackContainer = currentActiveAudio.closest('.music-container');
-            const currentIndex = visibleTracks.indexOf(currentTrackContainer);
-            if (currentIndex === -1) return;
-
-            let nextIndex = direction === 'next' ?
-                (currentIndex + 1) % visibleTracks.length :
-                (currentIndex - 1 + visibleTracks.length) % visibleTracks.length;
-
-            const nextTrackContainer = visibleTracks[nextIndex];
-            nextTrackContainer.click();
-        }
-
-        if (miniPlayerRepeatBtn) {
-            miniPlayerRepeatBtn.addEventListener('click', () => {
-                isRepeatActive = !isRepeatActive;
-                miniPlayerRepeatBtn.classList.toggle('active', isRepeatActive);
-            });
-        }
-
-        if (miniPlayerNextBtn) {
-            miniPlayerNextBtn.addEventListener('click', () => changeTrack('next'));
-        }
-
-        if (miniPlayerPrevBtn) {
-            miniPlayerPrevBtn.addEventListener('click', () => {
-                if (currentActiveAudio) {
-                    if (currentActiveAudio.currentTime > 3) {
-                        currentActiveAudio.currentTime = 0;
-                    } else {
-                        changeTrack('prev');
-                    }
-                }
-            });
-        }
-
-        if (miniPlayerDownloadBtn) {
-            miniPlayerDownloadBtn.addEventListener('click', async () => {
-                if (!currentActiveAudio) {
-                    alert("Сначала выберите трек для воспроизведения.");
-                    return;
-                }
-                const audioSrc = currentActiveAudio.dataset.originalSrc;
-                miniPlayerDownloadBtn.className = 'mini-player-btn downloading';
-                try {
-                    const response = await fetch(audioSrc);
-                    if (!response.ok) throw new Error('Ошибка сети');
-                    const audioBlob = await response.blob();
-                    await saveAudioToDB(audioSrc, audioBlob);
-                    miniPlayerDownloadBtn.className = 'mini-player-btn downloaded';
-                } catch {
-                    miniPlayerDownloadBtn.className = 'mini-player-btn not-downloaded';
-                    alert('Не удалось сохранить трек.');
-                }
-            });
-        }
-
-        if (miniPlayerPlayPauseBtn) {
-            miniPlayerPlayPauseBtn.addEventListener('click', () => {
-                if (currentActiveAudio) {
-                    currentActiveAudio.paused ? currentActiveAudio.play() : currentActiveAudio.pause();
-                }
-            });
-        }
-
-        if (miniPlayerProgressBar) {
-            miniPlayerProgressBar.addEventListener('input', () => {
-                if (currentActiveAudio && !isNaN(currentActiveAudio.duration)) {
-                    currentActiveAudio.currentTime = (miniPlayerProgressBar.value / 100) * currentActiveAudio.duration;
-                }
-            });
-        }
-
-        if (collapseBtn) {
-            collapseBtn.addEventListener('click', () => miniPlayer.classList.add('collapsed'));
-        }
-
-        if (collapsedView) {
-            collapsedView.addEventListener('click', e => {
-                e.stopPropagation();
-                miniPlayer.classList.remove('collapsed');
-            });
-        }
-
-        allTracks.forEach(container => {
-            const audioEl = container.querySelector('audio');
-            if (audioEl) {
-                audioEl.dataset.originalSrc = container.dataset.audioSrc;
+            function openAudioDB() {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(DB_NAME, 1);
+                    request.onerror = () => reject("Ошибка открытия IndexedDB");
+                    request.onsuccess = () => resolve(request.result);
+                    request.onupgradeneeded = (event) => {
+                        const db = event.target.result;
+                        if (!db.objectStoreNames.contains(STORE_NAME)) {
+                            db.createObjectStore(STORE_NAME);
+                        }
+                    };
+                });
             }
 
-            container.addEventListener('click', async (e) => {
-                if (e.target.closest('.lyrics-toggle-btn')) return;
+            async function saveAudioToDB(key, blob) {
+                const db = await openAudioDB();
+                return new Promise((resolve, reject) => {
+                    const transaction = db.transaction([STORE_NAME], 'readwrite');
+                    const store = transaction.objectStore(STORE_NAME);
+                    const request = store.put(blob, key);
+                    transaction.oncomplete = () => resolve(request.result);
+                    transaction.onerror = () => reject(transaction.error);
+                });
+            }
 
-                if (currentActiveAudio === audioEl && !audioEl.paused) {
-                    audioEl.pause();
-                    return;
-                }
+            async function getAudioFromDB(key) {
+                const db = await openAudioDB();
+                return new Promise((resolve, reject) => {
+                    const transaction = db.transaction([STORE_NAME], 'readonly');
+                    const store = transaction.objectStore(STORE_NAME);
+                    const request = store.get(key);
+                    transaction.oncomplete = () => resolve(request.result);
+                    transaction.onerror = () => reject(transaction.error);
+                });
+            }
 
-                if (currentActiveAudio && currentActiveAudio !== audioEl) {
-                    currentActiveAudio.pause();
-                    document.querySelectorAll('.music-container').forEach(el => el.classList.remove('active-track'));
-                }
+            const allTracks = document.querySelectorAll('.music-container');
+            const miniPlayer = document.getElementById('mini-player');
+            const miniPlayerTrackName = document.getElementById('mini-player-track-name');
+            const miniPlayerPlayPauseBtn = document.getElementById('mini-player-play-pause-btn');
+            const miniPlayerProgressBar = document.getElementById('mini-player-progress-bar');
+            const collapseBtn = document.getElementById('mini-player-collapse-btn');
+            const collapsedView = document.getElementById('mini-player-collapsed-view');
+            const collapsedTrackName = document.getElementById('collapsed-track-name');
+            const collapsedTrackImg = document.getElementById('collapsed-track-img');
+            const collapsedPlayPauseBtn = document.getElementById('collapsed-play-pause-btn');
+            const miniPlayerRepeatBtn = document.getElementById('mini-player-repeat-btn');
+            const miniPlayerPrevBtn = document.getElementById('mini-player-prev-btn');
+            const miniPlayerNextBtn = document.getElementById('mini-player-next-btn');
+            const miniPlayerDownloadBtn = document.getElementById('mini-player-download-btn');
+            const miniPlayerImg = document.getElementById('mini-player-img');
+            const miniPlayerArtistName = document.getElementById('mini-player-artist-name');
 
-                currentActiveAudio = audioEl;
-                const audioSrcOriginal = audioEl.dataset.originalSrc;
-                const offlineAudioBlob = await getAudioFromDB(audioSrcOriginal);
+            let currentActiveAudio = null;
+            let currentActiveMainPlayBtn = null;
+            let isRepeatActive = false;
 
-                if (offlineAudioBlob) {
-                    const objectURL = URL.createObjectURL(offlineAudioBlob);
-                    if (audioEl.src !== objectURL) {
-                        audioEl.src = objectURL;
-                    }
-                } else {
-                    if (audioEl.src !== audioSrcOriginal) {
-                        audioEl.src = audioSrcOriginal;
-                    }
-                }
+            function changeTrack(direction) {
+                if (!currentActiveAudio) return;
+                const visibleTracks = Array.from(allTracks).filter(track => track.style.display !== 'none');
+                if (visibleTracks.length <= 1) return;
+                const currentTrackContainer = currentActiveAudio.closest('.music-container');
+                const currentIndex = visibleTracks.indexOf(currentTrackContainer);
+                if (currentIndex === -1) return;
 
-                audioEl.play();
-                document.querySelectorAll('.music-container').forEach(el => el.classList.remove('active-track'));
-                container.classList.add('active-track');
-            });
-        });
+                let nextIndex = direction === 'next' ?
+                    (currentIndex + 1) % visibleTracks.length :
+                    (currentIndex - 1 + visibleTracks.length) % visibleTracks.length;
 
-        document.querySelectorAll('audio').forEach(audioEl => {
-            audioEl.addEventListener('play', async () => {
-                currentActiveAudio = audioEl;
-                currentActiveMainPlayBtn = audioEl.closest('.music-container')?.querySelector('.play-pause-btn');
-                currentActiveMainPlayBtn?.classList.add('playing');
-                miniPlayerPlayPauseBtn?.classList.add('playing');
+                const nextTrackContainer = visibleTracks[nextIndex];
+                nextTrackContainer.click();
+            }
 
-                const musicContainer = audioEl.closest('.music-container');
-                if (musicContainer) {
-                    miniPlayerTrackName.textContent = musicContainer.dataset.song;
-                    miniPlayerArtistName.textContent = musicContainer.dataset.artist;
-                    miniPlayerImg.src = musicContainer.dataset.img;
-                    collapsedTrackName.textContent = `${musicContainer.dataset.song} – ${musicContainer.dataset.artist}`;
-                    collapsedTrackImg.src = musicContainer.dataset.img;
-                    collapsedPlayPauseBtn.textContent = '⏸';
-                }
+            if (miniPlayerRepeatBtn) {
+                miniPlayerRepeatBtn.addEventListener('click', () => {
+                    isRepeatActive = !isRepeatActive;
+                    miniPlayerRepeatBtn.classList.toggle('active', isRepeatActive);
+                });
+            }
 
-                miniPlayer.classList.add('visible');
-                miniPlayer.classList.remove('collapsed');
+            if (miniPlayerNextBtn) {
+                miniPlayerNextBtn.addEventListener('click', () => changeTrack('next'));
+            }
 
-                const audioSrc = audioEl.dataset.originalSrc;
-                const isDownloaded = await getAudioFromDB(audioSrc);
-                miniPlayerDownloadBtn.className = isDownloaded ? 'mini-player-btn downloaded' : 'mini-player-btn not-downloaded';
-            });
-
-            audioEl.addEventListener('pause', () => {
-                if (currentActiveAudio === audioEl) {
-                    currentActiveMainPlayBtn?.classList.remove('playing');
-                    miniPlayerPlayPauseBtn?.classList.remove('playing');
-                    collapsedPlayPauseBtn.textContent = '▶';
-                }
-            });
-
-            audioEl.addEventListener('ended', () => {
-                if (isRepeatActive) {
-                    audioEl.currentTime = 0;
-                    audioEl.play();
-                } else {
-                    changeTrack('next');
-                }
-            });
-
-            audioEl.addEventListener('timeupdate', () => {
-                if (currentActiveAudio === audioEl && !isNaN(audioEl.duration)) {
-                    const progress = (audioEl.currentTime / audioEl.duration) * 100;
-                    miniPlayerProgressBar.value = progress;
-                }
-            });
-        });
-
-        if (collapsedPlayPauseBtn) {
-            collapsedPlayPauseBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (currentActiveAudio) {
-                    if (currentActiveAudio.paused) {
-                        currentActiveAudio.play();
-                        collapsedPlayPauseBtn.textContent = '⏸';
-                    } else {
-                        currentActiveAudio.pause();
-                        collapsedPlayPauseBtn.textContent = '▶';
-                    }
-                }
-            });
-        }
-
-        document.querySelectorAll('.lyrics-toggle-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                const musicContainer = button.closest('.music-container');
-                const lyricsContent = musicContainer.querySelector('.lyrics-content');
-                if (lyricsContent) {
-                    lyricsContent.classList.toggle('show');
-                    button.textContent = lyricsContent.classList.contains('show') ? '❌' : '📄';
-                    button.title = lyricsContent.classList.contains('show') ? 'Скрыть текст песни' : 'Показать текст песни';
-                }
-            });
-        });
-
-        // ====================================================================== //
-        // == НАЧАЛО БЛОКА КОДА ДЛЯ ФИЛЬТРАЦИИ ПО НАСТРОЕНИЮ (ИСПРАВЛЕНИЕ) == //
-        // ====================================================================== //
-
-        const moodButtons = document.querySelectorAll('.mood-btn');
-        const moodFeedback = document.getElementById('mood-feedback');
-        const moodTexts = document.querySelectorAll('.mood-text');
-
-        moodButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const selectedMood = button.dataset.mood;
-                let visibleCount = 0;
-
-                // Убираем класс 'active' со всех кнопок и добавляем к нажатой
-                moodButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-
-                // Скрываем все текстовые подсказки
-                moodTexts.forEach(text => text.style.display = 'none');
-
-                // Фильтруем треки
-                allTracks.forEach(track => {
-                    // Убедимся, что у трека есть data-mood. Если нет, считаем его неподходящим.
-                    const trackMood = track.dataset.mood;
-
-                    // Логика отображения трека
-                    if (selectedMood === 'все' || trackMood === selectedMood) {
-                        track.style.display = 'block'; // или 'flex', в зависимости от вашей верстки
-                        visibleCount++;
-                    } else {
-                        track.style.display = 'none';
-                        
-                        // Если скрыли трек, который сейчас играет, останавливаем его
-                        const audio = track.querySelector('audio');
-                        if (currentActiveAudio === audio) {
-                            audio.pause();
-                            miniPlayer.classList.remove('visible');
-                            currentActiveAudio = null;
+            if (miniPlayerPrevBtn) {
+                miniPlayerPrevBtn.addEventListener('click', () => {
+                    if (currentActiveAudio) {
+                        if (currentActiveAudio.currentTime > 3) {
+                            currentActiveAudio.currentTime = 0;
+                        } else {
+                            changeTrack('prev');
                         }
                     }
                 });
+            }
 
-                // Показываем сообщение, если ни один трек не найден
-                if (visibleCount === 0 && selectedMood !== 'все') {
-                    moodFeedback.style.display = 'block';
-                } else {
-                    moodFeedback.style.display = 'none';
+            if (miniPlayerDownloadBtn) {
+                miniPlayerDownloadBtn.addEventListener('click', async () => {
+                    if (!currentActiveAudio) {
+                        alert("Сначала выберите трек для воспроизведения.");
+                        return;
+                    }
+                    const audioSrc = currentActiveAudio.dataset.originalSrc;
+                    miniPlayerDownloadBtn.className = 'mini-player-btn downloading';
+                    try {
+                        const response = await fetch(audioSrc);
+                        if (!response.ok) throw new Error('Ошибка сети');
+                        const audioBlob = await response.blob();
+                        await saveAudioToDB(audioSrc, audioBlob);
+                        miniPlayerDownloadBtn.className = 'mini-player-btn downloaded';
+                    } catch {
+                        miniPlayerDownloadBtn.className = 'mini-player-btn not-downloaded';
+                        alert('Не удалось сохранить трек.');
+                    }
+                });
+            }
+
+            if (miniPlayerPlayPauseBtn) {
+                miniPlayerPlayPauseBtn.addEventListener('click', () => {
+                    if (currentActiveAudio) {
+                        currentActiveAudio.paused ? currentActiveAudio.play() : currentActiveAudio.pause();
+                    }
+                });
+            }
+
+            if (miniPlayerProgressBar) {
+                miniPlayerProgressBar.addEventListener('input', () => {
+                    if (currentActiveAudio && !isNaN(currentActiveAudio.duration)) {
+                        currentActiveAudio.currentTime = (miniPlayerProgressBar.value / 100) * currentActiveAudio.duration;
+                    }
+                });
+            }
+
+            if (collapseBtn) {
+                collapseBtn.addEventListener('click', () => miniPlayer.classList.add('collapsed'));
+            }
+
+            if (collapsedView) {
+                collapsedView.addEventListener('click', e => {
+                    e.stopPropagation();
+                    miniPlayer.classList.remove('collapsed');
+                });
+            }
+
+            // --- НАЧАЛО БЛОКА С ДИАГНОСТИКОЙ ---
+
+            allTracks.forEach(container => {
+                const audioEl = container.querySelector('audio');
+                if (audioEl) {
+                    audioEl.dataset.originalSrc = container.dataset.audioSrc;
                 }
 
-                // Показываем соответствующую текстовую подсказку
-                const activeText = document.querySelector(`.mood-text[data-mood-text="${selectedMood}"]`);
-                if (activeText) {
-                    activeText.style.display = 'block';
-                }
+                container.addEventListener('click', async (e) => {
+                    console.log('--- Новый клик по треку ---');
+                    if (e.target.closest('.lyrics-toggle-btn')) {
+                        console.log('Клик по кнопке текста песни, игнорируем.');
+                        return;
+                    }
+
+                    if (currentActiveAudio === audioEl && !audioEl.paused) {
+                        audioEl.pause();
+                        return;
+                    }
+                    if (currentActiveAudio && currentActiveAudio !== audioEl) {
+                        currentActiveAudio.pause();
+                    }
+
+                    currentActiveAudio = audioEl;
+                    const audioSrcOriginal = audioEl.dataset.originalSrc;
+
+                    try {
+                        console.log('Шаг 1: Клик по треку. Загружаю аудио:', audioSrcOriginal);
+                        const offlineAudioBlob = await getAudioFromDB(audioSrcOriginal);
+
+                        if (offlineAudioBlob) {
+                            const objectURL = URL.createObjectURL(offlineAudioBlob);
+                            if (audioEl.src !== objectURL) audioEl.src = objectURL;
+                            console.log('Аудио взято из базы данных (офлайн).');
+                        } else {
+                            if (audioEl.src !== audioSrcOriginal) audioEl.src = audioSrcOriginal;
+                            console.log('Аудио будет загружено из сети.');
+                        }
+
+                        document.querySelectorAll('.music-container').forEach(el => el.classList.remove('active-track'));
+                        container.classList.add('active-track');
+
+                        console.log('Шаг 2: Аудио подготовлено. Вызываю audio.play()');
+                        await audioEl.play();
+                        console.log('Шаг 2.1: Команда audio.play() выполнена успешно.');
+
+                    } catch (error) {
+                        console.error('ОШИБКА на Шаге 2: Не удалось запустить аудио!', error);
+                    }
+                });
+            });
+
+            document.querySelectorAll('audio').forEach(audioEl => {
+                audioEl.addEventListener('play', async () => {
+                    try {
+                        console.log('Шаг 3: Событие "play" сработало для трека:', audioEl.src);
+                        currentActiveAudio = audioEl;
+                        currentActiveMainPlayBtn = audioEl.closest('.music-container')?.querySelector('.play-pause-btn');
+                        if (currentActiveMainPlayBtn) currentActiveMainPlayBtn.classList.add('playing');
+                        if (miniPlayerPlayPauseBtn) miniPlayerPlayPauseBtn.classList.add('playing');
+
+                        const musicContainer = audioEl.closest('.music-container');
+                        if (musicContainer) {
+                            miniPlayerTrackName.textContent = musicContainer.dataset.song;
+                            miniPlayerArtistName.textContent = musicContainer.dataset.artist;
+                            miniPlayerImg.src = musicContainer.dataset.img;
+                            collapsedTrackName.textContent = `${musicContainer.dataset.song} – ${musicContainer.dataset.artist}`;
+                            collapsedTrackImg.src = musicContainer.dataset.img;
+                            if (collapsedPlayPauseBtn) collapsedPlayPauseBtn.textContent = '⏸';
+                        }
+
+                        console.log('Шаг 4: Вся информация собрана. Добавляю класс "visible" к плееру:', miniPlayer);
+                        if (miniPlayer) miniPlayer.classList.add('visible');
+                        if (miniPlayer) miniPlayer.classList.remove('collapsed');
+
+                        const audioSrc = audioEl.dataset.originalSrc;
+                        const isDownloaded = await getAudioFromDB(audioSrc);
+                        if (miniPlayerDownloadBtn) miniPlayerDownloadBtn.className = isDownloaded ? 'mini-player-btn downloaded' : 'mini-player-btn not-downloaded';
+                        console.log('Шаг 5: Плеер должен быть виден.');
+                    } catch (error) {
+                        console.error('ОШИБКА в обработчике события "play":', error);
+                    }
+                });
+
+                audioEl.addEventListener('pause', () => {
+                    if (currentActiveAudio === audioEl) {
+                        if (currentActiveMainPlayBtn) currentActiveMainPlayBtn.classList.remove('playing');
+                        if (miniPlayerPlayPauseBtn) miniPlayerPlayPauseBtn.classList.remove('playing');
+                        if (collapsedPlayPauseBtn) collapsedPlayPauseBtn.textContent = '▶';
+                    }
+                });
+
+                audioEl.addEventListener('ended', () => {
+                    if (isRepeatActive) {
+                        audioEl.currentTime = 0;
+                        audioEl.play();
+                    } else {
+                        changeTrack('next');
+                    }
+                });
+
+                audioEl.addEventListener('timeupdate', () => {
+                    if (currentActiveAudio === audioEl && !isNaN(audioEl.duration)) {
+                        const progress = (audioEl.currentTime / audioEl.duration) * 100;
+                        if (miniPlayerProgressBar) miniPlayerProgressBar.value = progress;
+                    }
+                });
+            });
+
+            if (collapsedPlayPauseBtn) {
+                collapsedPlayPauseBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (currentActiveAudio) {
+                        if (currentActiveAudio.paused) {
+                            currentActiveAudio.play();
+                            collapsedPlayPauseBtn.textContent = '⏸';
+                        } else {
+                            currentActiveAudio.pause();
+                            collapsedPlayPauseBtn.textContent = '▶';
+                        }
+                    }
+                });
+            }
+
+            document.querySelectorAll('.lyrics-toggle-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const musicContainer = button.closest('.music-container');
+                    const lyricsContent = musicContainer.querySelector('.lyrics-content');
+                    if (lyricsContent) {
+                        lyricsContent.classList.toggle('show');
+                        button.textContent = lyricsContent.classList.contains('show') ? '❌' : '📄';
+                        button.title = lyricsContent.classList.contains('show') ? 'Скрыть текст песни' : 'Показать текст песни';
+                    }
+                });
+            });
+
+            const moodButtons = document.querySelectorAll('.mood-btn');
+            const moodFeedback = document.getElementById('mood-feedback');
+            const moodTexts = document.querySelectorAll('.mood-text');
+            const searchSection = document.getElementById('search-section');
+            const resetButton = document.querySelector('.mood-btn[data-mood="все"]');
+            const emptyLikedMessage = document.getElementById('empty-liked-message');
+
+            const moodToClassMap = {
+                'бодрое': 'gradient-bodroe',
+                'весёлое': 'gradient-vesyoloe',
+                'спокойное': 'gradient-spokoinoe',
+                'грустное': 'gradient-grustnoe',
+                'новое': 'gradient-novoe',
+                'любимое': 'gradient-lyubimoe'
+            };
+
+            const allGradientClasses = Object.values(moodToClassMap);
+
+            moodButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const selectedMood = button.dataset.mood;
+                    let visibleCount = 0;
+
+                    moodButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    searchSection.classList.remove(...allGradientClasses);
+
+                    const classToAdd = moodToClassMap[selectedMood];
+                    if (classToAdd) {
+                        searchSection.classList.add(classToAdd);
+                    }
+
+                    if (resetButton) {
+                        if (selectedMood === 'все') {
+                            resetButton.classList.remove('visible');
+                        } else {
+                            resetButton.classList.add('visible');
+                        }
+                    }
+
+                    moodTexts.forEach(text => text.style.display = 'none');
+
+                    allTracks.forEach(track => {
+                        const trackMood = track.dataset.mood;
+
+                        if (selectedMood === 'все' || trackMood === selectedMood) {
+                            track.style.display = 'block';
+                            visibleCount++;
+                        } else {
+                            track.style.display = 'none';
+
+                            const audio = track.querySelector('audio');
+                            if (currentActiveAudio === audio) {
+                                audio.pause();
+                                miniPlayer.classList.remove('visible');
+                                currentActiveAudio = null;
+                            }
+                        }
+                    });
+
+                    if (visibleCount === 0 && selectedMood !== 'все' && selectedMood !== 'любимое') {
+                        moodFeedback.textContent = `Треки с настроением "${selectedMood}" не найдены.`;
+                        moodFeedback.style.display = 'block';
+                    } else {
+                        moodFeedback.style.display = 'none';
+                    }
+
+                    if (selectedMood === 'любимое' && visibleCount === 0) {
+                        if (emptyLikedMessage) emptyLikedMessage.style.display = 'block';
+                    } else {
+                        const activeText = document.querySelector(`.mood-text[data-mood-text="${selectedMood}"]`);
+                        if (activeText) {
+                            activeText.style.display = 'block';
+                        }
+                    }
+                });
             });
         });
-
-        // ====================================================================== //
-        // === КОНЕЦ БЛОКА КОДА ДЛЯ ФИЛЬТРАЦИИ ПО НАСТРОЕНИЮ (ИСПРАВЛЕНИЕ) ==== //
-        // ====================================================================== //
-
-    });
-</script>
+    </script>
 </body>
 
 </html>
