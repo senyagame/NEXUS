@@ -2011,9 +2011,7 @@
                             shouldShow = true;
                         } else if (selectedMood === 'любимое') {
                             const likeButton = track.querySelector('.favorite-heart-btn');
-                            // <-- ВАЖНО: Проверяем наличие класса 'liked'. 
-                            // Если у вас другой класс для лайка (например 'is-favorite'), замените 'liked' на него.
-                            if (likeButton && likeButton.classList.contains('liked')) {
+                            if (likeButton && likeButton.classList.contains('favorite-heart-btn is-favorite')) {
                                 shouldShow = true;
                             }
                         } else {
@@ -2056,4 +2054,5 @@
         });
     </script>
 </body>
+
 </html>
