@@ -1797,11 +1797,9 @@
                     miniPlayerRepeatBtn.classList.toggle('active', isRepeatActive);
                 });
             }
-
             if (miniPlayerNextBtn) {
                 miniPlayerNextBtn.addEventListener('click', () => changeTrack('next'));
             }
-
             if (miniPlayerPrevBtn) {
                 miniPlayerPrevBtn.addEventListener('click', () => {
                     if (currentActiveAudio) {
@@ -1813,7 +1811,6 @@
                     }
                 });
             }
-
             if (miniPlayerDownloadBtn) {
                 miniPlayerDownloadBtn.addEventListener('click', async () => {
                     if (!currentActiveAudio) {
@@ -1834,7 +1831,6 @@
                     }
                 });
             }
-
             if (miniPlayerPlayPauseBtn) {
                 miniPlayerPlayPauseBtn.addEventListener('click', () => {
                     if (currentActiveAudio) {
@@ -1842,7 +1838,6 @@
                     }
                 });
             }
-
             if (miniPlayerProgressBar) {
                 miniPlayerProgressBar.addEventListener('input', () => {
                     if (currentActiveAudio && !isNaN(currentActiveAudio.duration)) {
@@ -1850,19 +1845,15 @@
                     }
                 });
             }
-
             if (collapseBtn) {
                 collapseBtn.addEventListener('click', () => miniPlayer.classList.add('collapsed'));
             }
-
             if (collapsedView) {
                 collapsedView.addEventListener('click', e => {
                     e.stopPropagation();
                     miniPlayer.classList.remove('collapsed');
                 });
             }
-
-            // --- НАЧАЛО БЛОКА С ДИАГНОСТИКОЙ ---
 
             allTracks.forEach(container => {
                 const audioEl = container.querySelector('audio');
@@ -1871,9 +1862,9 @@
                 }
 
                 container.addEventListener('click', async (e) => {
-                    console.log('--- Новый клик по треку ---');
-                    if (e.target.closest('.lyrics-toggle-btn')) {
-                        console.log('Клик по кнопке текста песни, игнорируем.');
+                    // <-- ИЗМЕНЕНИЕ 1: Добавлена проверка на вашу кнопку лайка
+                    if (e.target.closest('.lyrics-toggle-btn') || e.target.closest('.favorite-heart-btn')) {
+                        console.log('Клик по кнопке лайка или текста, игнорируем.');
                         return;
                     }
 
@@ -1889,27 +1880,18 @@
                     const audioSrcOriginal = audioEl.dataset.originalSrc;
 
                     try {
-                        console.log('Шаг 1: Клик по треку. Загружаю аудио:', audioSrcOriginal);
                         const offlineAudioBlob = await getAudioFromDB(audioSrcOriginal);
-
                         if (offlineAudioBlob) {
                             const objectURL = URL.createObjectURL(offlineAudioBlob);
                             if (audioEl.src !== objectURL) audioEl.src = objectURL;
-                            console.log('Аудио взято из базы данных (офлайн).');
                         } else {
                             if (audioEl.src !== audioSrcOriginal) audioEl.src = audioSrcOriginal;
-                            console.log('Аудио будет загружено из сети.');
                         }
-
                         document.querySelectorAll('.music-container').forEach(el => el.classList.remove('active-track'));
                         container.classList.add('active-track');
-
-                        console.log('Шаг 2: Аудио подготовлено. Вызываю audio.play()');
                         await audioEl.play();
-                        console.log('Шаг 2.1: Команда audio.play() выполнена успешно.');
-
                     } catch (error) {
-                        console.error('ОШИБКА на Шаге 2: Не удалось запустить аудио!', error);
+                        console.error('ОШИБКА: Не удалось запустить аудио!', error);
                     }
                 });
             });
@@ -1917,12 +1899,10 @@
             document.querySelectorAll('audio').forEach(audioEl => {
                 audioEl.addEventListener('play', async () => {
                     try {
-                        console.log('Шаг 3: Событие "play" сработало для трека:', audioEl.src);
                         currentActiveAudio = audioEl;
                         currentActiveMainPlayBtn = audioEl.closest('.music-container')?.querySelector('.play-pause-btn');
                         if (currentActiveMainPlayBtn) currentActiveMainPlayBtn.classList.add('playing');
                         if (miniPlayerPlayPauseBtn) miniPlayerPlayPauseBtn.classList.add('playing');
-
                         const musicContainer = audioEl.closest('.music-container');
                         if (musicContainer) {
                             miniPlayerTrackName.textContent = musicContainer.dataset.song;
@@ -1932,20 +1912,15 @@
                             collapsedTrackImg.src = musicContainer.dataset.img;
                             if (collapsedPlayPauseBtn) collapsedPlayPauseBtn.textContent = '⏸';
                         }
-
-                        console.log('Шаг 4: Вся информация собрана. Добавляю класс "visible" к плееру:', miniPlayer);
                         if (miniPlayer) miniPlayer.classList.add('visible');
                         if (miniPlayer) miniPlayer.classList.remove('collapsed');
-
                         const audioSrc = audioEl.dataset.originalSrc;
                         const isDownloaded = await getAudioFromDB(audioSrc);
                         if (miniPlayerDownloadBtn) miniPlayerDownloadBtn.className = isDownloaded ? 'mini-player-btn downloaded' : 'mini-player-btn not-downloaded';
-                        console.log('Шаг 5: Плеер должен быть виден.');
                     } catch (error) {
                         console.error('ОШИБКА в обработчике события "play":', error);
                     }
                 });
-
                 audioEl.addEventListener('pause', () => {
                     if (currentActiveAudio === audioEl) {
                         if (currentActiveMainPlayBtn) currentActiveMainPlayBtn.classList.remove('playing');
@@ -1953,7 +1928,6 @@
                         if (collapsedPlayPauseBtn) collapsedPlayPauseBtn.textContent = '▶';
                     }
                 });
-
                 audioEl.addEventListener('ended', () => {
                     if (isRepeatActive) {
                         audioEl.currentTime = 0;
@@ -1962,7 +1936,6 @@
                         changeTrack('next');
                     }
                 });
-
                 audioEl.addEventListener('timeupdate', () => {
                     if (currentActiveAudio === audioEl && !isNaN(audioEl.duration)) {
                         const progress = (audioEl.currentTime / audioEl.duration) * 100;
@@ -1985,7 +1958,6 @@
                     }
                 });
             }
-
             document.querySelectorAll('.lyrics-toggle-btn').forEach(button => {
                 button.addEventListener('click', () => {
                     const musicContainer = button.closest('.music-container');
@@ -2004,7 +1976,6 @@
             const searchSection = document.getElementById('search-section');
             const resetButton = document.querySelector('.mood-btn[data-mood="все"]');
             const emptyLikedMessage = document.getElementById('empty-liked-message');
-
             const moodToClassMap = {
                 'бодрое': 'gradient-bodroe',
                 'весёлое': 'gradient-vesyoloe',
@@ -2013,47 +1984,54 @@
                 'новое': 'gradient-novoe',
                 'любимое': 'gradient-lyubimoe'
             };
-
             const allGradientClasses = Object.values(moodToClassMap);
 
             moodButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const selectedMood = button.dataset.mood;
                     let visibleCount = 0;
-
                     moodButtons.forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
-
                     searchSection.classList.remove(...allGradientClasses);
-
                     const classToAdd = moodToClassMap[selectedMood];
                     if (classToAdd) {
                         searchSection.classList.add(classToAdd);
                     }
-
                     if (resetButton) {
-                        if (selectedMood === 'все') {
-                            resetButton.classList.remove('visible');
-                        } else {
-                            resetButton.classList.add('visible');
-                        }
+                        resetButton.classList.toggle('visible', selectedMood !== 'все');
                     }
-
                     moodTexts.forEach(text => text.style.display = 'none');
+                    if (emptyLikedMessage) emptyLikedMessage.style.display = 'none';
 
+                    // --- ИЗМЕНЕНИЕ 2: Полностью переработанная логика фильтрации ---
                     allTracks.forEach(track => {
-                        const trackMood = track.dataset.mood;
+                        let shouldShow = false;
 
-                        if (selectedMood === 'все' || trackMood === selectedMood) {
+                        if (selectedMood === 'все') {
+                            shouldShow = true;
+                        } else if (selectedMood === 'любимое') {
+                            const likeButton = track.querySelector('.favorite-heart-btn');
+                            // <-- ВАЖНО: Проверяем наличие класса 'liked'. 
+                            // Если у вас другой класс для лайка (например 'is-favorite'), замените 'liked' на него.
+                            if (likeButton && likeButton.classList.contains('liked')) {
+                                shouldShow = true;
+                            }
+                        } else {
+                            const trackMood = track.dataset.mood;
+                            if (trackMood === selectedMood) {
+                                shouldShow = true;
+                            }
+                        }
+
+                        if (shouldShow) {
                             track.style.display = 'block';
                             visibleCount++;
                         } else {
                             track.style.display = 'none';
-
                             const audio = track.querySelector('audio');
                             if (currentActiveAudio === audio) {
                                 audio.pause();
-                                miniPlayer.classList.remove('visible');
+                                if (miniPlayer) miniPlayer.classList.remove('visible');
                                 currentActiveAudio = null;
                             }
                         }
@@ -2065,7 +2043,6 @@
                     } else {
                         moodFeedback.style.display = 'none';
                     }
-
                     if (selectedMood === 'любимое' && visibleCount === 0) {
                         if (emptyLikedMessage) emptyLikedMessage.style.display = 'block';
                     } else {
@@ -2079,5 +2056,4 @@
         });
     </script>
 </body>
-
 </html>
