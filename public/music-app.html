@@ -1862,9 +1862,7 @@
                 }
 
                 container.addEventListener('click', async (e) => {
-                    // <-- ИЗМЕНЕНИЕ 1: Добавлена проверка на вашу кнопку лайка
                     if (e.target.closest('.lyrics-toggle-btn') || e.target.closest('.favorite-heart-btn')) {
-                        console.log('Клик по кнопке лайка или текста, игнорируем.');
                         return;
                     }
 
@@ -2003,7 +2001,7 @@
                     moodTexts.forEach(text => text.style.display = 'none');
                     if (emptyLikedMessage) emptyLikedMessage.style.display = 'none';
 
-                    // --- ИЗМЕНЕНИЕ 2: Полностью переработанная логика фильтрации ---
+                    // --- ВОТ ИЗМЕНЕННАЯ ЛОГИКА ---
                     allTracks.forEach(track => {
                         let shouldShow = false;
 
@@ -2011,7 +2009,9 @@
                             shouldShow = true;
                         } else if (selectedMood === 'любимое') {
                             const likeButton = track.querySelector('.favorite-heart-btn');
-                            if (likeButton && likeButton.classList.contains('favorite-heart-btn is-favorite')) {
+
+                            // ПРОВЕРЯЕМ ТЕКСТ ВНУТРИ КНОПКИ
+                            if (likeButton && likeButton.textContent === '❤️') {
                                 shouldShow = true;
                             }
                         } else {
